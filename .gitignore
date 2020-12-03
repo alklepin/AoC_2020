@@ -1,0 +1,11 @@
+/.metadata
+/.recommenders
+/**/org.eclipse.jdt.core.prefs
+/*/bin
+/*/bin.tests
+/RemoteSystemsTempFiles/
+eclipse.bat
+
+MessageManager/.idea/
+*.iml
+*.log
