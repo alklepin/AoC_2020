@@ -50,39 +50,4 @@ public class Puzzle1 extends PuzzleCommon
         }
         System.out.println(treeCount);
     }
-
-    private static boolean isPwdValid(String pwd, char c, int num1, int num2)
-    {
-        int count = 0;
-        for (int idx = 0; idx < pwd.length(); idx++)
-        {
-            char ch = pwd.charAt(idx);
-            if (ch == c)
-                count++;
-        }
-        return num1 <= count && count <= num2;
-    }
-
-//    Pattern pattern = Pattern.compile("([0-9]+)-([0-9]+) ([a-z]): ([a-z]+)");
-//    int validPwdCounter = 0;
-//    while (scanner.hasNextLine())
-//    {
-//        String line = scanner.nextLine();
-//        System.out.println(line);
-//        Matcher m = pattern.matcher(line);
-//        if (m.matches())
-//        {
-//            int num1 = Integer.parseInt(m.group(1));
-//            int num2 = Integer.parseInt(m.group(2));
-//            char c = m.group(3).charAt(0);
-//            String pwd = m.group(4);
-////            System.out.printf("%d-%d %s: %s\n", num1, num2, c, pwd);
-//            if (isPwdValid(pwd, c, num1, num2))
-//            {
-//                validPwdCounter++;
-//            }
-//        }
-//    }
-//    System.out.printf("%d", validPwdCounter);
-    
 }
