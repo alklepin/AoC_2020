@@ -1,6 +1,10 @@
 package common;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +17,102 @@ public class PuzzleCommon
             cl = ClassLoader.getSystemClassLoader();
         String localPath = getClass().getPackageName().replace('.', '/');
         return cl.getResourceAsStream(localPath + '/' + fileName);        
+    }
+    
+    public ArrayList<String> readAllLines(String localFile)
+        throws IOException
+    {
+        ArrayList<String> lines = new ArrayList<>();
+        try (InputStream fis = loadLocalFile(localFile))
+        {
+            try (Scanner scanner = new Scanner(fis, "UTF8"))
+            {
+                while (scanner.hasNextLine())
+                {
+                    lines.add(scanner.nextLine().trim());
+                }
+            }
+        }
+        return lines;
+    }
+    
+    public static interface GroupProcessorAction
+    {
+        void process(LinesGroup lines);
+    }
+    
+    public static interface GroupProcessorFunc<T>
+    {
+        T process(LinesGroup lines);
+    }
+    
+    public static class LinesGroup implements Iterable<String>
+    {
+        private ArrayList<String> lines = new ArrayList<>();
+        
+        public void addLine(String line)
+        {
+            lines.add(line);
+        }
+        
+        public void processGroup(GroupProcessorAction processor)
+        {
+            processor.process(this);
+        }
+        
+        public <T> T processGroup(GroupProcessorFunc<T> processor)
+        {
+            return processor.process(this);
+        }
+        
+        @Override
+        public Iterator<String> iterator()
+        {
+            return lines.iterator();
+        }
+
+        public int size()
+        {
+            return lines.size();
+        }
+    }
+    
+    public ArrayList<LinesGroup> readAllLineGroups(String localFile)
+        throws IOException
+    {
+        ArrayList<LinesGroup> groups = new ArrayList<>();
+        try (InputStream fis = loadLocalFile(localFile))
+        {
+            try (Scanner scanner = new Scanner(fis, "UTF8"))
+            {
+                LinesGroup current = null;
+                while (scanner.hasNextLine())
+                {
+                    String line = scanner.nextLine().trim();
+                    if (line.length() == 0)
+                    {
+                        if (current != null)
+                        {
+                            groups.add(current);
+                            current = null;
+                        }
+                    }
+                    else
+                    {
+                        if (current == null)
+                        {
+                            current = new LinesGroup();
+                        }
+                        current.addLine(line);
+                    }
+                }
+                if (current != null)
+                {
+                    groups.add(current);
+                }
+            }
+        }
+        return groups;
     }
     
     public static int parseInt(String value, int defValue)

@@ -26,21 +26,32 @@ public class Puzzle1 extends PuzzleCommon
 //        System.exit(1);
 //        
 //        
-        try (InputStream fis = loadLocalFile("input1.txt"))
+
+//        try (InputStream fis = loadLocalFile("input1.txt"))
+//        {
+//            try (Scanner scanner = new Scanner(fis, "UTF8"))
+//            {
+//                int maxSeatId = -1;
+//                while (scanner.hasNextLine())
+//                {
+//                    String line = scanner.nextLine().trim();
+//                    int seatId = decodeSeat(line);
+//                    if (seatId > maxSeatId)
+//                        maxSeatId = seatId;
+//                }
+//                System.out.println(maxSeatId);
+//            }
+//        }
+
+        ArrayList<String> lines = readAllLines("input1.txt");
+        int maxSeatId = -1;
+        for (String line : lines)
         {
-            try (Scanner scanner = new Scanner(fis, "UTF8"))
-            {
-                int maxSeatId = -1;
-                while (scanner.hasNextLine())
-                {
-                    String line = scanner.nextLine().trim();
-                    int seatId = decodeSeat(line);
-                    if (seatId > maxSeatId)
-                        maxSeatId = seatId;
-                }
-                System.out.println(maxSeatId);
-            }
+            int seatId = decodeSeat(line);
+            if (seatId > maxSeatId)
+                maxSeatId = seatId;
         }
+        System.out.println(maxSeatId);
     }
 
     private int decodeSeat(String line)

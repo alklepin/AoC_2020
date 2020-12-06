@@ -2,18 +2,18 @@ package day6;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     private class GroupInfo
@@ -27,15 +27,30 @@ public class Puzzle1 extends PuzzleCommon
         
         public int processGroup()
         {
-            HashSet<Character> chars = new HashSet<>();
+            HashMap<Character, Integer> chars = new HashMap<>();
             for (String line : lines)
             {
                 for (int i = 0; i < line.length(); i++)
                 {
-                    chars.add(line.charAt(i));
+                    char key = line.charAt(i);
+                    int count = 0;
+                    if (chars.get(key) != null)
+                    {
+                        count = chars.get(key);
+                    }
+                    chars.put(key, count + 1);
                 }
             }
-            return chars.size();
+            int count = 0;
+            int groupSize = lines.size();
+            for (Integer v : chars.values())
+            {
+                if (v == groupSize)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
     }
 

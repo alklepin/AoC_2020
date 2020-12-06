@@ -83,6 +83,7 @@ public class Puzzle1 extends PuzzleCommon
             return k;
         }
         
+        @SuppressWarnings("unused")
         public void print()
         {
             System.out.println("===");

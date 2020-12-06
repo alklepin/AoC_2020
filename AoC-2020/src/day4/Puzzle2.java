@@ -129,6 +129,7 @@ public class Puzzle2 extends PuzzleCommon
             return false;
         }
 
+        @SuppressWarnings("unused")
         public void print()
         {
             System.out.println("===");
