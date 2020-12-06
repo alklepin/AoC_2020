@@ -7,9 +7,14 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class PuzzleCommon
 {
+    public static final String EnglishCharsLow = "abcdefghijklmnopqrstuvwxyz";
+    public static final String EnglishCharsUp = EnglishCharsLow.toUpperCase();
+    
     public InputStream loadLocalFile(String fileName)
     {
         ClassLoader cl = getClass().getClassLoader();
@@ -75,6 +80,12 @@ public class PuzzleCommon
         {
             return lines.size();
         }
+
+        public Stream<String> stream() 
+        {
+            return StreamSupport.stream(lines.spliterator(), false);
+        }
+        
     }
     
     public ArrayList<LinesGroup> readAllLineGroups(String localFile)
@@ -188,5 +199,10 @@ public class PuzzleCommon
             return result;
         }
         return defaultValue;
+    }
+    
+    public static ArrayList<Character> toListOfChars(String line)
+    {
+        return Convert.toListOfChars(line);
     }
 }
