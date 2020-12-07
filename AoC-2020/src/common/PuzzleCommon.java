@@ -1,7 +1,11 @@
 package common;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -24,13 +28,32 @@ public class PuzzleCommon
         return cl.getResourceAsStream(localPath + '/' + fileName);        
     }
     
+    public static Reader toUTF8Reader(InputStream is)
+        throws IOException
+    {
+        try
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF8"));
+            br.mark(4096);
+            int firstChar = br.read();
+            if (firstChar != 0xFEFF)
+                br.reset();
+            return br;
+        }
+        catch (UnsupportedEncodingException ignored)
+        {
+            throw new IllegalStateException(ignored);
+        }
+        
+    }
+    
     public ArrayList<String> readAllLines(String localFile)
         throws IOException
     {
         ArrayList<String> lines = new ArrayList<>();
         try (InputStream fis = loadLocalFile(localFile))
         {
-            try (Scanner scanner = new Scanner(fis, "UTF8"))
+            try (Scanner scanner = new Scanner(toUTF8Reader(fis)))
             {
                 while (scanner.hasNextLine())
                 {
@@ -94,7 +117,7 @@ public class PuzzleCommon
         ArrayList<LinesGroup> groups = new ArrayList<>();
         try (InputStream fis = loadLocalFile(localFile))
         {
-            try (Scanner scanner = new Scanner(fis, "UTF8"))
+            try (Scanner scanner = new Scanner(toUTF8Reader(fis)))
             {
                 LinesGroup current = null;
                 while (scanner.hasNextLine())

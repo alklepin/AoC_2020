@@ -7,13 +7,13 @@ import java.util.LinkedList;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -51,46 +51,35 @@ public class Puzzle1 extends PuzzleCommon
         throws Exception
     {
         ArrayList<String> lines = readAllLines("input1.txt");
+//        ArrayList<String> lines = readAllLines("test.txt");
         int result = 0;
         for (String line : lines)
         {
             Rule rule = new Rule(line);
-//            rule.print();
-//            System.out.printf("====\n");
+            rule.print();
+            System.out.printf("====\n");
             rules.put(rule.sourceColor, rule);
             startColors.add(rule.sourceColor);
         }
         
-        int count = 0;
-        for (String color: startColors)
-        {
-            if (isReachable(color, "shiny gold", rules))
-                count++;
-        }
-        
-        System.out.println(count);
+        result = countChildrenOf("shiny gold", rules);
+        System.out.println(result-1);
     }
     
-    private boolean isReachable(String from, String to, HashMap<String, Rule> rules)
+    private static int countChildrenOf(String from, HashMap<String, Rule> rules)
     {
-        LinkedList<String> queue = new LinkedList<>();
-        HashSet<String> foundColors = new HashSet<>();
-        queue.add(from);
-        while (queue.size() > 0)
+        int result = 1;
+        Rule rule = rules.get(from);
+        for (int i = 0; i < rule.targetColors.size(); i++)
         {
-            String current = queue.poll();
-            Rule rule = rules.get(current);
-            for (String next : rule.targetColors)
-            {
-                if (next.equals(to))
-                {
-                    return true;
-                }
-                queue.add(next);
-            }
+            String next = rule.targetColors.get(i);
+            int num = rule.targetAmounts.get(i);
+            result += num * countChildrenOf(next, rules);
         }
-        return false;
+        return result;
     }
+    
+    
     
     
     public static class Rule
