@@ -1,4 +1,4 @@
-package common;
+package common.graph;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -144,65 +144,33 @@ public class Graph<TNodeKey, TInfo>
         Collections.reverse(result);
         return result;
     }
+
+    public TraverseState<TNodeKey, Integer> traverseDFS(TNodeKey root)
+    {
+        TraverseState<TNodeKey, Integer> state = new TraverseState<TNodeKey, Integer>(null);
+        traverseSubTreeDFS(root, state);
+        return state;
+    }
+
+    public <TValue> TraverseState<TNodeKey, TValue> traverseDFS(TNodeKey root, NodeAggregator<TNodeKey, TValue> aggregator)
+    {
+        TraverseState<TNodeKey, TValue> state = new TraverseState<TNodeKey, TValue>(aggregator);
+        traverseSubTreeDFS(root, state);
+        return state;
+    }
     
-//    public ArrayList<TNodeKey> traverseTree(TNodeKey root)
-//    {
-//        HashSet<TNodeKey> visited = new HashSet<>();
-//        traverseSubTree(root, visited);
-//        
-//    }
-//    
-//    private ArrayList<TNodeKey> traverseSubTree(TNodeKey currentRoot, HashSet<TNodeKey> visited)
-//    {
-//        visited.add(currentRoot);
-//        Node<TNodeKey, TInfo> node = m_nodes.get(current);
-//        
-//        for (TNodeKey next : node.nextNodes())
-//        {
-//            if (visited.contains(next))
-//                continue;
-//            
-//            visited.add(next);
-//            traverseSubTree(next, visited);
-//            visitedFrom.put(next, current);
-//        }
-//
-//        LinkedList<TNodeKey> queue = new LinkedList<>();
-//        HashSet<TNodeKey> visited = new HashSet<>();
-//        HashMap<TNodeKey, TNodeKey> visitedFrom = new HashMap<>();
-//        visited.add(source);
-//        queue.add(source);
-//        while (queue.size() > 0)
-//        {
-//            TNodeKey current = queue.poll();
-//            Node<TNodeKey, TInfo> node = m_nodes.get(current);
-//            
-//            for (TNodeKey next : node.nextNodes())
-//            {
-//                if (visited.contains(next))
-//                    continue;
-//                
-//                visited.add(next);
-//                visitedFrom.put(next, current);
-//                if (next.equals(target))
-//                {
-//                    break;
-//                }
-//                queue.add(next);
-//            }
-//        }
-//        
-//        if (!visited.contains(target))
-//            return null;
-//        
-//        ArrayList<TNodeKey> result = new ArrayList<>();
-//        TNodeKey current = target;
-//        while (current != null)
-//        {
-//            result.add(current);
-//            current = visitedFrom.get(current);
-//        }
-//        Collections.reverse(result);
-//        return result;
-//    }
+    private <TValue> void traverseSubTreeDFS(TNodeKey currentRoot, TraverseState<TNodeKey, TValue> state)
+    {
+        Node<TNodeKey, TInfo> node = m_nodes.get(currentRoot);
+        state.addVisited(currentRoot);
+        for (TNodeKey next : node.nextNodes())
+        {
+            if (state.isVisited(next))
+                continue;
+            
+            traverseSubTreeDFS(next, state);
+            state.saveTransition(currentRoot, next);
+        }
+        state.aggregate(currentRoot, node.nextNodes());
+    }
 }

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import common.Graph;
 import common.PuzzleCommon;
+import common.graph.Graph;
 
 public class Puzzle1New extends PuzzleCommon
 {
