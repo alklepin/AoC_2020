@@ -3,9 +3,12 @@ package common.graph;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.function.Supplier;
 
 public class Graph<TNodeKey, TInfo>
@@ -17,8 +20,8 @@ public class Graph<TNodeKey, TInfo>
     {
         private TKey m_nodeKey;
         private TInf m_info;
-        private HashSet<TKey> m_nextNodes = new HashSet<>();
-        private HashSet<TKey> m_prevNodes = new HashSet<>();
+        private HashMap<TKey, Double> m_nextNodes = new HashMap<>();
+        private HashMap<TKey, Double> m_prevNodes = new HashMap<>();
 
         public Node(TKey nodeKey, TInf info)
         {
@@ -36,19 +39,24 @@ public class Graph<TNodeKey, TInfo>
             return m_info;
         }
 
-        public void addNext(TKey toNodeKey)
+        public void addNext(TKey toNodeKey, double weight)
         {
-            m_nextNodes.add(toNodeKey);
+            m_nextNodes.put(toNodeKey, weight);
         }
 
-        public void addPrev(TKey fromNodeKey)
+        public void addPrev(TKey fromNodeKey, double weight)
         {
-            m_prevNodes.add(fromNodeKey);
+            m_prevNodes.put(fromNodeKey, weight);
         }
 
         public Iterable<TKey> nextNodes()
         {
-            return m_nextNodes;
+            return m_nextNodes.keySet();
+        }
+        
+        public double getEdgeWeightTo(TKey next)
+        {
+            return m_nextNodes.get(next);
         }
     }
     
@@ -65,10 +73,15 @@ public class Graph<TNodeKey, TInfo>
     
     public void addEdge(TNodeKey from, TNodeKey to)
     {
+        addEdge(from, to, 0);
+    }
+    
+    public void addEdge(TNodeKey from, TNodeKey to, double weight)
+    {
         Node<TNodeKey, TInfo> fromNode = getOrCreateNode(from);
         Node<TNodeKey, TInfo> toNode = getOrCreateNode(to);
-        fromNode.addNext(to);
-        toNode.addPrev(from);
+        fromNode.addNext(to, weight);
+        toNode.addPrev(from, weight);
     }
     
     public TInfo getNodeInfo(TNodeKey nodeKey)
@@ -102,6 +115,61 @@ public class Graph<TNodeKey, TInfo>
     public boolean isReachable(TNodeKey source, TNodeKey target)
     {
         return findPath(source, target) != null;
+    }
+    
+    
+    private static class NodeDistanceComparator<TNodeKey> implements Comparator<Pair<TNodeKey, Double>>
+    {
+        public static final NodeDistanceComparator instance = new NodeDistanceComparator();
+        
+        @Override
+        public int compare(Pair<TNodeKey, Double> o1, Pair<TNodeKey, Double> o2)
+        {
+            return o1.getItem2().compareTo(o2.getItem2());
+        }
+        
+    }
+    
+    public TraverseState<TNodeKey, Double> findPathDijkstra(TNodeKey source, TNodeKey target)
+    {
+        TraverseState<TNodeKey, Double> state = new TraverseState<TNodeKey, Double>(null);
+        PriorityQueue<Pair<TNodeKey, Double>> queue = new PriorityQueue<Pair<TNodeKey, Double>>(NodeDistanceComparator.instance);
+        for (TNodeKey nodeKey : m_nodes.keySet())
+        {
+            state.setNodeValue(nodeKey, Double.MAX_VALUE);
+        }
+        
+        state.setNodeValue(source, 0.0);
+        queue.add(new Pair<TNodeKey, Double>(source, 0.0));
+        while (queue.size() > 0)
+        {
+            TNodeKey current = queue.poll().getItem1();
+            Node<TNodeKey, TInfo> node = m_nodes.get(current);
+            state.addVisited(current);
+
+            if (current.equals(target))
+            {
+                break;
+            }
+            
+            double currentDistance = state.getNodeValue(current);
+            
+            for (TNodeKey next : node.nextNodes())
+            {
+                if (state.isVisited(next))
+                    continue;
+                
+                double newDistance = currentDistance + node.getEdgeWeightTo(next);
+                if (state.getNodeValue(next).doubleValue() < newDistance)
+                    continue;
+                
+                state.setNodeValue(next, newDistance);
+                state.saveTransition(current, next);
+                queue.add(new Pair<TNodeKey, Double>(next, newDistance));
+            }
+        }
+        
+        return state;
     }
     
     public ArrayList<TNodeKey> findPath(TNodeKey source, TNodeKey target)
@@ -172,5 +240,21 @@ public class Graph<TNodeKey, TInfo>
             state.saveTransition(currentRoot, next);
         }
         state.aggregate(currentRoot, node.nextNodes());
+    }
+    
+    public static void main(String[] args)
+    {
+        Graph<Integer, String> graph = new Graph<Integer, String>(()->"");
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(2, 3, 1);
+        graph.addEdge(3, 4, 1);
+        graph.addEdge(4, 5, 1);
+        graph.addEdge(1, 3, 1.5);
+        graph.addEdge(3, 5, 0.5);
+        TraverseState<Integer, Double> state = graph.findPathDijkstra(1, null);
+        for (Integer nodeKey : graph.m_nodes.keySet())
+        {
+            System.out.println("node: " + nodeKey + " -> " + state.getNodeValue(nodeKey));
+        }
     }
 }
