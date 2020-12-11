@@ -250,7 +250,9 @@ public class Graph<TNodeKey, TInfo>
         graph.addEdge(3, 4, 1);
         graph.addEdge(4, 5, 1);
         graph.addEdge(1, 3, 1.5);
+        graph.addEdge(4, 2, 0.5);
         graph.addEdge(3, 5, 0.5);
+        graph.addEdge(5, 1, 0.5);
         TraverseState<Integer, Double> state = graph.findPathDijkstra(1, null);
         for (Integer nodeKey : graph.m_nodes.keySet())
         {
