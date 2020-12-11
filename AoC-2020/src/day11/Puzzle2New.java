@@ -6,6 +6,7 @@ import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.Generators;
 import common.boards.IntPair;
+import common.boards.Pair;
 import common.queries.Query;
 
 public class Puzzle2New extends PuzzleCommon
@@ -14,20 +15,26 @@ public class Puzzle2New extends PuzzleCommon
     public static void main(String [] args)
         throws Exception
     {
+//        Integer[] data = new Integer[] {1,1,1,2,3,1,1};
+//        for (Integer i : Query.wrapArray(data).takeWhile(i -> i == 1))
+//        {
+//            System.out.println(i);
+//        }
+//        
         new Puzzle2New().solve();
     }
     
+    
     private static Query<IntPair> deltas = Query.wrapArray(
-        new IntPair[] {
-            new IntPair(1,1),
-            new IntPair(1,0),
-            new IntPair(1,-1),
-            new IntPair(0,-1),
-            new IntPair(-1,-1),
-            new IntPair(-1,0),
-            new IntPair(-1,1),
-            new IntPair(0,1),
-        });
+            Pair.of(1,1),
+            Pair.of(1,0),
+            Pair.of(1,-1),
+            Pair.of(0,-1),
+            Pair.of(-1,-1),
+            Pair.of(-1,0),
+            Pair.of(-1,1),
+            Pair.of(0,1)
+        );
 
     
     public void modelStep(Board2D current, Board2D next)
@@ -42,14 +49,25 @@ public class Puzzle2New extends PuzzleCommon
             {
                 int occupiedCount = 0;
                 
-                for (IntPair pair : deltas)
-                {
-                    IntPair p = Query.wrap(Generators.ray(rowIdx, colIdx, pair.getX(), pair.getY(), 105))
+//                for (IntPair pair : deltas)
+//                {
+//                    IntPair p = Query.wrap(Generators.ray(rowIdx, colIdx, pair.getX(), pair.getY(), 105))
+//                        .where(cell -> cell.inRectangle(min, max) && current.getCharAt(cell) != '.')
+//                        .firstOrDefault();
+//                    if (p != null)
+//                    {
+//                        char value = current.getCharAt(p);
+//                        occupiedCount += (value == '#') ? 1 : 0;
+//                    }
+//                }
+                final int r = rowIdx;
+                final int c = colIdx;
+                occupiedCount = Query.wrap(deltas)
+                    .select(delta -> Query.wrap(Generators.ray(r, c, delta.getX(), delta.getY(), 105))
                         .where(cell -> cell.inRectangle(min, max) && current.getCharAt(cell) != '.')
-                        .first();
-                    char value = current.getCharAt(p);
-                    occupiedCount += (value == '#') ? 1 : 0;
-                }
+                        .firstOrDefault())
+                    .whereNotNull()
+                    .count(cell -> current.getCharAt(cell) == '#');
                 
                 char nextState = current.getCharAt(rowIdx,colIdx);
                 switch (nextState)

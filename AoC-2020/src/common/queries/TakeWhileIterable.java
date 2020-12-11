@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-public class FilteringIterable<TSource> implements Iterable<TSource>
+public class TakeWhileIterable<TSource> implements Iterable<TSource>
 {
     private Iterable<TSource> m_source;
     private Predicate<? super TSource> m_predicate;
     
-    public FilteringIterable(Iterable<TSource> source, Predicate<? super TSource> predicate)
+    public TakeWhileIterable(Iterable<TSource> source, Predicate<? super TSource> predicate)
     {
         m_source = source;
         m_predicate = predicate;
@@ -17,16 +17,17 @@ public class FilteringIterable<TSource> implements Iterable<TSource>
     
     public Iterator<TSource> iterator()
     {
-        return new FilteringIterator(m_source.iterator());
+        return new TakeWhileIterator(m_source.iterator());
     }
+
     
-    private class FilteringIterator implements Iterator<TSource>
+    private class TakeWhileIterator implements Iterator<TSource>
     {
         private Iterator<TSource> m_iterator;
         private TSource m_next;
         private boolean m_hasNext = true;
 
-        public FilteringIterator(Iterator<TSource> iterator)
+        public TakeWhileIterator(Iterator<TSource> iterator)
         {
             m_iterator = iterator;
             prefetch();
@@ -35,14 +36,13 @@ public class FilteringIterable<TSource> implements Iterable<TSource>
         private void prefetch()
         {
             m_hasNext = false;
-            while (m_iterator.hasNext())
+            if (m_iterator.hasNext())
             {
                 TSource next = m_iterator.next();
                 if (m_predicate.test(next))
                 {
                     m_next = next;
                     m_hasNext = true;
-                    break;
                 }
             }
         }
