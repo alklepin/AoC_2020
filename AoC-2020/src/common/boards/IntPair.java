@@ -33,6 +33,16 @@ public class IntPair
         return new IntPair(m_x + other.m_x, m_y + other.m_y);
     }
 
+    public IntPair minus(IntPair other)
+    {
+        return new IntPair(m_x - other.m_x, m_y - other.m_y);
+    }
+
+    public IntPair mult(int number)
+    {
+        return new IntPair(m_x * number, m_y * number);
+    }
+
     @Override
     public int hashCode()
     {
@@ -72,4 +82,12 @@ public class IntPair
         }
         return true;
     }
+
+    @Override
+    public String toString()
+    {
+        return "IntPair [m_x=" + m_x + ", m_y=" + m_y + "]";
+    }
+
+    
 }
