@@ -1,4 +1,4 @@
-package common;
+package common.geometry;
 
 public class Vect2I
 {

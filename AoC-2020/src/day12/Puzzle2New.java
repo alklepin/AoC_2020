@@ -1,10 +1,10 @@
 package day12;
-import static common.Vect2I.vector;
+import static common.geometry.Vect2I.vector;
 
 import java.util.ArrayList;
 
 import common.PuzzleCommon;
-import common.Vect2I;
+import common.geometry.Vect2I;
 
 public class Puzzle2New extends PuzzleCommon
 {

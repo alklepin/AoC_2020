@@ -1,9 +1,14 @@
-package common;
+package common.geometry;
 
 public class Vect2D
 {
-    private double m_x;
-    private double m_y;
+    private final double m_x;
+    private final double m_y;
+    
+    public static Vect2D vector(double x, double y)
+    {
+        return new Vect2D(x, y);
+    }
     
     public Vect2D(double x, double y)
     {
@@ -15,17 +20,10 @@ public class Vect2D
     {
         return m_x;
     }
-    public void setX(int x)
-    {
-        this.m_x = x;
-    }
+
     public double getY()
     {
         return m_y;
-    }
-    public void setY(int y)
-    {
-        this.m_y = y;
     }
     
     public Vect2D add(Vect2D other)
@@ -38,14 +36,24 @@ public class Vect2D
         return new Vect2D(m_x - other.m_x, m_y - other.m_y);
     }
 
-    public Vect2D mult(int number)
+    public Vect2D mult(double value)
     {
-        return new Vect2D(m_x * number, m_y * number);
+        return new Vect2D(m_x * value, m_y * value);
+    }
+
+    public Vect2D divideBy(double value)
+    {
+        return new Vect2D(m_x / value, m_y / value);
     }
 
     public double scalarMult(Vect2D other)
     {
         return m_x * other.m_x +  m_y * other.m_y;
+    }
+
+    public double vectorMult(Vect2D other)
+    {
+        return m_x * other.m_y -  m_y * other.m_x;
     }
     
     public Vect2D rotateLeft()
@@ -118,6 +126,7 @@ public class Vect2D
     {
         return "(x: " + m_x + ", y: " + m_y + ")";
     }
+
 
     
 }
