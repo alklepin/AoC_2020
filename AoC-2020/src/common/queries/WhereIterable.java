@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-public class FilteringIterable<TSource> implements Iterable<TSource>
+public class WhereIterable<TSource> implements Iterable<TSource>
 {
     private Iterable<TSource> m_source;
     private Predicate<? super TSource> m_predicate;
     
-    public FilteringIterable(Iterable<TSource> source, Predicate<? super TSource> predicate)
+    public WhereIterable(Iterable<TSource> source, Predicate<? super TSource> predicate)
     {
         m_source = source;
         m_predicate = predicate;

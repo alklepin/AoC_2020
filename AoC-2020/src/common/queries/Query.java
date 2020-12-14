@@ -27,24 +27,24 @@ public class Query<T> implements Iterable<T>
         return new Query<Type>(source);
     }
     
-//    public static <Type> Query<Type> wrapArray(Type[] array)
-//    {
-//        return new Query<Type>(Arrays.asList(array));
-//    }
-
-    public static <Type> Query<Type> wrapArray(Type... array)
+    public static <Type> Query<Type> wrap(Type... array)
     {
         return new Query<Type>(Arrays.asList(array));
     }
     
     public <TTarget> Query<TTarget> select(Converter<? super T, ? extends TTarget> converter)
     {
-        return new Query<TTarget>(new ConvertingIterable<T, TTarget>(m_source, converter));
+        return new Query<TTarget>(new SelectIterable<T, TTarget>(m_source, converter));
+    }
+    
+    public <TTarget> Query<TTarget> selectMany(Converter<? super T, Iterable<? extends TTarget>> converter)
+    {
+        return new Query<TTarget>(new SelectManyIterable<T, TTarget>(m_source, converter));
     }
     
     public Query<T> where(Predicate<? super T> predicate)
     {
-        return new Query<T>(new FilteringIterable<T>(m_source, predicate));
+        return new Query<T>(new WhereIterable<T>(m_source, predicate));
     }
     
     public Query<T> skipWhile(Predicate<? super T> predicate)
@@ -59,7 +59,7 @@ public class Query<T> implements Iterable<T>
     
     public Query<T> whereNotNull()
     {
-        return new Query<T>(new FilteringIterable<T>(m_source, e -> e != null));
+        return new Query<T>(new WhereIterable<T>(m_source, e -> e != null));
     }
     
     public ArrayList<T> toList()

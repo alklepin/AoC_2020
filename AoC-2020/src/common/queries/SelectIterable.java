@@ -2,12 +2,12 @@ package common.queries;
 
 import java.util.Iterator;
 
-public class ConvertingIterable<TSource, TTarget> implements Iterable<TTarget>
+public class SelectIterable<TSource, TTarget> implements Iterable<TTarget>
 {
     private Iterable<TSource> m_source;
     private Converter<? super TSource, ? extends TTarget> m_converter;
     
-    public ConvertingIterable(Iterable<TSource> source, Converter<? super TSource, ? extends TTarget> converter)
+    public SelectIterable(Iterable<TSource> source, Converter<? super TSource, ? extends TTarget> converter)
     {
         m_source = source;
         m_converter = converter;

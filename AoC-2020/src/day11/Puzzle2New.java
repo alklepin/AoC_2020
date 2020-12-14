@@ -25,7 +25,7 @@ public class Puzzle2New extends PuzzleCommon
     }
     
     
-    private static Query<IntPair> deltas = Query.wrapArray(
+    private static Query<IntPair> deltas = Query.wrap(
             Pair.of(1,1),
             Pair.of(1,0),
             Pair.of(1,-1),

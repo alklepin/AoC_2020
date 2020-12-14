@@ -88,7 +88,7 @@ public class Generators
         @Override
         public Iterator<IntPair> iterator()
         {
-            return Query.wrapArray(
+            return Query.wrap(
                 new IntPair[] {
                     new IntPair(1,1),
                     new IntPair(1,0),
