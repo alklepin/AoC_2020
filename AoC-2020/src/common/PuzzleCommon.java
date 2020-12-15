@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -227,5 +228,14 @@ public class PuzzleCommon
     public static ArrayList<Character> toListOfChars(String line)
     {
         return Convert.toListOfChars(line);
+    }
+    
+    public static <K,V> V getOrDefault(Map<K,V> map, K key, V defaultValue)
+    {
+        V result = map.get(key);
+        if (result != null)
+            return result;
+        else
+            return defaultValue;
     }
 }
