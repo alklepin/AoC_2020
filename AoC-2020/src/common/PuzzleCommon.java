@@ -166,6 +166,11 @@ public class PuzzleCommon
             return defValue;
         }
     }
+
+    public static int parseInt(String value)
+    {
+        return Integer.parseInt(value);
+    }
     
     public static boolean fitsRange(String value, int rangeStart, int rangeEnd)
     {

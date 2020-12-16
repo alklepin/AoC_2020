@@ -22,6 +22,11 @@ public class Query<T> implements Iterable<T>
         return m_source.iterator();
     }
 
+    public static Query<Integer> range(int start, int count)
+    {
+        return new Query<Integer>(new RangeIterable(start, count));
+    }
+
     public static <Type> Query<Type> wrap(Iterable<Type> source)
     {
         return new Query<Type>(source);
@@ -47,6 +52,16 @@ public class Query<T> implements Iterable<T>
         return new Query<T>(new WhereIterable<T>(m_source, predicate));
     }
     
+    public Query<T> skip(int itemsToSkip)
+    {
+        return new Query<T>(new SkipIterable<T>(m_source, itemsToSkip));
+    }
+    
+    public Query<T> take(int itemsToTake)
+    {
+        return new Query<T>(new TakeIterable<T>(m_source, itemsToTake));
+    }
+
     public Query<T> skipWhile(Predicate<? super T> predicate)
     {
         return new Query<T>(new SkipWhileIterable<T>(m_source, predicate));
@@ -109,6 +124,26 @@ public class Query<T> implements Iterable<T>
         if (iter.hasNext())
             return iterator().next();
         return null;
+    }
+    
+    public boolean any(Predicate<? super T> condition)
+    {
+        for (T element : this)
+        {
+            if (condition.test(element))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean all(Predicate<? super T> condition)
+    {
+        for (T element : this)
+        {
+            if (!condition.test(element))
+                return false;
+        }
+        return true;
     }
     
 //    private Iterable<T> unwrap()
