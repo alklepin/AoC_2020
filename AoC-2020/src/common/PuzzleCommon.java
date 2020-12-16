@@ -100,6 +100,11 @@ public class PuzzleCommon
             return lines.iterator();
         }
 
+        public String get(int pos)
+        {
+            return lines.get(pos);
+        }
+        
         public int size()
         {
             return lines.size();
