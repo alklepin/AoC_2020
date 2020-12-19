@@ -1,0 +1,40 @@
+﻿2 3 | 3 2: b -> false
+4 4 | 5 5: b -> false
+4 5 | 5 4: b -> false
+2 3 | 3 2: ba -> false
+4 4 | 5 5: ba -> false
+4 5 | 5 4: ba -> false
+2 3 | 3 2: bab -> false
+4 4 | 5 5: bab -> false
+4 5 | 5 4: bab -> false
+2 3 | 3 2: babb -> false
+4 1 5: ababbb -> false
+4 1 5: bababa -> false
+2 3 | 3 2: bb -> false
+4 4 | 5 5: bb -> false
+4 5 | 5 4: bb -> false
+2 3 | 3 2: bbb -> false
+4 4 | 5 5: bbb -> false
+4 5 | 5 4: bbb -> false
+2 3 | 3 2: bbba -> false
+4 1 5: abbbab -> false
+2 3 | 3 2: a -> false
+4 4 | 5 5: a -> false
+4 5 | 5 4: a -> false
+2 3 | 3 2: aa -> false
+4 4 | 5 5: aa -> false
+4 5 | 5 4: aa -> false
+2 3 | 3 2: aab -> false
+4 4 | 5 5: aab -> false
+4 5 | 5 4: aab -> false
+2 3 | 3 2: aabb -> false
+4 1 5: aaabbb -> false
+2 3 | 3 2: aaa -> false
+4 4 | 5 5: aaa -> false
+4 5 | 5 4: aaa -> false
+2 3 | 3 2: aaab -> false
+4 4 | 5 5: aaab -> false
+4 5 | 5 4: aaab -> false
+2 3 | 3 2: aaabb -> false
+4 1 5: aaaabbb -> false
+0
