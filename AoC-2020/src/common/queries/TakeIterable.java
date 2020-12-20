@@ -2,7 +2,6 @@ package common.queries;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 
 public class TakeIterable<TSource> implements Iterable<TSource>
 {
@@ -24,8 +23,6 @@ public class TakeIterable<TSource> implements Iterable<TSource>
     private static class TakeIterator<TSource> implements Iterator<TSource>
     {
         private Iterator<TSource> m_iterator;
-        private TSource m_next;
-        private boolean m_hasNext = true;
         private int m_itemsToTake;
 
         public TakeIterator(Iterator<TSource> iterator, int itemsToTake)

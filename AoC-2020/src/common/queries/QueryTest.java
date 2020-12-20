@@ -1,7 +1,5 @@
 package common.queries;
 
-import common.queries.YieldIterable.Code;
-
 public class QueryTest
 {
     public static void main(String[] args)
@@ -46,7 +44,7 @@ public class QueryTest
                 for (int i = 2; i <= upBound; i++)
                 {
                     if (value % i == 0)
-                        yield(i);
+                        doYield(i);
                 }
             }
         };
@@ -58,7 +56,7 @@ public class QueryTest
         {
             for (int i = 0; i < 20; i+=5)
             {
-                yield(i);
+                doYield(i);
             }
         }
     }

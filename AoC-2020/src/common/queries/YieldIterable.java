@@ -12,7 +12,7 @@ public abstract class YieldIterable<T> implements Iterable<T>
     
     abstract protected void generate();
     
-    protected void yield(T value)
+    protected void doYield(T value)
     {
         YieldIterator iter = m_iterator.get();
         iter.yield(value);
@@ -35,7 +35,7 @@ public abstract class YieldIterable<T> implements Iterable<T>
         return new YieldIterable<TValue>(){
             protected void generate()
             {
-                code.execute((v) -> yield(v));
+                code.execute((v) -> doYield(v));
             }
         };
     }
