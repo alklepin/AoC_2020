@@ -1,7 +1,9 @@
 package day21;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import common.PuzzleCommon;
 
@@ -14,53 +16,74 @@ public class Puzzle1 extends PuzzleCommon
         new Puzzle1().solve();
     }
     
-    public int processGroup(LinesGroup group)
-    {
-        HashMap<Character, Integer> chars = new HashMap<>();
-        for (String line : group)
-        {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
-        }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
-        {
-            if (v == groupSize)
-            {
-                count++;
-            }
-        }
-        return count;
-    }
-    
     public void solve()
         throws Exception
     {
-//        ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
+        HashSet<String> ingredients = new HashSet<>();
+        HashSet<String> allergens = new HashSet<>();
+        HashMap<String, String> alergToIngr = new HashMap<>();
+        HashMap<String, HashSet<String>> alergToIngrSet = new HashMap<>();
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        ArrayList<String> lines = readAllLines("input1.txt");
+//        ArrayList<String> lines = readAllLines("test.txt");
+        int result = 0;
+        for (String line : lines)
+        {
+            String [] parts = parse("(.+)\\(contains (.+)\\)", line);
+            
+            for (String alerg : parts[2].split(",? "))
+            {
+                allergens.add(alerg);
+                HashSet<String> ingrs = new HashSet<>();
+                for (String ingr : parts[1].split(",? "))
+                {
+                    ingrs.add(ingr);
+                    ingredients.add(ingr);
+                    alergToIngr.put(alerg, ingr);
+                }
+                HashSet<String> knownIngrs = alergToIngrSet.get(alerg);
+                if (knownIngrs == null)
+                {
+                    knownIngrs = ingrs;
+                    alergToIngrSet.put(alerg, knownIngrs);
+                }
+                else
+                {
+                    knownIngrs.retainAll(ingrs);
+                }
+            }
+        }
+        for (String alerg : allergens)
+        {
+            HashSet<String> knownIngrs = alergToIngrSet.get(alerg);
+            System.out.println("Allergen: "+alerg);
+            for (String ingr : knownIngrs)
+            {
+                System.out.println("  -> "+ingr);
+            }
+            
+        }
+
+        HashSet<String> forbiddenIngr = new HashSet<>();
+        forbiddenIngr.addAll(Arrays.asList(
+            "kgbzf", "fllssz", "zcdcdf", "fvvrc", "qpxhfp", "kpsdtv", "dqbjj", "pzmg"));
+        
+
+        result = 0;
+        for (String line : lines)
+        {
+            String [] parts = parse("(.+)\\(contains (.+)\\)", line);
+            
+            for (String ingr : parts[1].split(",? "))
+            {
+                if (!forbiddenIngr.contains(ingr))
+                    result++;
+            }
+        }
+        
+        System.out.println(ingredients.size());
+        System.out.println(allergens.size());
+        System.out.println(result);
         
     }
 }

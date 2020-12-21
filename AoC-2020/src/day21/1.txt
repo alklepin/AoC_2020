@@ -1,0 +1,60 @@
+﻿fllssz,kgbzf,zcdcdf,pzmg,kpsdtv,fvvrc,dqbjj,qpxhfp
+
+dairy -> fllssz
+eggs -> kgbzf
+nuts -> zcdcdf
+peanuts  -> pzmg
+sesame -> kpsdtv
+shellfish ->fvvrc
+soy  -> dqbjj
+wheat  -> qpxhfp
+
+
+
+eggs -> kgbzf
+dairy -> fllssz
+nuts -> zcdcdf
+shellfish ->fvvrc
+wheat  -> qpxhfp
+sesame -> kpsdtv
+soy  -> dqbjj
+peanuts  -> pzmg
+
+
+
+
+
+Allergen: eggs
+//  -> kgbzf
+Allergen: shellfish
+  -> fvvrc
+//  -> kgbzf
+  -> zcdcdf
+//  -> fllssz
+Allergen: nuts
+//  -> kgbzf
+  -> zcdcdf
+//  -> fllssz
+Allergen: wheat
+  -> fvvrc
+//  -> kgbzf
+  -> zcdcdf
+//  -> fllssz
+  -> qpxhfp
+Allergen: sesame
+  -> kpsdtv
+//  -> kgbzf
+  -> zcdcdf
+Allergen: soy
+//  -> kgbzf
+  -> dqbjj
+//  -> fllssz
+Allergen: peanuts
+  -> dqbjj
+  -> pzmg
+Allergen: dairy
+//  -> kgbzf
+//  -> fllssz
+200
+8
+0
