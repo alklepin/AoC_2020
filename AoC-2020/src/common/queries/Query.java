@@ -2,6 +2,7 @@ package common.queries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Spliterators;
 import java.util.function.Predicate;
@@ -14,7 +15,7 @@ public class Query<T> implements Iterable<T>
     
     public Query(Iterable<T> source)
     {
-        m_source = source;
+        m_source = source != null ? source : EmptyIterable.instance();
     }
     
     public Iterator<T> iterator()
@@ -87,6 +88,16 @@ public class Query<T> implements Iterable<T>
         return result;
     }
 
+    public HashSet<T> toSet()
+    {
+        HashSet<T> result = new HashSet<T>();
+        for (T value : this)
+        {
+            result.add(value);
+        }
+        return result;
+    }
+
     public Stream<T> stream()
     {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator(), 0), false);
@@ -145,6 +156,7 @@ public class Query<T> implements Iterable<T>
         }
         return true;
     }
+
     
 //    private Iterable<T> unwrap()
 //    {

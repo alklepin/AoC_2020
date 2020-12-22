@@ -9,9 +9,9 @@ public class EmptyIterator<T> implements Iterator<T>
     private static Iterator st_instance = new EmptyIterator();
     
     @SuppressWarnings("unchecked")
-    public static <T> Iterator<T> instance()
+    public static <TType> Iterator<TType> instance()
     {
-        return (Iterator<T>)st_instance;
+        return (Iterator<TType>)st_instance;
     }
     
     @Override
