@@ -177,6 +177,11 @@ public class PuzzleCommon
         int v = parseInt(value, rangeStart-1);
         return rangeStart <= v && v <= rangeEnd;
     }
+
+    public static boolean fitsRange(int v, int rangeStart, int rangeEnd)
+    {
+        return rangeStart <= v && v <= rangeEnd;
+    }
     
     public static String join(Iterable<String> values, String separator)
     {

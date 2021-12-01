@@ -33,6 +33,7 @@ public class Query<T> implements Iterable<T>
         return new Query<Type>(source);
     }
     
+    @SafeVarargs
     public static <Type> Query<Type> wrap(Type... array)
     {
         return new Query<Type>(Arrays.asList(array));
