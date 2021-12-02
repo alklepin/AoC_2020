@@ -1,4 +1,4 @@
-package day;
+package day02;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,14 +55,37 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
-        
-//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+        int result = 0;
+        long pos = 0;
+        long depth = 0;
+        for (String line : lines)
+        {
+            if (line.trim().length() == 0)
+                break;
+            
+            var parts = line.split(" ");
+            int v = parseInt(parts[1]);
+            switch (parts[0].trim())
+            {
+                case "forward": 
+                {
+                    pos += v;
+                    break;
+                }
+                case "up":
+                {
+                    depth -= v;
+                    break;
+                }
+                case "down":
+                {
+                    depth += v;
+                    break;
+                }
+            }
+        }
+        System.out.println(pos * depth);
         
     }
 }

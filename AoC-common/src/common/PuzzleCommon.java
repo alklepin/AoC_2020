@@ -48,7 +48,19 @@ public class PuzzleCommon
         
     }
     
+    public ArrayList<String> readAllLinesNonEmpty(String localFile)
+        throws IOException
+    {
+        return readAllLines(localFile, true);
+    }
+    
     public ArrayList<String> readAllLines(String localFile)
+        throws IOException
+    {
+        return readAllLines(localFile, false);
+    }
+    
+    public ArrayList<String> readAllLines(String localFile, boolean skipEmpty)
         throws IOException
     {
         ArrayList<String> lines = new ArrayList<>();
@@ -58,7 +70,9 @@ public class PuzzleCommon
             {
                 while (scanner.hasNextLine())
                 {
-                    lines.add(scanner.nextLine().trim());
+                    var line = scanner.nextLine().trim();
+                    if (!skipEmpty || line.length() > 0)
+                    lines.add(line);
                 }
             }
         }
