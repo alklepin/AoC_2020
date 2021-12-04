@@ -3,6 +3,8 @@ package common.boards;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import common.queries.Sequence;
+
 public class Board2D
     implements Cloneable
 {
@@ -30,6 +32,11 @@ public class Board2D
     public int getAt(int row, int col)
     {
         return m_data[row][col];
+    }
+    
+    public void setAt(int row, int col, int data)
+    {
+        m_data[row][col] = data;
     }
 
     public char getCharAt(int row, int col)
@@ -65,6 +72,16 @@ public class Board2D
         {
             rowData[i] = data.charAt(i);
         }
+    }
+    
+    public Iterable<Integer> rowInts(int row)
+    {
+        return Sequence.of(0, m_width, i -> m_data[row][i]);
+    }
+
+    public Iterable<Integer> colInts(int col)
+    {
+        return Sequence.of(0, m_width, i -> m_data[i][col]);
     }
     
     public void printAsInts(PrintStream ps)
