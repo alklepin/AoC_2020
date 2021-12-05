@@ -1,5 +1,7 @@
 package common.boards;
 
+import common.geometry.Vect2D;
+
 public class IntPair
 {
     private int m_x;
@@ -9,6 +11,12 @@ public class IntPair
     {
         m_x = x;
         m_y = y;
+    }
+
+    public IntPair(Vect2D v)
+    {
+        m_x = (int)v.getX();
+        m_y = (int)v.getY();
     }
     
     public int getX()

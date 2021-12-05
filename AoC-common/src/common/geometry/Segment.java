@@ -40,4 +40,11 @@ public class Segment
             return null;
         return p;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Segment [m_point1=" + m_point1 + ", m_point2=" + m_point2 + "]";
+    }
+    
 }

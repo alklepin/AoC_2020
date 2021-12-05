@@ -3,6 +3,7 @@ package common.boards;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import common.geometry.Vect2D;
 import common.queries.Query;
 
 public class Generators
@@ -29,6 +30,13 @@ public class Generators
         {
             m_start = start;
             m_delta = delta;
+            m_count = count;
+        }
+        
+        public RayGenerator(Vect2D start, Vect2D delta, int count)
+        {
+            m_start = new IntPair(start);
+            m_delta = new IntPair(delta);
             m_count = count;
         }
 
