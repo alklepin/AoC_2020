@@ -3,6 +3,8 @@ package common.boards;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import common.Numbers;
+import common.geometry.SegmentInt;
 import common.geometry.Vect2D;
 import common.queries.Query;
 
@@ -25,14 +27,37 @@ public class Generators
         private IntPair m_start;
         private IntPair m_delta;
         private int m_count;
+        private boolean m_includeStart;
 
         public RayGenerator(IntPair start, IntPair delta, int count)
+        {
+            this(start, delta, count, false);
+        }
+        
+        public RayGenerator(IntPair start, IntPair delta, int count, boolean includeStart)
         {
             m_start = start;
             m_delta = delta;
             m_count = count;
+            m_includeStart = includeStart;
+        }
+
+        public RayGenerator(SegmentInt segment)
+        {
+            this(segment.getPoint1(), segment.getPoint2());
+        }
+
+        public RayGenerator(IntPair from, IntPair to)
+        {
+            m_start = from;
+            var delta = to.minus(from);
+            m_count = Numbers.nod(delta.getX(), delta.getY());
+            m_delta = delta.divideBy(m_count);
+            m_includeStart = true;
         }
         
+        
+        @Deprecated
         public RayGenerator(Vect2D start, Vect2D delta, int count)
         {
             m_start = new IntPair(start);
@@ -52,8 +77,16 @@ public class Generators
 
             public RayIterator()
             {
-                m_toGenerate = m_count;
-                m_current = m_start;
+                if (m_includeStart)
+                {
+                    m_toGenerate = m_count + 1;
+                    m_current = m_start.minus(m_delta);
+                }
+                else
+                {
+                    m_toGenerate = m_count;
+                    m_current = m_start;
+                }
             }
 
             @Override

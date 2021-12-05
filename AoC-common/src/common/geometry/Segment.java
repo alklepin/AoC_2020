@@ -1,9 +1,16 @@
 package common.geometry;
 
+import common.boards.IntPair;
+
 public class Segment
 {
     private final Vect2D m_point1;
     private final Vect2D m_point2;
+
+    public static Segment of(IntPair point1, IntPair point2)
+    {
+        return new Segment(point1.asVector(), point2.asVector());
+    }
     
     public Segment(Vect2D point1, Vect2D point2)
     {
@@ -46,5 +53,6 @@ public class Segment
     {
         return "Segment [m_point1=" + m_point1 + ", m_point2=" + m_point2 + "]";
     }
+
     
 }

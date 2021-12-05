@@ -28,7 +28,7 @@ public class Puzzle1 extends PuzzleCommon
             for (var j = 0; j < numbers.length; j++)
             {
                 var num = parseInt(numbers[j]);
-                board.setAt(i, j, num);
+                board.setAtRC(i, j, num);
                 cells.put(num, new IntPair(i, j));
             }
             i++;
@@ -45,7 +45,7 @@ public class Puzzle1 extends PuzzleCommon
             var cell  = cells.get(num);
             if(cell != null)
             {
-                boardUsed.setAt(cell.getX(), cell.getY(), 1);
+                boardUsed.setAtRC(cell.getX(), cell.getY(), 1);
                 
                 rowUsed[cell.getX()]++;
                 colUsed[cell.getY()]++;
@@ -57,9 +57,9 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         for (int col = 0; col < 5; col++)
                         {
-                            if (boardUsed.getAt(row, col) == 0)
+                            if (boardUsed.getAtRC(row, col) == 0)
                             {
-                                score += board.getAt(row, col);
+                                score += board.getAtRC(row, col);
                             }
                         }
                     }

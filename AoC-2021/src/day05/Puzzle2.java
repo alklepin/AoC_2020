@@ -3,12 +3,15 @@ package day05;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import common.IntValue;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.Generators;
 import common.boards.Generators.RayGenerator;
+import common.boards.Pair;
 import common.geometry.Line;
 import common.geometry.Segment;
+import common.geometry.SegmentInt;
 import common.geometry.Vect2D;
 
 public class Puzzle2 extends PuzzleCommon
@@ -63,16 +66,16 @@ public class Puzzle2 extends PuzzleCommon
         
 //        ArrayList<String> lines = readAllLines("input1.txt");
         
-        ArrayList<Segment> segments = new ArrayList<>();
+        ArrayList<SegmentInt> segments = new ArrayList<>();
         
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
         int result = 0;
         for (String line : lines)
         {
             var parsed = parse("(\\d+),(\\d+) -> (\\d+),(\\d+)", line);
-            var start = new Vect2D(parseInt(parsed[1]), parseInt(parsed[2]));
-            var end = new Vect2D(parseInt(parsed[3]), parseInt(parsed[4]));
-            var segment = new Segment(start, end);
+            var start = Pair.of(parseInt(parsed[1]), parseInt(parsed[2]));
+            var end = Pair.of(parseInt(parsed[3]), parseInt(parsed[4]));
+            var segment = new SegmentInt(start, end);
             segments.add(segment);
             System.out.println(segment);
         }
@@ -82,43 +85,19 @@ public class Puzzle2 extends PuzzleCommon
 //        Board2D board = new Board2D(10,10);
         for (var segment : segments)
         {
-            var start = segment.getPoint1();
-            var end = segment.getPoint2();
-            var delta = end.minus(start);
+            for (var point : new RayGenerator(segment))
             {
-                var count = board.getAt((int)start.getY(), (int)start.getX());
+                var count = board.getAtXY(point);
                 count++;
                 if (count > maxCount)
                 {
                     maxCount++;
                 }
-                board.setAt((int)start.getY(), (int)start.getX(), count);
-            }
-            var length = (int)Math.max(Math.abs(delta.getX()), Math.abs(delta.getY()));
-            for (var point : new RayGenerator(start, delta.divideBy(length), length))
-            {
-                var count = board.getAt(point.getY(), point.getX());
-                count++;
-                if (count > maxCount)
-                {
-                    maxCount++;
-                }
-                board.setAt(point.getY(), point.getX(), count);
+                board.setAtXY(point, count);
             }
         }
-      board.printAsInts(System.out);
-      System.out.println();
         
-        for (int x = 0; x < board.getWidth(); x++)
-        {
-            for (var y = 0; y < board.getHeigth(); y++)
-            {
-                var count = board.getAt(x, y);
-//                if (count == maxCount)
-                if (count > 1)
-                    result++;
-            }
-        }
+        result = board.countCells(v -> v > 1);
         
         System.out.println(maxCount);
         System.out.println(result);

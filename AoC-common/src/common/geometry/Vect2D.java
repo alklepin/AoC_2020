@@ -1,5 +1,7 @@
 package common.geometry;
 
+import common.boards.IntPair;
+
 public class Vect2D
 {
     private final double m_x;
@@ -24,6 +26,11 @@ public class Vect2D
     public double getY()
     {
         return m_y;
+    }
+
+    public IntPair asIntPair()
+    {
+        return new IntPair((int)Math.round(m_x), (int)Math.round(m_y));
     }
     
     public Vect2D add(Vect2D other)

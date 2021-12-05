@@ -6,6 +6,11 @@ public class IntPair
 {
     private int m_x;
     private int m_y;
+
+    public Vect2D asVector()
+    {
+        return new Vect2D(m_x, m_y);
+    }
     
     public IntPair(int x, int y)
     {
@@ -23,10 +28,12 @@ public class IntPair
     {
         return m_x;
     }
+    
     public void setX(int x)
     {
         this.m_x = x;
     }
+    
     public int getY()
     {
         return m_y;
@@ -49,6 +56,17 @@ public class IntPair
     public IntPair mult(int number)
     {
         return new IntPair(m_x * number, m_y * number);
+    }
+
+    public IntPair divideBy(int number)
+    {
+        return new IntPair(m_x / number, m_y / number);
+    }
+    
+    
+    public int lengthL1()
+    {
+        return Math.max(Math.abs(m_x), Math.abs(m_y));
     }
 
     @Override
@@ -97,5 +115,4 @@ public class IntPair
         return "IntPair [m_x=" + m_x + ", m_y=" + m_y + "]";
     }
 
-    
 }

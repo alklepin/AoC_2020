@@ -2,6 +2,8 @@ package common.boards;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 
 import common.queries.Sequence;
 
@@ -29,16 +31,36 @@ public class Board2D
         return m_heigth;
     }
 
-    public int getAt(int row, int col)
+    public int getAtRC(int row, int col)
     {
         return m_data[row][col];
     }
     
-    public void setAt(int row, int col, int data)
+    public void setAtRC(int row, int col, int data)
     {
         m_data[row][col] = data;
     }
 
+    public int getAtXY(int x, int y)
+    {
+        return m_data[y][x];
+    }
+    
+    public void setAtXY(int x, int y, int data)
+    {
+        m_data[y][x] = data;
+    }
+
+    public int getAtXY(IntPair cell)
+    {
+        return getAtXY(cell.getX(), cell.getY());
+    }
+    
+    public void setAtXY(IntPair cell, int data)
+    {
+        setAtXY(cell.getX(), cell.getY(), data);
+    }
+    
     public char getCharAt(int row, int col)
     {
         return (char)m_data[row][col];
@@ -83,6 +105,43 @@ public class Board2D
     {
         return Sequence.of(0, m_width, i -> m_data[i][col]);
     }
+    
+    public void forEachCell(IntConsumer action)
+    {
+        for (int row = 0; row < m_heigth; row++)
+        {
+            var rowData = m_data[row];
+            for (int col = 0; col < m_width; col++)
+            {
+                action.accept(rowData[col]);
+            }
+        }
+    }
+    
+    public void setAll(int value)
+    {
+        for (int row = 0; row < m_heigth; row++)
+        {
+            var rowData = m_data[row];
+            for (int col = 0; col < m_width; col++)
+            {
+                rowData[col] = value;
+            }
+        }
+    }
+
+    public void setAll(char value)
+    {
+        for (int row = 0; row < m_heigth; row++)
+        {
+            var rowData = m_data[row];
+            for (int col = 0; col < m_width; col++)
+            {
+                rowData[col] = value;
+            }
+        }
+    }
+    
     
     public void printAsInts(PrintStream ps)
     {
@@ -182,6 +241,22 @@ public class Board2D
             for (int colIdx = 0; colIdx < width; colIdx++)
             {
                 if (m_data[rowIdx][colIdx] == value)
+                    result++;
+            }
+        }
+        return result;
+    }
+
+    public int countCells(IntPredicate condition)
+    {
+        int height = m_heigth;
+        int width = m_width;
+        int result = 0;
+        for (int rowIdx = 0; rowIdx < height; rowIdx++)
+        {
+            for (int colIdx = 0; colIdx < width; colIdx++)
+            {
+                if (condition.test(m_data[rowIdx][colIdx]))
                     result++;
             }
         }

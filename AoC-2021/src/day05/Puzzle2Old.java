@@ -11,13 +11,13 @@ import common.geometry.Line;
 import common.geometry.Segment;
 import common.geometry.Vect2D;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2Old extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2Old().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -85,31 +85,25 @@ public class Puzzle1 extends PuzzleCommon
             var start = segment.getPoint1();
             var end = segment.getPoint2();
             var delta = end.minus(start);
-            if (Math.abs(delta.getX()) < 0.5 || Math.abs(delta.getY()) < 0.5)
             {
+                var count = board.getAtRC((int)start.getY(), (int)start.getX());
+                count++;
+                if (count > maxCount)
                 {
-                    var count = board.getAtRC((int)start.getY(), (int)start.getX());
-                    count++;
-                    if (count > maxCount)
-                    {
-                        maxCount++;
-                    }
-                    board.setAtRC((int)start.getY(), (int)start.getX(), count);
+                    maxCount++;
                 }
-                for (var point : new RayGenerator(start, delta.divideBy(delta.length()), (int)delta.length()))
-                {
-                    var count = board.getAtRC(point.getY(), point.getX());
-                    count++;
-                    if (count > maxCount)
-                    {
-                        maxCount++;
-                    }
-                    board.setAtRC(point.getY(), point.getX(), count);
-                }
+                board.setAtRC((int)start.getY(), (int)start.getX(), count);
             }
-            else
+            var length = (int)Math.max(Math.abs(delta.getX()), Math.abs(delta.getY()));
+            for (var point : new RayGenerator(start, delta.divideBy(length), length))
             {
-                System.out.println("Skip: "+segment);
+                var count = board.getAtRC(point.getY(), point.getX());
+                count++;
+                if (count > maxCount)
+                {
+                    maxCount++;
+                }
+                board.setAtRC(point.getY(), point.getX(), count);
             }
         }
       board.printAsInts(System.out);
