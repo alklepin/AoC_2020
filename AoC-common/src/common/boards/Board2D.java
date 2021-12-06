@@ -311,4 +311,32 @@ public class Board2D
         }
         System.out.println("==========================================");
     }
+
+    public static void printArray(int [][] data)
+    {
+        System.out.println("==========================================");
+        for (int rowIdx = 0; rowIdx < data.length; rowIdx++)
+        {
+            for (int colIdx = 0; colIdx < data.length; colIdx++)
+            {
+                System.out.printf("%4s, ", data[rowIdx][colIdx]);
+            }
+            System.out.println();
+        }
+        System.out.println("==========================================");
+    }
+
+    public static void printArray(long [][] data)
+    {
+        System.out.println("==========================================");
+        for (int rowIdx = 0; rowIdx < data.length; rowIdx++)
+        {
+            for (int colIdx = 0; colIdx < data[rowIdx].length; colIdx++)
+            {
+                System.out.printf("%8s, ", data[rowIdx][colIdx]);
+            }
+            System.out.println();
+        }
+        System.out.println("==========================================");
+    }
 }
