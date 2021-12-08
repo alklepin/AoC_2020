@@ -1,0 +1,73 @@
+﻿ae, ace, abef, abcfg, abceg, bcdeg, abcefg, abcdfg, acdefg, abcdefg        e, d, b
+
+a -> c
+b -> f
+d -> b
+c -> e
+f -> a
+
+
+6 - abcdfg
+2 - bcdeg
+bf -> af
+abcdf -> abcef
+
+ cccc
+f    b
+f    b
+ ....
+.    a
+.    a
+ .... 
+
+  0:      1:      2:      3:      4:
+ aaaa    ....    aaaa    aaaa    ....
+b    c  .    c  .    c  .    c  b    c
+b    c  .    c  .    c  .    c  b    c
+ ....    ....    dddd    dddd    dddd
+e    f  .    f  e    .  .    f  .    f
+e    f  .    f  e    .  .    f  .    f
+ gggg    ....    gggg    gggg    ....
+
+  5:      6:      7:      8:      9:
+ aaaa    aaaa    aaaa    aaaa    aaaa
+b    .  b    .  .    c  b    c  b    c
+b    .  b    .  .    c  b    c  b    c
+ dddd    dddd    ....    dddd    dddd
+.    f  e    f  .    f  e    f  .    f
+.    f  e    f  .    f  e    f  .    f
+ gggg    gggg    ....    gggg    gggg
+
+   0:      1:      2:      3:      4:
+ aaaa    ....    aaaa    aaaa    ....
+b    c  .    c  .    c  .    c  b    c
+b    c  .    c  .    c  .    c  b    c
+ ....    ....    dddd    dddd    dddd
+e    f  .    f  e    .  .    f  .    f
+e    f  .    f  e    .  .    f  .    f
+ gggg    ....    gggg    gggg    ....
+
+  5:      6:      7:      8:      9:
+ aaaa    aaaa    aaaa    aaaa    aaaa
+b    .  b    .  .    c  b    c  b    c
+b    .  b    .  .    c  b    c  b    c
+ dddd    dddd    ....    dddd    dddd
+.    f  e    f  .    f  e    f  .    f
+.    f  e    f  .    f  e    f  .    f
+ gggg    gggg    ....    gggg    gggg
+
+ aa
+b  c
+b  c
+ dd
+e  f
+e  f
+ gg
+
+length 2 -> one
+length 3 -> seven
+length 4 -> 4
+length 7 -> 8
+
+length 3 - length 2 -> segment a
+length 7 - no info
