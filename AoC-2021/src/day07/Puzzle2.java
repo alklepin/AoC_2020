@@ -73,7 +73,7 @@ public class Puzzle2 extends PuzzleCommon
         {
             sum += v;
         }
-        target = (int)Math.round(1.0 * sum / values.size())-2;
+        target = (int)Math.round(1.0 * sum / values.size());
         var min = Integer.MAX_VALUE;
         var bestPos = 0;
         for (int t = target - 2; t <= target + 2; t++)
