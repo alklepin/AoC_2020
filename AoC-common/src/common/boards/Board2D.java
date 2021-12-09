@@ -1,10 +1,16 @@
 package common.boards;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 
+import common.boards.Generators.Neighbours4Generator;
+import common.queries.Query;
 import common.queries.Sequence;
 
 public class Board2D
@@ -35,10 +41,20 @@ public class Board2D
     {
         return m_data[row][col];
     }
+
+    public int getAtRC(IntPair cell)
+    {
+        return getAtRC(cell.getX(), cell.getY());
+    }
     
     public void setAtRC(int row, int col, int data)
     {
         m_data[row][col] = data;
+    }
+
+    public void setAtRC(IntPair cell, int data)
+    {
+        setAtRC(cell.getX(), cell.getY(), data);
     }
 
     public int getAtXY(int x, int y)
@@ -190,7 +206,94 @@ public class Board2D
         {
             throw new IllegalStateException();
         }
+    }
+    
+    public ArrayList<ArrayList<IntPair>> connectedComponentsXY(ArrayList<IntPair> starts, 
+        Function<IntPair, Iterable<IntPair>> movesGenerator,
+        BiPredicate<IntPair, IntPair> canMoveFromTo)
+    {
+        Board2D used = new Board2D(m_width, m_heigth);
         
+        Iterable<IntPair> startNodes;
+        if (starts != null)
+        {
+            startNodes = starts;
+        }
+        else
+        {
+            startNodes = Query.range(0, m_width).selectMany(
+                row -> Query.range(0, m_heigth).select(col -> Pair.of(row, col)));
+        }
+        
+        ArrayList<ArrayList<IntPair>> result = new ArrayList<>();
+        LinkedList<IntPair> front = new LinkedList<>();
+        for (var current : startNodes)
+        {
+            if (used.getAtXY(current) == 0)
+            {
+                ArrayList<IntPair> component = new ArrayList<>();
+                front.add(current);
+                component.add(current);
+                while ((current = front.poll()) != null)
+                {
+                    for (var next : movesGenerator.apply(current))
+                    {
+                        if (used.getAtXY(next) == 0 && canMoveFromTo.test(current, next))
+                        {
+                            used.setAtXY(next, 1);
+                            front.add(next);
+                            component.add(current);
+                        }
+                    }
+                }
+                result.add(component);
+            }
+        }
+        return result;
+    }
+    
+    public ArrayList<ArrayList<IntPair>> connectedComponentsRC(ArrayList<IntPair> starts,
+        Function<IntPair, Iterable<IntPair>> movesGenerator,
+        BiPredicate<IntPair, IntPair> canMoveFromTo)
+    {
+        Board2D used = new Board2D(m_width, m_heigth);
+        
+        Iterable<IntPair> startNodes;
+        if (starts != null)
+        {
+            startNodes = starts;
+        }
+        else
+        {
+            startNodes = Query.range(0, m_heigth).selectMany(
+                row -> Query.range(0, m_width).select(col -> Pair.of(row, col)));
+        }
+        
+        ArrayList<ArrayList<IntPair>> result = new ArrayList<>();
+        LinkedList<IntPair> front = new LinkedList<>();
+        for (var current : startNodes)
+        {
+            if (used.getAtRC(current) == 0)
+            {
+                ArrayList<IntPair> component = new ArrayList<>();
+                front.add(current);
+                component.add(current);
+                while ((current = front.poll()) != null)
+                {
+                    for (var next : movesGenerator.apply(current))
+                    {
+                        if (used.getAtRC(next) == 0 && canMoveFromTo.test(current, next))
+                        {
+                            used.setAtRC(next, 1);
+                            front.add(next);
+                            component.add(current);
+                        }
+                    }
+                }
+                result.add(component);
+            }
+        }
+        return result;
     }
 
     
@@ -263,6 +366,16 @@ public class Board2D
         return result;
     }
 
+    public static int[][] createArray(int dim1, int dim2)
+    {
+        int[][] result = new int[dim1][];
+        for (int rowIdx = 0; rowIdx < result.length; rowIdx++)
+        {
+            result[rowIdx] = new int[dim2]; 
+        }            
+        return result;
+    }
+    
     public static int[][] duplicateArray(int[][] data)
     {
         int[][] result = data.clone();

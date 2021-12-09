@@ -112,20 +112,20 @@ public class Generators
     }
     
     public static class Neighbours8Generator 
-        implements Iterable<IntPair>
+    implements Iterable<IntPair>
     {
-
+        
         private IntPair m_start;
         private IntPair m_min;
         private IntPair m_max;
-
+        
         public Neighbours8Generator(IntPair intPair, IntPair min, IntPair max)
         {
             m_start = intPair;
             m_min = min;
             m_max = max;
         }
-
+        
         @Override
         public Iterator<IntPair> iterator()
         {
@@ -138,6 +138,37 @@ public class Generators
                     new IntPair(-1,-1),
                     new IntPair(-1,0),
                     new IntPair(-1,1),
+                    new IntPair(0,1),
+                })
+                .select(pair -> pair.add(m_start))
+                .where(pair -> pair.inRectangle(m_min, m_max)).iterator();
+        }
+        
+    }
+    
+    public static class Neighbours4Generator 
+        implements Iterable<IntPair>
+    {
+
+        private IntPair m_start;
+        private IntPair m_min;
+        private IntPair m_max;
+
+        public Neighbours4Generator(IntPair intPair, IntPair min, IntPair max)
+        {
+            m_start = intPair;
+            m_min = min;
+            m_max = max;
+        }
+
+        @Override
+        public Iterator<IntPair> iterator()
+        {
+            return Query.wrap(
+                new IntPair[] {
+                    new IntPair(1,0),
+                    new IntPair(0,-1),
+                    new IntPair(-1,0),
                     new IntPair(0,1),
                 })
                 .select(pair -> pair.add(m_start))
