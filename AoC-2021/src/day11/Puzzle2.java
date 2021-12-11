@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import common.IntValue;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.Generators;
@@ -78,27 +79,21 @@ public class Puzzle2 extends PuzzleCommon
         LinkedList<IntPair> flashes = new LinkedList<IntPair>();
         for (int step = 1; step <= 2000; step++)
         {
-            int count = 0;
-            for (row = 0; row < board.getHeigth(); row++)
-            {
-                for (var col = 0; col < board.getHeigth(); col++)
+            IntValue count = new IntValue(0);
+            board.modifyEachCellRC((cell, value) -> {
+                var newValue = value + 1;
+                if (newValue > 9)
                 {
-                    IntPair current = Pair.of(row,  col);
-                    var newValue = board.getAtRC(current) + 1;
-                    board.setAtRC(current, newValue);
-                    if (newValue > 9)
-                    {
-                        result++;
-                        flashes.add(current);
-                        board.setAtRC(current, 0);
-                        count++;
-                    }
+                    newValue = 0;
+                    flashes.add(cell);
+                    count.inc();
                 }
-            }
+                return newValue;
+            });
+            
             IntPair f = null;
             while ((f = flashes.poll()) != null)
             {
-                board.setAtRC(f, 0);
                 for (var next : board.neighbours8RC(f))
                 {
                     var value = board.getAtRC(next);
@@ -108,22 +103,21 @@ public class Puzzle2 extends PuzzleCommon
                         board.setAtRC(next, newValue);
                         if (newValue > 9)
                         {
-                            result++;
                             flashes.add(next);
                             board.setAtRC(next, 0);
-                            count++;
+                            count.inc();
                         }
                     }
                 }
             }
-            System.out.println("Step: "+step);
-            board.printAsInts(System.out);
-            if (count == 100)
+//            System.out.println("Step: "+step);
+//            board.printAsInts(System.out);
+            if (count.getValue() == 100)
             {
+                result = step;
                 break;
             }
         }
-        
         
         System.out.println(result);
         

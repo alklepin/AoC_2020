@@ -134,6 +134,28 @@ public class Board2D
             }
         }
     }
+
+    @FunctionalInterface
+    public interface CellUpdater
+    {
+        public int update(IntPair cell, int currentValue);
+    }
+    
+    public void modifyEachCellRC(CellUpdater updater)
+    {
+        for (var cell : allCellsRC())
+        {
+            setAtRC(cell, updater.update(cell, getAtRC(cell)));
+        }
+    }
+
+    public void modifyEachCellXY(CellUpdater updater)
+    {
+        for (var cell : allCellsXY())
+        {
+            setAtXY(cell, updater.update(cell, getAtXY(cell)));
+        }
+    }
     
     public void setAll(int value)
     {
@@ -209,6 +231,18 @@ public class Board2D
         }
     }
     
+    public Iterable<IntPair> allCellsRC()
+    {
+        return Query.range(0, m_width).selectMany(
+            row -> Query.range(0, m_heigth).select(col -> Pair.of(row, col)));
+    }
+
+    public Iterable<IntPair> allCellsXY()
+    {
+        return Query.range(0, m_width).selectMany(
+            row -> Query.range(0, m_heigth).select(col -> Pair.of(col, row)));
+    }
+    
     public ArrayList<ArrayList<IntPair>> connectedComponentsXY(ArrayList<IntPair> starts, 
         Function<IntPair, Iterable<IntPair>> movesGenerator,
         BiPredicate<IntPair, IntPair> canMoveFromTo)
@@ -222,8 +256,7 @@ public class Board2D
         }
         else
         {
-            startNodes = Query.range(0, m_width).selectMany(
-                row -> Query.range(0, m_heigth).select(col -> Pair.of(row, col)));
+            startNodes = allCellsXY();
         }
         
         ArrayList<ArrayList<IntPair>> result = new ArrayList<>();
@@ -266,8 +299,7 @@ public class Board2D
         }
         else
         {
-            startNodes = Query.range(0, m_heigth).selectMany(
-                row -> Query.range(0, m_width).select(col -> Pair.of(row, col)));
+            startNodes = allCellsRC();
         }
         
         ArrayList<ArrayList<IntPair>> result = new ArrayList<>();
