@@ -15,6 +15,21 @@ public class Generators
         return new Neighbours8Generator(new IntPair(startX, startY), new IntPair(minX,  minY), new IntPair(maxX, maxY));
     }
     
+    public static Iterable<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
+    {
+        return new Neighbours8Generator(start, min, max);
+    }
+    
+    public static Iterable<IntPair> neighbours4(int startX, int startY, int minX, int minY, int maxX, int maxY)
+    {
+        return new Neighbours4Generator(new IntPair(startX, startY), new IntPair(minX,  minY), new IntPair(maxX, maxY));
+    }
+
+    public static Iterable<IntPair> neighbours4(IntPair start, IntPair min, IntPair max)
+    {
+        return new Neighbours4Generator(start, min, max);
+    }
+    
     public static Iterable<IntPair> ray(int startX, int startY, int dx, int dy, int count)
     {
         return new RayGenerator(new IntPair(startX, startY), new IntPair(dx,  dy), count);

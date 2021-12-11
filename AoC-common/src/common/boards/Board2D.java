@@ -10,6 +10,7 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 
 import common.boards.Generators.Neighbours4Generator;
+import common.boards.Generators.Neighbours8Generator;
 import common.queries.Query;
 import common.queries.Sequence;
 
@@ -451,5 +452,30 @@ public class Board2D
             System.out.println();
         }
         System.out.println("==========================================");
+    }
+
+    public static Iterable<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
+    {
+        return new Neighbours8Generator(start, min, max);
+    }
+    
+    public Iterable<IntPair> neighbours4RC(IntPair start)
+    {
+        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
+    }
+    
+    public Iterable<IntPair> neighbours4XY(IntPair start)
+    {
+        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
+    }
+    
+    public Iterable<IntPair> neighbours8RC(IntPair start)
+    {
+        return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
+    }
+    
+    public Iterable<IntPair> neighbours8XY(IntPair start)
+    {
+        return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
     }
 }

@@ -4,6 +4,8 @@ import common.geometry.Vect2D;
 
 public class IntPair
 {
+    public static IntPair ZERO = Pair.of(0,  0);
+    
     private int m_x;
     private int m_y;
 
