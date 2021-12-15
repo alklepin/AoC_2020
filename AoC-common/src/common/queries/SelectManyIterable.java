@@ -27,23 +27,36 @@ public class SelectManyIterable<TSource, TTarget> implements Iterable<TTarget>
         public SelectManyIterator(Iterator<TSource> iterator)
         {
             m_iterator = iterator;
+            m_currentIterator = EmptyIterator.instance();
         }
 
+        private Iterator<? extends TTarget> fetchNextIterator()
+        {
+            while (m_iterator.hasNext())
+            {
+                var result = m_converter.convert(m_iterator.next()).iterator();
+                if (result.hasNext())
+                    return result;
+            }
+            return EmptyIterator.instance();
+        }
+        
         @Override
         public boolean hasNext()
         {
-            return (m_currentIterator != null && m_currentIterator.hasNext()) || m_iterator.hasNext();
+            if (m_currentIterator.hasNext())
+                return true;
+            m_currentIterator = fetchNextIterator();
+            return m_currentIterator.hasNext();
         }
 
         @Override
         public TTarget next()
         {
-            if (m_currentIterator.hasNext())
+            if (hasNext())
+            {
                 return m_currentIterator.next();
-            while (!m_currentIterator.hasNext() && m_iterator.hasNext())
-                m_currentIterator = m_converter.convert(m_iterator.next()).iterator();
-            if (m_currentIterator.hasNext())
-                return m_currentIterator.next();
+            }
             throw new NoSuchElementException();
         }
     }

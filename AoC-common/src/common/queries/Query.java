@@ -44,6 +44,11 @@ public class Query<T> implements Iterable<T>
         return new Query<TTarget>(new SelectIterable<T, TTarget>(m_source, converter));
     }
     
+    public <TTarget> Query<TTarget> select(ConverterIndexed<? super T, ? extends TTarget> converter)
+    {
+        return new Query<TTarget>(new SelectIndexedIterable<T, TTarget>(m_source, converter));
+    }
+    
     public <TTarget> Query<TTarget> selectMany(Converter<? super T, Iterable<? extends TTarget>> converter)
     {
         return new Query<TTarget>(new SelectManyIterable<T, TTarget>(m_source, converter));
@@ -77,6 +82,18 @@ public class Query<T> implements Iterable<T>
     public Query<T> whereNotNull()
     {
         return new Query<T>(new WhereIterable<T>(m_source, e -> e != null));
+    }
+
+    @SafeVarargs
+    public final Query<T> concat(Query<? extends T>... sources)
+    {
+        return new Query<T>(new ConcatIterable<T>(sources));
+    }
+
+    @SafeVarargs
+    public static <T> Iterable<T> concat(Iterable<? extends T>... sources)
+    {
+        return new ConcatIterable<T>(sources);
     }
     
     public ArrayList<T> toList()
