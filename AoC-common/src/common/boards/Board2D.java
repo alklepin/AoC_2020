@@ -27,6 +27,13 @@ public class Board2D
         m_heigth = heigth;
         m_data = createDataArray(getWidth(), getHeigth());
     }
+    
+    public Board2D(Board2D other)
+    {
+        m_width = other.m_width;
+        m_heigth = other.m_heigth;
+        m_data = duplicateArray(other.m_data);
+    }
 
     public int getWidth()
     {

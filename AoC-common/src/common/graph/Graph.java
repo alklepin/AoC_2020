@@ -160,7 +160,7 @@ public class Graph<TNodeKey, TInfo>
                     continue;
                 
                 double newDistance = currentDistance + node.getEdgeWeightTo(next);
-                if (state.getNodeValue(next).doubleValue() < newDistance)
+                if (state.getNodeValue(next).doubleValue() <= newDistance)
                     continue;
                 
                 state.setNodeValue(next, newDistance);

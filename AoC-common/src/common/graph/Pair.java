@@ -70,5 +70,13 @@ public class Pair<T1, T2>
     {
         return new Pair<T1,T2>(item1, item2);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Pair [m_item1=" + m_item1 + ", m_item2=" + m_item2 + "]";
+    }
+    
+    
     
 }
