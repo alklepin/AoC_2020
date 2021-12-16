@@ -1,0 +1,214 @@
+package day16;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import common.PuzzleCommon;
+
+public class Puzzle1 extends PuzzleCommon
+{
+
+    public static void main(String [] args)
+        throws Exception
+    {
+        new Puzzle1().solve();
+    }
+    
+    public int processGroup(LinesGroup group)
+    {
+        HashMap<Character, Integer> chars = new HashMap<>();
+        for (String line : group)
+        {
+            for (int i = 0; i < line.length(); i++)
+            {
+                char key = line.charAt(i);
+                int count = 0;
+                if (chars.get(key) != null)
+                {
+                    count = chars.get(key);
+                }
+                chars.put(key, count + 1);
+            }
+        }
+        int count = 0;
+        int groupSize = group.size();
+        for (Integer v : chars.values())
+        {
+            if (v == groupSize)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    public static HashMap<Character, String> hexToBinary = new HashMap<>();
+    static
+    {
+        hexToBinary.put('0', "0000");
+        hexToBinary.put('1', "0001");
+        hexToBinary.put('2', "0010");
+        hexToBinary.put('3', "0011");
+        hexToBinary.put('4', "0100");
+        hexToBinary.put('5', "0101");
+        hexToBinary.put('6', "0110");
+        hexToBinary.put('7', "0111");
+        hexToBinary.put('8', "1000");
+        hexToBinary.put('9', "1001");
+        hexToBinary.put('A', "1010");
+        hexToBinary.put('B', "1011");
+        hexToBinary.put('C', "1100");
+        hexToBinary.put('D', "1101");
+        hexToBinary.put('E', "1110");
+        hexToBinary.put('F', "1111");
+    }
+    
+    public void solve()
+        throws Exception
+    {
+//        ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
+//        // System.out.println(groups.size());
+//        
+//        int result = 0;
+//        for (LinesGroup group : groups)
+//        {
+//            result += group.processGroup(this::processGroup);
+//        }
+//        System.out.println(result);
+        
+//        ArrayList<String> lines = readAllLines("input1.txt");
+        
+//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt");
+        int result = 0;
+        var line = lines.get(0);
+        var buffer = new StringBuilder();
+        for (var c : line.toCharArray())
+        {
+            buffer.append(hexToBinary.get(c));
+        }
+        var binaryData = buffer.toString();
+        
+        var packets = Packet.parse(binaryData, 0, false);
+        for (var p : packets)
+        {
+            sum(p);
+        }
+        System.out.println(verSum);
+        
+    }
+    
+    public int verSum = 0;
+    
+    public void sum(Packet packet)
+    {
+        verSum += packet.version;
+        for (var p : packet.packets)
+        {
+            sum(p);
+        }
+    }
+    
+    public static class Packet
+    {
+        public int version;
+        public int type;
+        public int length;
+        public int number;
+        public ArrayList<Packet> packets = new ArrayList<>();
+        
+        
+        public static ArrayList<Packet> parse(String data, int fromPos, boolean singlePacket)
+        {
+            var resultPackets = new ArrayList<Packet>();
+            var currentPos = fromPos;
+            while (currentPos < data.length() -6 && (!singlePacket || resultPackets.size() == 0))
+            {
+                var versionString = data.substring(currentPos, currentPos+3);
+                currentPos += 3;
+                var typeString = data.substring(currentPos, currentPos+3);
+                currentPos += 3;
+                
+                var version = Integer.parseInt(versionString, 2);
+                var type = Integer.parseInt(typeString, 2);
+                if (type == 4)
+                {
+                    var number = 0;
+                    var stop = false;
+                    while (!stop)
+                    {
+                        var segmentType = data.charAt(currentPos);
+                        var segment = data.substring(currentPos + 1, currentPos+5);
+                        currentPos += 5;
+                        number = number * 16 + Integer.parseInt(segment, 2);
+                        if (segmentType == '0')
+                            stop = true;
+                    }
+                    var result = new Packet(version, type, currentPos - fromPos);
+                    result.number = number;
+                    resultPackets.add(result);
+                }
+                else
+                {
+                    var kind = data.charAt(currentPos);
+                    var packets = new ArrayList<Packet>();
+                    currentPos++;
+                    if (kind == '0')
+                    {
+                        var length = Integer.parseInt(data.substring(currentPos, currentPos + 15), 2);
+                        currentPos += 15;
+                        var innerPackets = parse(data.substring(currentPos, currentPos+length), 0, false);
+                        for (var p : innerPackets)
+                        {
+                            currentPos += p.length;
+                            length += p.length;
+                            packets.add(p);
+                        }
+                    }
+                    else
+                    {
+                        var length = 0;
+                        var count = Integer.parseInt(data.substring(currentPos, currentPos + 11), 2);
+                        currentPos += 11;
+                        while (count > 0)
+                        {
+                            var innerPackets = parse(data, currentPos, true);
+                            for (var p : innerPackets)
+                            {
+                                currentPos += p.length;
+                                length += p.length;
+                                packets.add(p);
+                            }
+                            count--;
+                        }
+                    }
+                    var result = new Packet(version, type, currentPos - fromPos);
+                    result.packets = packets;
+                    resultPackets.add(result);
+                }
+                
+            }
+            return resultPackets;
+        }
+
+
+        public Packet(int version, int type, int length)
+        {
+            super();
+            this.version = version;
+            this.type = type;
+            this.length = length;
+        }
+
+
+        @Override
+        public String toString()
+        {
+            return "Packet [version=" + version + ", type=" + type + ", length="
+                + length + ", number=" + number + "]";
+        }
+
+
+        
+    }
+}
