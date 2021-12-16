@@ -1,17 +1,19 @@
 package day16;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import common.PuzzleCommon;
+import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -93,10 +95,9 @@ public class Puzzle1 extends PuzzleCommon
         var packets = Packet.parse(binaryData, 0, false);
         for (var p : packets)
         {
-            sum(p);
+            long l = p.evaluate();
+            System.out.println(l);
         }
-        System.out.println(verSum);
-        
     }
     
     public int verSum = 0;
@@ -115,7 +116,7 @@ public class Puzzle1 extends PuzzleCommon
         public int version;
         public int type;
         public int length;
-        public int number;
+        public long number;
         public ArrayList<Packet> packets = new ArrayList<>();
         
         
@@ -135,7 +136,7 @@ public class Puzzle1 extends PuzzleCommon
                 var type = Integer.parseInt(typeString, 2);
                 if (type == 4)
                 {
-                    var number = 0;
+                    long number = 0;
                     var stop = false;
                     while (!stop)
                     {
@@ -206,7 +207,76 @@ public class Puzzle1 extends PuzzleCommon
             this.type = type;
             this.length = length;
         }
-
+        
+        public long evaluate()
+        {
+            switch (type)
+            {
+                case 0:
+                {
+                    long value = 0;
+                    for (var p : packets)
+                    {
+                        long op = p.evaluate();
+                        System.out.printf("Sum: %s + %s = %s\n", value, op, value + op);
+                        value += op;
+                    }
+                    return value;
+                }
+                case 1:
+                {
+                    long value = 1;
+                    for (var p : packets)
+                    {
+                        long op = p.evaluate();
+                        System.out.printf("Mul: %s * %s = %s\n", value, op, value * op);
+                        value *= op;
+                    }
+                    return value;
+                }
+                case 2:
+                {
+                    long value = Long.MAX_VALUE;
+                    for (var p : packets)
+                    {
+                        value = Math.min(value, p.evaluate());
+                    }
+                    return value;
+                }
+                case 3:
+                {
+                    long value = Long.MIN_VALUE;
+                    for (var p : packets)
+                    {
+                        value = Math.max(value, p.evaluate());
+                    }
+                    return value;
+                }
+                case 4:
+                {
+                    return number;
+                }
+                case 5:
+                {
+                    var v1 = packets.get(0).evaluate();
+                    var v2 = packets.get(1).evaluate();
+                    return v1 > v2 ? 1 : 0;
+                }
+                case 6:
+                {
+                    var v1 = packets.get(0).evaluate();
+                    var v2 = packets.get(1).evaluate();
+                    return v1 < v2 ? 1 : 0;
+                }
+                case 7:
+                {
+                    var v1 = packets.get(0).evaluate();
+                    var v2 = packets.get(1).evaluate();
+                    return v1 == v2 ? 1 : 0;
+                }
+            }
+            throw new IllegalStateException();
+        }
 
         @Override
         public String toString()
