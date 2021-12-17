@@ -117,4 +117,9 @@ public class IntPair
         return "IntPair [m_x=" + m_x + ", m_y=" + m_y + "]";
     }
 
+    public boolean componentLessEq(IntPair next)
+    {
+        return m_x <= next.getX() && m_y <= next.getY();
+    }
+
 }
