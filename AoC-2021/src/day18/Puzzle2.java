@@ -2,16 +2,17 @@ package day18;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -78,8 +79,10 @@ public class Puzzle1 extends PuzzleCommon
 //        System.exit(0);
         
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+//        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt");
         int result = 0;
         ArrayList<Node> numbers = new ArrayList<Node>();
+        HashSet<String> unique = new HashSet<>();
         for (String line : lines)
         {
             var node = parse(line, 0);
@@ -89,13 +92,23 @@ public class Puzzle1 extends PuzzleCommon
 //            System.out.println();
             
         }
-        var sum = numbers.get(0);
-        for (int idx = 1; idx < numbers.size(); idx++)
+        long maxMagnitude = Integer.MIN_VALUE;
+        for (int i1 = 0; i1 < numbers.size(); i1++)
         {
-            sum = sum.add(numbers.get(idx));
+            for (int i2 = 0; i2 < numbers.size(); i2++)
+            {
+//                if (i1 != i2)
+                {
+                    var n1 = numbers.get(i1).duplicate();
+                    var n2 = numbers.get(i2).duplicate();
+                    var res = n1.add(n2);
+                    var m = res.magnitude();
+                    maxMagnitude = Math.max(maxMagnitude, m);
+                }
+            }
         }
 
-        System.out.println(sum.magnitude());
+        System.out.println(maxMagnitude);
         
     }
     
@@ -122,6 +135,7 @@ public class Puzzle1 extends PuzzleCommon
     }
     
     public static class Node
+        implements Cloneable
     {
         Node parent;
         Node left;
@@ -143,6 +157,31 @@ public class Puzzle1 extends PuzzleCommon
             this.right = right;
             this.length = left.length + right.length + 3;
             leaf = false;
+        }
+        
+        public Node duplicate()
+        {
+            try
+            {
+                var result = (Node)super.clone();
+                if (result.left != null)
+                {
+                    result.left = result.left.duplicate();
+                    result.left.parent = result;
+                }
+                if (result.right != null)
+                {
+                    result.right = result.right.duplicate();
+                    result.right.parent = result;
+                }
+                return result;
+            }
+            catch (CloneNotSupportedException ex)
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+                throw new IllegalStateException();
+            }
         }
         
         public void setParent(Node parent)
