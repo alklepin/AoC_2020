@@ -52,6 +52,16 @@ public class IntTriple
     {
         return new IntTriple(m_x * number, m_y * number, m_z * number);
     }
+    
+    public double length()
+    {
+        return Math.sqrt(m_x*(double)m_x + m_y*(double)m_y + m_z*(double)m_z); 
+    }
+
+    public long lengthSquared()
+    {
+        return m_x*(long)m_x + m_y*(long)m_y + m_z*(long)m_z;
+    }
 
     
     
@@ -88,7 +98,8 @@ public class IntTriple
     @Override
     public String toString()
     {
-        return "IntPair [m_x=" + m_x + ", m_y=" + m_y +", m_z=" + m_z + "]";
+//        return "IntPair [m_x=" + m_x + ", m_y=" + m_y +", m_z=" + m_z + "]";
+        return String.format("(%s, %s, %s)", m_x, m_y, m_z);
     }
 
     

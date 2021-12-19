@@ -123,8 +123,34 @@ public class Vect3I
     @Override
     public String toString()
     {
-        return "IntPair [m_x=" + m_x + ", m_y=" + m_y + ", m_z=" + m_z + "]";
+        return String.format("(%s, %s, %s)", m_x, m_y, m_z);
     }
 
+    public static int comparatorXYZ(Vect3I v1, Vect3I v2)
+    {
+        if (v1.m_x < v2.m_x)
+            return -1;
+        if (v1.m_x > v2.m_x)
+            return 1;
+        if (v1.m_y < v2.m_y)
+            return -1;
+        if (v1.m_y > v2.m_y)
+            return 1;
+        if (v1.m_z < v2.m_z)
+            return -1;
+        if (v1.m_z > v2.m_z)
+            return 1;
+        return 0;
+    }
+
+    public Vect3I negate()
+    {
+        return new Vect3I(-m_x, -m_y, -m_z);
+    }
+
+    public int lengthManhattan()
+    {
+        return Math.abs(m_x) + Math.abs(m_y) + Math.abs(m_z);
+    }
     
 }

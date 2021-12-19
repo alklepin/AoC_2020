@@ -132,7 +132,7 @@ public class Graph<TNodeKey, TInfo>
     
     public TraverseState<TNodeKey, Double> findPathDijkstra(TNodeKey source, TNodeKey target)
     {
-        TraverseState<TNodeKey, Double> state = new TraverseState<TNodeKey, Double>(null);
+        TraverseState<TNodeKey, Double> state = new TraverseState<TNodeKey, Double>(source, null);
         PriorityQueue<Pair<TNodeKey, Double>> queue = new PriorityQueue<Pair<TNodeKey, Double>>(NodeDistanceComparator.instance);
         for (TNodeKey nodeKey : m_nodes.keySet())
         {
@@ -213,19 +213,48 @@ public class Graph<TNodeKey, TInfo>
         return result;
     }
 
+    public TraverseState<TNodeKey, Integer> traverseBFS(TNodeKey source)
+    {
+        TraverseState<TNodeKey, Integer> state = new TraverseState<TNodeKey, Integer>(source);
+
+        LinkedList<TNodeKey> queue = new LinkedList<>();
+        state.addVisited(source);
+        state.setNodeValue(source, 0);
+        queue.add(source);
+        while (queue.size() > 0)
+        {
+            TNodeKey current = queue.poll();
+            Node<TNodeKey, TInfo> node = m_nodes.get(current);
+            
+            for (TNodeKey next : node.nextNodes())
+            {
+                if (state.isVisited(next))
+                    continue;
+                
+                state.addVisited(next);
+                state.saveTransition(current, next);
+                state.setNodeValue(next, state.getNodeValue(current) + 1);
+                queue.add(next);
+            }
+        }
+
+        return state;
+    }
+    
     public TraverseState<TNodeKey, Integer> traverseDFS(TNodeKey root)
     {
-        TraverseState<TNodeKey, Integer> state = new TraverseState<TNodeKey, Integer>(null);
+        TraverseState<TNodeKey, Integer> state = new TraverseState<TNodeKey, Integer>(root, null);
         traverseSubTreeDFS(root, state);
         return state;
     }
 
     public <TValue> TraverseState<TNodeKey, TValue> traverseDFS(TNodeKey root, NodeAggregator<TNodeKey, TValue> aggregator)
     {
-        TraverseState<TNodeKey, TValue> state = new TraverseState<TNodeKey, TValue>(aggregator);
+        TraverseState<TNodeKey, TValue> state = new TraverseState<TNodeKey, TValue>(root, aggregator);
         traverseSubTreeDFS(root, state);
         return state;
     }
+
     
     private <TValue> void traverseSubTreeDFS(TNodeKey currentRoot, TraverseState<TNodeKey, TValue> state)
     {

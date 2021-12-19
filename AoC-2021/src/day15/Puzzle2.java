@@ -60,7 +60,7 @@ public class Puzzle2 extends PuzzleCommon
 //        System.out.println(result);
         
 //        ArrayList<String> lines = readAllLines("input1.txt");
-
+        
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
 //        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt");
 //        ArrayList<String> lines = readAllLinesNonEmpty("input3.txt");
@@ -125,7 +125,7 @@ public class Puzzle2 extends PuzzleCommon
         while (!start.equals(cell))
         {
             result += board.getAtRC(cell);
-            cell = path.m_visitedFrom.get(cell);
+            cell = path.visitedFrom(cell);
         }
         
         System.out.println(result);

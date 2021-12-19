@@ -2,19 +2,30 @@ package common.graph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.BiFunction;
 
 public class TraverseState <TNodeKey, TValue>
 {
-    public HashMap<TNodeKey, TValue> m_nodeValues = new HashMap<>();
-    public HashMap<TNodeKey, TNodeKey> m_visitedFrom = new HashMap<>();
-    public HashSet<TNodeKey> m_visited = new HashSet<>();
+    
+    private HashMap<TNodeKey, TValue> m_nodeValues = new HashMap<>();
+    private HashMap<TNodeKey, TNodeKey> m_visitedFrom = new HashMap<>();
+    private HashSet<TNodeKey> m_visited = new HashSet<>();
     private NodeAggregator<TNodeKey, TValue> m_aggregator;
+    private HashSet<TNodeKey> m_leafs = new HashSet<TNodeKey>();
+    private TNodeKey m_source;
 
-    public TraverseState(NodeAggregator<TNodeKey, TValue> aggregator)
+    public TraverseState(TNodeKey source)
     {
-        m_aggregator = aggregator;
+        this(source, null);
     }
     
+    public TraverseState(TNodeKey source, NodeAggregator<TNodeKey, TValue> aggregator)
+    {
+        m_source = source;
+        m_leafs.add(source);
+        m_aggregator = aggregator;
+    }
+
     public void aggregate(TNodeKey node, Iterable<TNodeKey> childNodes)
     {
         if (m_aggregator != null)
@@ -27,6 +38,11 @@ public class TraverseState <TNodeKey, TValue>
     public void setNodeValue(TNodeKey nodeKey, TValue value)
     {
         m_nodeValues.put(nodeKey, value);
+    }
+
+    public void updateNodeValue(TNodeKey nodeKey, BiFunction<? super TNodeKey, ? super TValue, ? extends TValue> updater)
+    {
+        m_nodeValues.compute(nodeKey, updater);
     }
     
     public TValue getNodeValue(TNodeKey nodeKey)
@@ -44,9 +60,25 @@ public class TraverseState <TNodeKey, TValue>
         return m_visited.contains(nodeKey);
     }
     
-    public void saveTransition(TNodeKey currentRoot, TNodeKey next)
+    public TNodeKey visitedFrom(TNodeKey key)
     {
-        m_visitedFrom.put(next, currentRoot);
+        return m_visitedFrom.get(key);
+    }
+    
+    public TNodeKey getSource()
+    {
+        return m_source;
+    }
+    
+    public void saveTransition(TNodeKey current, TNodeKey next)
+    {
+        m_visitedFrom.put(next, current);
+        m_leafs.remove(current);
+        m_leafs.add(next);
     }
 
+    public Iterable<TNodeKey> leafs()
+    {
+        return m_leafs;
+    }
 }

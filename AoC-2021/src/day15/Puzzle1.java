@@ -108,7 +108,7 @@ public class Puzzle1 extends PuzzleCommon
         while (!start.equals(cell))
         {
             result += board.getAtRC(cell);
-            cell = path.m_visitedFrom.get(cell);
+            cell = path.visitedFrom(cell);
         }
         
         System.out.println(result);
