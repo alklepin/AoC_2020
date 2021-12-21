@@ -454,6 +454,22 @@ public class Board2D
         }
         return data;
     }
+
+    public static long[][] createDataArrayLong(int width, int height, int defaultValue)
+    {
+        long[][] data = new long[height][];
+        long [] row = new long[width];
+        if (defaultValue != 0)
+        {
+            Arrays.fill(row, defaultValue);
+        }
+        data[0] = row;
+        for (int rowIdx = 1; rowIdx < height; rowIdx++)
+        {
+            data[rowIdx] = row.clone();
+        }
+        return data;
+    }
     
     public static void printArray(char [][] data)
     {

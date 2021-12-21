@@ -6,4 +6,9 @@ public class Pair
     {
         return new IntPair(a,b);
     }
+
+    public static LongPair of(long a, long b)
+    {
+        return new LongPair(a,b);
+    }
 }
