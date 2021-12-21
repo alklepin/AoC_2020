@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.function.Supplier;
@@ -66,6 +65,16 @@ public class Graph<TNodeKey, TInfo>
         
     }
 
+    public int size()
+    {
+        return m_nodes.size();
+    }
+    
+    public Iterable<TNodeKey> nodes()
+    {
+        return m_nodes.keySet();
+    }
+    
     public void addNode(TNodeKey nodeKey)
     {
         getOrCreateNode(nodeKey);
@@ -88,6 +97,11 @@ public class Graph<TNodeKey, TInfo>
     {
         Node<TNodeKey, TInfo> node = getOrCreateNode(nodeKey);
         return node.getInfo();
+    }
+    
+    private Node<TNodeKey, TInfo> tryGetNode(TNodeKey nodeKey)
+    {
+        return m_nodes.get(nodeKey);
     }
     
     private Node<TNodeKey, TInfo> getOrCreateNode(TNodeKey nodeKey)
@@ -270,6 +284,35 @@ public class Graph<TNodeKey, TInfo>
         }
         state.aggregate(currentRoot, node.nextNodes());
     }
+
+    public int countOutboundEdges(TNodeKey nodeKey)
+    {
+        var node = tryGetNode(nodeKey);
+        if (node != null) 
+        {
+            return node.m_nextNodes.size(); 
+        }
+        return 0;
+    }
+
+    public void removeNode(TNodeKey nodeKey)
+    {
+        var node = tryGetNode(nodeKey);
+        if (node != null) 
+        {
+            m_nodes.remove(nodeKey);
+            for (var nextNodeId : node.m_nextNodes.keySet())
+            {
+                var nextNode = tryGetNode(nextNodeId);
+                nextNode.m_prevNodes.remove(nodeKey);
+            }
+            for (var prevNodeId : node.m_prevNodes.keySet())
+            {
+                var prevNode = tryGetNode(prevNodeId);
+                prevNode.m_nextNodes.remove(nodeKey);
+            }
+        }
+    }
     
     public static void main(String[] args)
     {
@@ -288,4 +331,6 @@ public class Graph<TNodeKey, TInfo>
             System.out.println("node: " + nodeKey + " -> " + state.getNodeValue(nodeKey));
         }
     }
+
+
 }
