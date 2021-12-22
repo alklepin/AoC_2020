@@ -102,5 +102,37 @@ public class IntTriple
         return String.format("(%s, %s, %s)", m_x, m_y, m_z);
     }
 
+    public boolean componentLessEq(IntTriple point1)
+    {
+        return m_x <= point1.m_x 
+            && m_y <= point1.m_y
+            && m_z <= point1.m_z
+            ;
+    }
+    
+    public boolean componentGreaterEq(IntTriple point1)
+    {
+        return m_x >= point1.m_x 
+            && m_y >= point1.m_y
+            && m_z >= point1.m_z
+            ;
+    }
+
+    public IntTriple componentMax(IntTriple point1)
+    {
+        return new IntTriple(Math.max(m_x, point1.m_x),
+            Math.max(m_y, point1.m_y),
+            Math.max(m_z, point1.m_z)
+            );
+    }
+
+    public IntTriple componentMin(IntTriple point1)
+    {
+        return new IntTriple(Math.min(m_x, point1.m_x),
+            Math.min(m_y, point1.m_y),
+            Math.min(m_z, point1.m_z)
+            );
+    }
+
     
 }
