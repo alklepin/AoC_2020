@@ -114,7 +114,8 @@ public class Board2D
     public void setRowAsString(int row, String data)
     {
         int[] rowData = m_data[row];
-        for (int i = 0; i < rowData.length; i++)
+        int length = Math.min(rowData.length, data.length());
+        for (int i = 0; i < length; i++)
         {
             rowData[i] = data.charAt(i);
         }

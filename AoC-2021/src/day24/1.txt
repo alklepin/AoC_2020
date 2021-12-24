@@ -1,0 +1,506 @@
+﻿inp w
+x = 0, y = 0, z = 0, w = 1
+mul x 0
+x = 0, y = 0, z = 0, w = 1
+add x z
+x = 0, y = 0, z = 0, w = 1
+mod x 26
+x = 0, y = 0, z = 0, w = 1
+div z 1
+x = 0, y = 0, z = 0, w = 1
+add x 12
+x = 12, y = 0, z = 0, w = 1
+eql x w
+x = 0, y = 0, z = 0, w = 1
+eql x 0
+x = 1, y = 0, z = 0, w = 1
+mul y 0
+x = 1, y = 0, z = 0, w = 1
+add y 25
+x = 1, y = 25, z = 0, w = 1
+mul y x
+x = 1, y = 25, z = 0, w = 1
+add y 1
+x = 1, y = 26, z = 0, w = 1
+mul z y
+x = 1, y = 26, z = 0, w = 1
+mul y 0
+x = 1, y = 0, z = 0, w = 1
+add y w
+x = 1, y = 1, z = 0, w = 1
+add y 7
+x = 1, y = 8, z = 0, w = 1
+mul y x
+x = 1, y = 8, z = 0, w = 1
+add z y
+x = 1, y = 8, z = 8, w = 1
+inp w
+x = 1, y = 8, z = 8, w = 3
+mul x 0
+x = 0, y = 8, z = 8, w = 3
+add x z
+x = 8, y = 8, z = 8, w = 3
+mod x 26
+x = 8, y = 8, z = 8, w = 3
+div z 1
+x = 8, y = 8, z = 8, w = 3
+add x 13
+x = 21, y = 8, z = 8, w = 3
+eql x w
+x = 0, y = 8, z = 8, w = 3
+eql x 0
+x = 1, y = 8, z = 8, w = 3
+mul y 0
+x = 1, y = 0, z = 8, w = 3
+add y 25
+x = 1, y = 25, z = 8, w = 3
+mul y x
+x = 1, y = 25, z = 8, w = 3
+add y 1
+x = 1, y = 26, z = 8, w = 3
+mul z y
+x = 1, y = 26, z = 208, w = 3
+mul y 0
+x = 1, y = 0, z = 208, w = 3
+add y w
+x = 1, y = 3, z = 208, w = 3
+add y 8
+x = 1, y = 11, z = 208, w = 3
+mul y x
+x = 1, y = 11, z = 208, w = 3
+add z y
+x = 1, y = 11, z = 219, w = 3
+inp w
+x = 1, y = 11, z = 219, w = 5
+mul x 0
+x = 0, y = 11, z = 219, w = 5
+add x z
+x = 219, y = 11, z = 219, w = 5
+mod x 26
+x = 11, y = 11, z = 219, w = 5
+div z 1
+x = 11, y = 11, z = 219, w = 5
+add x 13
+x = 24, y = 11, z = 219, w = 5
+eql x w
+x = 0, y = 11, z = 219, w = 5
+eql x 0
+x = 1, y = 11, z = 219, w = 5
+mul y 0
+x = 1, y = 0, z = 219, w = 5
+add y 25
+x = 1, y = 25, z = 219, w = 5
+mul y x
+x = 1, y = 25, z = 219, w = 5
+add y 1
+x = 1, y = 26, z = 219, w = 5
+mul z y
+x = 1, y = 26, z = 5694, w = 5
+mul y 0
+x = 1, y = 0, z = 5694, w = 5
+add y w
+x = 1, y = 5, z = 5694, w = 5
+add y 10
+x = 1, y = 15, z = 5694, w = 5
+mul y x
+x = 1, y = 15, z = 5694, w = 5
+add z y
+x = 1, y = 15, z = 5709, w = 5
+inp w
+x = 1, y = 15, z = 5709, w = 7
+mul x 0
+x = 0, y = 15, z = 5709, w = 7
+add x z
+x = 5709, y = 15, z = 5709, w = 7
+mod x 26
+x = 15, y = 15, z = 5709, w = 7
+div z 26
+x = 15, y = 15, z = 219, w = 7
+add x -2
+x = 13, y = 15, z = 219, w = 7
+eql x w
+x = 0, y = 15, z = 219, w = 7
+eql x 0
+x = 1, y = 15, z = 219, w = 7
+mul y 0
+x = 1, y = 0, z = 219, w = 7
+add y 25
+x = 1, y = 25, z = 219, w = 7
+mul y x
+x = 1, y = 25, z = 219, w = 7
+add y 1
+x = 1, y = 26, z = 219, w = 7
+mul z y
+x = 1, y = 26, z = 5694, w = 7
+mul y 0
+x = 1, y = 0, z = 5694, w = 7
+add y w
+x = 1, y = 7, z = 5694, w = 7
+add y 4
+x = 1, y = 11, z = 5694, w = 7
+mul y x
+x = 1, y = 11, z = 5694, w = 7
+add z y
+x = 1, y = 11, z = 5705, w = 7
+inp w
+x = 1, y = 11, z = 5705, w = 9
+mul x 0
+x = 0, y = 11, z = 5705, w = 9
+add x z
+x = 5705, y = 11, z = 5705, w = 9
+mod x 26
+x = 11, y = 11, z = 5705, w = 9
+div z 26
+x = 11, y = 11, z = 219, w = 9
+add x -10
+x = 1, y = 11, z = 219, w = 9
+eql x w
+x = 0, y = 11, z = 219, w = 9
+eql x 0
+x = 1, y = 11, z = 219, w = 9
+mul y 0
+x = 1, y = 0, z = 219, w = 9
+add y 25
+x = 1, y = 25, z = 219, w = 9
+mul y x
+x = 1, y = 25, z = 219, w = 9
+add y 1
+x = 1, y = 26, z = 219, w = 9
+mul z y
+x = 1, y = 26, z = 5694, w = 9
+mul y 0
+x = 1, y = 0, z = 5694, w = 9
+add y w
+x = 1, y = 9, z = 5694, w = 9
+add y 4
+x = 1, y = 13, z = 5694, w = 9
+mul y x
+x = 1, y = 13, z = 5694, w = 9
+add z y
+x = 1, y = 13, z = 5707, w = 9
+inp w
+x = 1, y = 13, z = 5707, w = 2
+mul x 0
+x = 0, y = 13, z = 5707, w = 2
+add x z
+x = 5707, y = 13, z = 5707, w = 2
+mod x 26
+x = 13, y = 13, z = 5707, w = 2
+div z 1
+x = 13, y = 13, z = 5707, w = 2
+add x 13
+x = 26, y = 13, z = 5707, w = 2
+eql x w
+x = 0, y = 13, z = 5707, w = 2
+eql x 0
+x = 1, y = 13, z = 5707, w = 2
+mul y 0
+x = 1, y = 0, z = 5707, w = 2
+add y 25
+x = 1, y = 25, z = 5707, w = 2
+mul y x
+x = 1, y = 25, z = 5707, w = 2
+add y 1
+x = 1, y = 26, z = 5707, w = 2
+mul z y
+x = 1, y = 26, z = 148382, w = 2
+mul y 0
+x = 1, y = 0, z = 148382, w = 2
+add y w
+x = 1, y = 2, z = 148382, w = 2
+add y 6
+x = 1, y = 8, z = 148382, w = 2
+mul y x
+x = 1, y = 8, z = 148382, w = 2
+add z y
+x = 1, y = 8, z = 148390, w = 2
+inp w
+x = 1, y = 8, z = 148390, w = 4
+mul x 0
+x = 0, y = 8, z = 148390, w = 4
+add x z
+x = 148390, y = 8, z = 148390, w = 4
+mod x 26
+x = 8, y = 8, z = 148390, w = 4
+div z 26
+x = 8, y = 8, z = 5707, w = 4
+add x -14
+x = -6, y = 8, z = 5707, w = 4
+eql x w
+x = 0, y = 8, z = 5707, w = 4
+eql x 0
+x = 1, y = 8, z = 5707, w = 4
+mul y 0
+x = 1, y = 0, z = 5707, w = 4
+add y 25
+x = 1, y = 25, z = 5707, w = 4
+mul y x
+x = 1, y = 25, z = 5707, w = 4
+add y 1
+x = 1, y = 26, z = 5707, w = 4
+mul z y
+x = 1, y = 26, z = 148382, w = 4
+mul y 0
+x = 1, y = 0, z = 148382, w = 4
+add y w
+x = 1, y = 4, z = 148382, w = 4
+add y 11
+x = 1, y = 15, z = 148382, w = 4
+mul y x
+x = 1, y = 15, z = 148382, w = 4
+add z y
+x = 1, y = 15, z = 148397, w = 4
+inp w
+x = 1, y = 15, z = 148397, w = 6
+mul x 0
+x = 0, y = 15, z = 148397, w = 6
+add x z
+x = 148397, y = 15, z = 148397, w = 6
+mod x 26
+x = 15, y = 15, z = 148397, w = 6
+div z 26
+x = 15, y = 15, z = 5707, w = 6
+add x -5
+x = 10, y = 15, z = 5707, w = 6
+eql x w
+x = 0, y = 15, z = 5707, w = 6
+eql x 0
+x = 1, y = 15, z = 5707, w = 6
+mul y 0
+x = 1, y = 0, z = 5707, w = 6
+add y 25
+x = 1, y = 25, z = 5707, w = 6
+mul y x
+x = 1, y = 25, z = 5707, w = 6
+add y 1
+x = 1, y = 26, z = 5707, w = 6
+mul z y
+x = 1, y = 26, z = 148382, w = 6
+mul y 0
+x = 1, y = 0, z = 148382, w = 6
+add y w
+x = 1, y = 6, z = 148382, w = 6
+add y 13
+x = 1, y = 19, z = 148382, w = 6
+mul y x
+x = 1, y = 19, z = 148382, w = 6
+add z y
+x = 1, y = 19, z = 148401, w = 6
+inp w
+x = 1, y = 19, z = 148401, w = 8
+mul x 0
+x = 0, y = 19, z = 148401, w = 8
+add x z
+x = 148401, y = 19, z = 148401, w = 8
+mod x 26
+x = 19, y = 19, z = 148401, w = 8
+div z 1
+x = 19, y = 19, z = 148401, w = 8
+add x 15
+x = 34, y = 19, z = 148401, w = 8
+eql x w
+x = 0, y = 19, z = 148401, w = 8
+eql x 0
+x = 1, y = 19, z = 148401, w = 8
+mul y 0
+x = 1, y = 0, z = 148401, w = 8
+add y 25
+x = 1, y = 25, z = 148401, w = 8
+mul y x
+x = 1, y = 25, z = 148401, w = 8
+add y 1
+x = 1, y = 26, z = 148401, w = 8
+mul z y
+x = 1, y = 26, z = 3858426, w = 8
+mul y 0
+x = 1, y = 0, z = 3858426, w = 8
+add y w
+x = 1, y = 8, z = 3858426, w = 8
+add y 1
+x = 1, y = 9, z = 3858426, w = 8
+mul y x
+x = 1, y = 9, z = 3858426, w = 8
+add z y
+x = 1, y = 9, z = 3858435, w = 8
+inp w
+x = 1, y = 9, z = 3858435, w = 9
+mul x 0
+x = 0, y = 9, z = 3858435, w = 9
+add x z
+x = 3858435, y = 9, z = 3858435, w = 9
+mod x 26
+x = 9, y = 9, z = 3858435, w = 9
+div z 1
+x = 9, y = 9, z = 3858435, w = 9
+add x 15
+x = 24, y = 9, z = 3858435, w = 9
+eql x w
+x = 0, y = 9, z = 3858435, w = 9
+eql x 0
+x = 1, y = 9, z = 3858435, w = 9
+mul y 0
+x = 1, y = 0, z = 3858435, w = 9
+add y 25
+x = 1, y = 25, z = 3858435, w = 9
+mul y x
+x = 1, y = 25, z = 3858435, w = 9
+add y 1
+x = 1, y = 26, z = 3858435, w = 9
+mul z y
+x = 1, y = 26, z = 100319310, w = 9
+mul y 0
+x = 1, y = 0, z = 100319310, w = 9
+add y w
+x = 1, y = 9, z = 100319310, w = 9
+add y 8
+x = 1, y = 17, z = 100319310, w = 9
+mul y x
+x = 1, y = 17, z = 100319310, w = 9
+add z y
+x = 1, y = 17, z = 100319327, w = 9
+inp w
+x = 1, y = 17, z = 100319327, w = 9
+mul x 0
+x = 0, y = 17, z = 100319327, w = 9
+add x z
+x = 100319327, y = 17, z = 100319327, w = 9
+mod x 26
+x = 17, y = 17, z = 100319327, w = 9
+div z 26
+x = 17, y = 17, z = 3858435, w = 9
+add x -14
+x = 3, y = 17, z = 3858435, w = 9
+eql x w
+x = 0, y = 17, z = 3858435, w = 9
+eql x 0
+x = 1, y = 17, z = 3858435, w = 9
+mul y 0
+x = 1, y = 0, z = 3858435, w = 9
+add y 25
+x = 1, y = 25, z = 3858435, w = 9
+mul y x
+x = 1, y = 25, z = 3858435, w = 9
+add y 1
+x = 1, y = 26, z = 3858435, w = 9
+mul z y
+x = 1, y = 26, z = 100319310, w = 9
+mul y 0
+x = 1, y = 0, z = 100319310, w = 9
+add y w
+x = 1, y = 9, z = 100319310, w = 9
+add y 4
+x = 1, y = 13, z = 100319310, w = 9
+mul y x
+x = 1, y = 13, z = 100319310, w = 9
+add z y
+x = 1, y = 13, z = 100319323, w = 9
+inp w
+x = 1, y = 13, z = 100319323, w = 9
+mul x 0
+x = 0, y = 13, z = 100319323, w = 9
+add x z
+x = 100319323, y = 13, z = 100319323, w = 9
+mod x 26
+x = 13, y = 13, z = 100319323, w = 9
+div z 1
+x = 13, y = 13, z = 100319323, w = 9
+add x 10
+x = 23, y = 13, z = 100319323, w = 9
+eql x w
+x = 0, y = 13, z = 100319323, w = 9
+eql x 0
+x = 1, y = 13, z = 100319323, w = 9
+mul y 0
+x = 1, y = 0, z = 100319323, w = 9
+add y 25
+x = 1, y = 25, z = 100319323, w = 9
+mul y x
+x = 1, y = 25, z = 100319323, w = 9
+add y 1
+x = 1, y = 26, z = 100319323, w = 9
+mul z y
+x = 1, y = 26, z = 2608302398, w = 9
+mul y 0
+x = 1, y = 0, z = 2608302398, w = 9
+add y w
+x = 1, y = 9, z = 2608302398, w = 9
+add y 13
+x = 1, y = 22, z = 2608302398, w = 9
+mul y x
+x = 1, y = 22, z = 2608302398, w = 9
+add z y
+x = 1, y = 22, z = 2608302420, w = 9
+inp w
+x = 1, y = 22, z = 2608302420, w = 9
+mul x 0
+x = 0, y = 22, z = 2608302420, w = 9
+add x z
+x = 2608302420, y = 22, z = 2608302420, w = 9
+mod x 26
+x = 22, y = 22, z = 2608302420, w = 9
+div z 26
+x = 22, y = 22, z = 100319323, w = 9
+add x -14
+x = 8, y = 22, z = 100319323, w = 9
+eql x w
+x = 0, y = 22, z = 100319323, w = 9
+eql x 0
+x = 1, y = 22, z = 100319323, w = 9
+mul y 0
+x = 1, y = 0, z = 100319323, w = 9
+add y 25
+x = 1, y = 25, z = 100319323, w = 9
+mul y x
+x = 1, y = 25, z = 100319323, w = 9
+add y 1
+x = 1, y = 26, z = 100319323, w = 9
+mul z y
+x = 1, y = 26, z = 2608302398, w = 9
+mul y 0
+x = 1, y = 0, z = 2608302398, w = 9
+add y w
+x = 1, y = 9, z = 2608302398, w = 9
+add y 4
+x = 1, y = 13, z = 2608302398, w = 9
+mul y x
+x = 1, y = 13, z = 2608302398, w = 9
+add z y
+x = 1, y = 13, z = 2608302411, w = 9
+inp w
+x = 1, y = 13, z = 2608302411, w = 9
+mul x 0
+x = 0, y = 13, z = 2608302411, w = 9
+add x z
+x = 2608302411, y = 13, z = 2608302411, w = 9
+mod x 26
+x = 13, y = 13, z = 2608302411, w = 9
+div z 26
+x = 13, y = 13, z = 100319323, w = 9
+add x -5
+x = 8, y = 13, z = 100319323, w = 9
+eql x w
+x = 0, y = 13, z = 100319323, w = 9
+eql x 0
+x = 1, y = 13, z = 100319323, w = 9
+mul y 0
+x = 1, y = 0, z = 100319323, w = 9
+add y 25
+x = 1, y = 25, z = 100319323, w = 9
+mul y x
+x = 1, y = 25, z = 100319323, w = 9
+add y 1
+x = 1, y = 26, z = 100319323, w = 9
+mul z y
+x = 1, y = 26, z = 2608302398, w = 9
+mul y 0
+x = 1, y = 0, z = 2608302398, w = 9
+add y w
+x = 1, y = 9, z = 2608302398, w = 9
+add y 14
+x = 1, y = 23, z = 2608302398, w = 9
+mul y x
+x = 1, y = 23, z = 2608302398, w = 9
+add z y
+x = 1, y = 23, z = 2608302421, w = 9
+0
+

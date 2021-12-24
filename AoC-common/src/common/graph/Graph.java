@@ -10,6 +10,10 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.function.Supplier;
 
+import common.Tuple;
+import common.queries.EmptyIterable;
+import common.queries.Query;
+
 public class Graph<TNodeKey, TInfo>
 {
     private HashMap<TNodeKey, Node<TNodeKey, TInfo>> m_nodes = new HashMap<>();
@@ -80,6 +84,29 @@ public class Graph<TNodeKey, TInfo>
         getOrCreateNode(nodeKey);
     }
     
+    public void addEdge(TNodeKey from, TNodeKey to, boolean undirected)
+    {
+        addEdge(from, to, undirected, 0);
+    }
+    
+    public void addEdge(TNodeKey from, TNodeKey to, boolean undirected, double weight)
+    {
+        addEdge(from, to, weight);
+        if (undirected)
+            addEdge(to, from, weight);
+    }
+
+    public void addEdgeUndirected(TNodeKey node1, TNodeKey node2)
+    {
+        addEdgeUndirected(node1, node2, 0);
+    }
+    
+    public void addEdgeUndirected(TNodeKey node1, TNodeKey node2, double weight)
+    {
+        addEdge(node1, node2, weight);
+        addEdge(node2, node1, weight);
+    }
+
     public void addEdge(TNodeKey from, TNodeKey to)
     {
         addEdge(from, to, 0);
@@ -293,6 +320,16 @@ public class Graph<TNodeKey, TInfo>
             return node.m_nextNodes.size(); 
         }
         return 0;
+    }
+
+    public Iterable<Tuple<TNodeKey, Double>> outboundEdges(TNodeKey nodeKey)
+    {
+        var node = tryGetNode(nodeKey);
+        if (node != null) 
+        {
+            return Query.wrap(node.m_nextNodes.entrySet()).select(e -> new Tuple<>(e.getKey(), e.getValue())); 
+        }
+        return EmptyIterable.instance();
     }
 
     public void removeNode(TNodeKey nodeKey)
