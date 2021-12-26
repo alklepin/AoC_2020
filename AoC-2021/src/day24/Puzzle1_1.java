@@ -5,57 +5,19 @@ import java.util.HashMap;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle1_1 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle1_1().solve();
     }
     
-    public int processGroup(LinesGroup group)
-    {
-        HashMap<Character, Integer> chars = new HashMap<>();
-        for (String line : group)
-        {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
-        }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
-        {
-            if (v == groupSize)
-            {
-                count++;
-            }
-        }
-        return count;
-    }
     
     public void solve()
         throws Exception
     {
-//        ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
-        
-//        ArrayList<String> lines = readAllLines("input1.txt");
         
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
 //        ArrayList<String> lines = readAllLinesNonEmpty("input1_1.txt.1");
@@ -67,19 +29,55 @@ public class Puzzle1 extends PuzzleCommon
                 continue;
             program.add(Command.parse(line));
         }
-        
-        Value value = new Value();
-        digitsProvider = new DigitsProvider(12080803460100L);
-        for (var cmd : program)
+  
+        for (int digit = 9; digit >= 1; digit--)
         {
-            value = cmd.apply(value);
-//            System.out.println(cmd);
-//            System.out.println(value);
+            tryExecute(program, 1, digit);
         }
-        System.out.println(value);
-        
-        System.out.println(result);
-        
+    }
+    
+    public boolean tryExecute(ArrayList<Command> program, int level, long prefix)
+    {
+        if (level < 14)
+        {
+            Value value = new Value();
+            digitsProvider = new DigitsProvider(prefix);
+            int curLevel = 0;
+            for (var cmd : program)
+            {
+                if (cmd instanceof InputCmd)
+                {
+                    curLevel++;
+                    if (curLevel >= level)
+                    {
+                        if (value.get(2) > 26*26)
+                            return false;
+                        break;
+                    }
+                }
+                value = cmd.apply(value);
+            }
+            for (int digit = 9; digit >= 0; digit--)
+            {
+                if (tryExecute(program, level+1, prefix * 10 + digit))
+                    return true;
+            }
+        }
+        else
+        {
+            Value value = new Value();
+            digitsProvider = new DigitsProvider(prefix);
+            for (var cmd : program)
+            {
+                value = cmd.apply(value);
+            }
+            if (value.get(2) == 0)
+            {
+                System.out.println(prefix);
+                return true;
+            }
+        }
+        return false;
     }
 
 

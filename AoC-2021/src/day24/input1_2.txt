@@ -16,6 +16,8 @@ add y w
 add y 7
 mul y x
 add z y
+# z = (z0 / 1) * (d[1] == (z0 % 26 + 12) ? 1 : 26) + (d[1] + 7) * (d[1] == (z0 % 26 + 12) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -34,6 +36,8 @@ add y w
 add y 8
 mul y x
 add z y
+# z = (z0 / 1) * (d[2] == (z0 % 26 + 13) ? 1 : 26) + (d[2] + 8) * (d[2] == (z0 % 26 + 13) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -52,6 +56,8 @@ add y w
 add y 10
 mul y x
 add z y
+# z = (z0 / 1) * (d[3] == (z0 % 26 + 13) ? 1 : 26) + (d[3] + 10) * (d[3] == (z0 % 26 + 13) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -70,6 +76,8 @@ add y w
 add y 4
 mul y x
 add z y
+# z = (z0 / 26) * (d[4] == (z0 % 26 - 2) ? 1 : 26) + (d[4] + 4) * (d[4] == (z0 % 26 - 2) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -88,6 +96,8 @@ add y w
 add y 4
 mul y x
 add z y
+# z = (z0 / 26) * (d[5] == (z0 % 26 - 10) ? 1 : 26) + (d[5] + 4) * (d[5] == (z0 % 26 - 10) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -106,6 +116,8 @@ add y w
 add y 6
 mul y x
 add z y
+# z = (z0 / 1) * (d[6] == (z0 % 26 + 13) ? 1 : 26) + (d[6] + 6) * (d[6] == (z0 % 26 + 13) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -124,6 +136,8 @@ add y w
 add y 11
 mul y x
 add z y
+# z = (z0 / 26) * (d[7] == (z0 % 26 - 14) ? 1 : 26) + (d[7] + 11) * (d[7] == (z0 % 26 - 14) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
@@ -196,6 +210,7 @@ add y w
 add y 4
 mul y x
 add z y
+
 inp w
 mul x 0
 add x z
@@ -214,6 +229,7 @@ add y w
 add y 13
 mul y x
 add z y
+
 inp w
 mul x 0
 add x z
@@ -232,21 +248,35 @@ add y w
 add y 4
 mul y x
 add z y
+# z = (z0 / 26) * (d[13] == (z0 % 26 - 14) ? 1 : 26) + (d[13] + 4) * (d[13] == (z0 % 26 - 14) ? 0 : 1)
+
 inp w
 mul x 0
 add x z
 mod x 26
+# x = z0 % 26
 div z 26
+# z = z0 / 26
 add x -5
+# x = z0 % 26 - 5
 eql x w
 eql x 0
+# x = d[14] == (z0 % 26 - 5) ? 0 : 1 
 mul y 0
 add y 25
 mul y x
 add y 1
+# y = d[14] == (z0 % 26 - 5) ? 1 : 26
 mul z y
+# z = (z0 / 26) * (d[14] == (z0 % 26 - 5) ? 1 : 26)
 mul y 0
 add y w
 add y 14
 mul y x
 add z y
+# z = (z0 / 26) * (d[14] == (z0 % 26 - 5) ? 1 : 26) + (d[14] + 14) * (d[14] == (z0 % 26 - 5) ? 0 : 1)
+# z0 = 5 -> d[14] = 0
+# z0 = 6 -> d[14] = 1
+# ...
+# z0 = 14 -> d[14] = 9
+

@@ -2,60 +2,23 @@ package day24;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2_2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2_2().solve();
     }
     
-    public int processGroup(LinesGroup group)
-    {
-        HashMap<Character, Integer> chars = new HashMap<>();
-        for (String line : group)
-        {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
-        }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
-        {
-            if (v == groupSize)
-            {
-                count++;
-            }
-        }
-        return count;
-    }
     
     public void solve()
         throws Exception
     {
-//        ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
-        
-//        ArrayList<String> lines = readAllLines("input1.txt");
         
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
 //        ArrayList<String> lines = readAllLinesNonEmpty("input1_1.txt.1");
@@ -67,19 +30,165 @@ public class Puzzle1 extends PuzzleCommon
                 continue;
             program.add(Command.parse(line));
         }
-        
-        Value value = new Value();
-        digitsProvider = new DigitsProvider(12080803460100L);
-        for (var cmd : program)
+  
+        HashSet<Integer> prefixes1 = new HashSet<>();
+        for (int d1 = 1; d1 <= 9; d1++)
+        for (int d2 = 1; d2 <= 9; d2++)
+        for (int d3 = 1; d3 <= 9; d3++)
+        for (int d4 = 1; d4 <= 9; d4++)
+        for (int d5 = 1; d5 <= 9; d5++)
         {
-            value = cmd.apply(value);
-//            System.out.println(cmd);
-//            System.out.println(value);
+            var digits = d1 * 10000 + d2 * 1000 + d3 * 100 + d4 * 10 + d5;
+            Value value = new Value();
+            digitsProvider = new DigitsProvider(digits);
+            int curLevel = 0;
+            for (var cmd : program)
+            {
+                if (cmd instanceof InputCmd)
+                {
+                    curLevel++;
+                    if (curLevel >= 6)
+                    {
+                        break;
+                    }
+                }
+                value = cmd.apply(value);
+            }
+            if (value.get(2) < 26*26)
+            {
+                //System.out.printf("%s -> %s\n", digits, value.get(2));
+                prefixes1.add(digits);
+            }
         }
-        System.out.println(value);
         
-        System.out.println(result);
-        
+        HashMap<Integer, Long> prefixes2 = new HashMap<>();
+        for (var prefix : prefixes1)
+        {
+            for (int d1 = 1; d1 <= 9; d1++)
+            for (int d2 = 1; d2 <= 9; d2++)
+            for (int d3 = 1; d3 <= 9; d3++)
+            {
+                var digits = d1 * 100 + d2 * 10 + d3;
+                long v = prefix.longValue() * 1000 + digits;
+                Value value = new Value();
+                digitsProvider = new DigitsProvider(v);
+                int curLevel = 0;
+                for (var cmd : program)
+                {
+                    if (cmd instanceof InputCmd)
+                    {
+                        curLevel++;
+                        if (curLevel >= 9)
+                        {
+                            break;
+                        }
+                    }
+                    value = cmd.apply(value);
+                }
+                if (value.get(2) < 26)
+                {
+                    var zvalue = (int)value.get(2);
+                    System.out.printf("%s -> %s\n", v, value.get(2));
+                    if (prefixes2.containsKey(zvalue))
+                    {
+                        prefixes2.put(zvalue, Math.min(v, prefixes2.get(zvalue)));
+                    }
+                    else
+                    {
+                        prefixes2.put(zvalue, v);
+                    }
+                }
+            }
+        }
+
+        long minResult = Long.MAX_VALUE;
+        for (var prefix : prefixes2.values())
+        {
+            for (int d1 = 1; d1 <= 9; d1++)
+            for (int d2 = 1; d2 <= 9; d2++)
+            for (int d3 = 1; d3 <= 9; d3++)
+            for (int d4 = 1; d4 <= 9; d4++)
+            for (int d5 = 1; d5 <= 9; d5++)
+            for (int d6 = 1; d6 <= 9; d6++)
+            {
+                var digits = d1 * 100000 + d2 * 10000 + d3 * 1000 + d4 * 100 + d5 * 10 + d6;
+                long v = prefix.longValue() * 1000000 + digits;
+                Value value = new Value();
+                digitsProvider = new DigitsProvider(v);
+                int curLevel = 0;
+                for (var cmd : program)
+                {
+                    if (cmd instanceof InputCmd)
+                    {
+                        curLevel++;
+                        if (curLevel >= 15)
+                        {
+                            break;
+                        }
+                    }
+                    value = cmd.apply(value);
+                }
+//                if (value.get(2) < 26)
+                if (value.get(2) == 0)
+                {
+                    var zvalue = (int)value.get(2);
+                    minResult = Math.min(minResult, v);
+                    System.out.printf("%s -> %s (min: %s)\n", v, value.get(2), minResult);
+//                    if (prefixes2.containsKey(zvalue))
+//                    {
+//                        prefixes2.put(zvalue, Math.max(v, prefixes2.get(zvalue)));
+//                    }
+//                    else
+//                    {
+//                        prefixes2.put(zvalue, v);
+//                    }
+                }
+            }
+        }
+    }
+    
+    public boolean tryExecute(ArrayList<Command> program, int level, long prefix)
+    {
+        if (level < 14)
+        {
+            Value value = new Value();
+            digitsProvider = new DigitsProvider(prefix);
+            int curLevel = 0;
+            for (var cmd : program)
+            {
+                if (cmd instanceof InputCmd)
+                {
+                    curLevel++;
+                    if (curLevel >= level)
+                    {
+                        if (value.get(2) > 26*26)
+                            return false;
+                        break;
+                    }
+                }
+                value = cmd.apply(value);
+            }
+            for (int digit = 9; digit >= 0; digit--)
+            {
+                if (tryExecute(program, level+1, prefix * 10 + digit))
+                    return true;
+            }
+        }
+        else
+        {
+            Value value = new Value();
+            digitsProvider = new DigitsProvider(prefix);
+            for (var cmd : program)
+            {
+                value = cmd.apply(value);
+            }
+            if (value.get(2) == 0)
+            {
+                System.out.println(prefix);
+                return true;
+            }
+        }
+        return false;
     }
 
 
