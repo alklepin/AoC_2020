@@ -1,17 +1,19 @@
 package day01;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public long processGroup(LinesGroup group)
@@ -24,6 +26,15 @@ public class Puzzle1 extends PuzzleCommon
         }
         return sum;
     }
+
+    private static class LongComparator implements Comparator<Long>
+    {
+        @Override
+        public int compare(Long a, Long b)
+        {
+            return - a.compareTo(b);
+        }
+    }
     
     public void solve()
         throws Exception
@@ -31,13 +42,17 @@ public class Puzzle1 extends PuzzleCommon
         ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
         // System.out.println(groups.size());
         
-        long result = 0;
+        PriorityQueue<Long> queue = new PriorityQueue<Long>(new LongComparator());
         for (LinesGroup group : groups)
         {
             var l = group.processGroup(this::processGroup);
-            if (result < l)
-                result = l;
+            queue.add(l);
         }
+        long result = 0;
+        result += queue.poll();
+        result += queue.poll();
+        result += queue.poll();
+        
         System.out.println(result);
         
 //        ArrayList<String> lines = readAllLines("input1.txt");
