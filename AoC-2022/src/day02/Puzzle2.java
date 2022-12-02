@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -57,29 +57,36 @@ public class Puzzle1 extends PuzzleCommon
         public int scoreAgainst(GameValue other)
         {
             int result = 0;
-            if (this == Rock)
+            if (this == other)
             {
-                if (other == Rock)
-                    result += 3;
-                else if (other == Scissors)
-                    result += 6;
+                result += 3;
             }
-            if (this == Paper)
+            else if (other == this.getWeaker())
             {
-                if (other == Paper)
-                    result += 3;
-                else if (other == Rock)
-                    result += 6;
-            }
-            if (this == Scissors)
-            {
-                if (other == Scissors)
-                    result += 3;
-                else if (other == Paper)
-                    result += 6;
+                result += 6;
             }
             result += this.score;
             return result;
+        }
+
+        public GameValue getStronger()
+        {
+            return switch (this)
+                {
+                    case Paper -> Scissors;
+                    case Rock -> Paper;
+                    case Scissors -> Rock;
+                };
+        }
+
+        public GameValue getWeaker()
+        {
+            return switch (this)
+                {
+                    case Paper -> Rock;
+                    case Rock -> Scissors;
+                    case Scissors -> Paper;
+                };
         }
     }
     
@@ -91,19 +98,27 @@ public class Puzzle1 extends PuzzleCommon
         public Game(String line)
         {
             elf = decode(line.charAt(0));
-            player = decode(line.charAt(2));
+            player = decode(line.charAt(2), elf);
         }
         
         private GameValue decode(char c)
         {
             return switch (c)
+                {
+                    case 'A' -> GameValue.Rock; 
+                    case 'B' -> GameValue.Paper; 
+                    case 'C' -> GameValue.Scissors;
+                    default -> null;
+                };
+        }
+
+        private GameValue decode(char c, GameValue elf)
+        {
+            return switch (c)
             {
-                case 'A' -> GameValue.Rock; 
-                case 'B' -> GameValue.Paper; 
-                case 'C' -> GameValue.Scissors;
-                case 'X' -> GameValue.Rock; 
-                case 'Y' -> GameValue.Paper; 
-                case 'Z' -> GameValue.Scissors;
+                case 'X' -> elf.getWeaker(); 
+                case 'Y' -> elf; 
+                case 'Z' -> elf.getStronger();
                 default -> null;
             };
         }
