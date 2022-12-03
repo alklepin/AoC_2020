@@ -1,8 +1,7 @@
-package day03;
+package day04;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import common.PuzzleCommon;
 
@@ -58,39 +57,12 @@ public class Puzzle1 extends PuzzleCommon
         
 //        ArrayList<String> lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input1_sample.txt");
-        int result = 0;
-        for (String line : lines)
-        {
-            var first = line.substring(0, line.length() / 2);
-            var second = line.substring(line.length() / 2);
-            var hsFirst = new HashSet<Character>();
-            for (var c : first.toCharArray())
-            {
-                hsFirst.add(c);
-            }
-            var hsSecond = new HashSet<Character>();
-            for (var c : second.toCharArray())
-            {
-                hsSecond.add(c);
-            }
-            hsFirst.retainAll(hsSecond);
-            if (hsFirst.size() != 1)
-            {
-                System.out.println("Something wrong "+hsFirst.size());
-            }
-            char item = '!';
-            for (var e : hsFirst)
-            {
-                item = e;
-            }
-            System.out.println(item);
-            var score = item >= 'a' ? item - 'a' + 1 : item - 'A' + 27;
-            result += score;
-                
-        }
-        System.out.println(result);
+//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
         
     }
 }

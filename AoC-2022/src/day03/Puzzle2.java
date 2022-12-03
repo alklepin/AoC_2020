@@ -6,13 +6,13 @@ import java.util.HashSet;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -61,10 +61,11 @@ public class Puzzle1 extends PuzzleCommon
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
 //        ArrayList<String> lines = readAllLinesNonEmpty("input1_sample.txt");
         int result = 0;
-        for (String line : lines)
+        for (int idx = 0; idx < lines.size(); idx += 3)
         {
-            var first = line.substring(0, line.length() / 2);
-            var second = line.substring(line.length() / 2);
+            var first = lines.get(idx);
+            var second = lines.get(idx+1);
+            var third = lines.get(idx+2);
             var hsFirst = new HashSet<Character>();
             for (var c : first.toCharArray())
             {
@@ -75,7 +76,13 @@ public class Puzzle1 extends PuzzleCommon
             {
                 hsSecond.add(c);
             }
+            var hsThird = new HashSet<Character>();
+            for (var c : third.toCharArray())
+            {
+                hsThird.add(c);
+            }
             hsFirst.retainAll(hsSecond);
+            hsFirst.retainAll(hsThird);
             if (hsFirst.size() != 1)
             {
                 System.out.println("Something wrong "+hsFirst.size());
