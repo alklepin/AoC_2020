@@ -1,10 +1,9 @@
-package day04;
+package day05;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import common.PuzzleCommon;
-import common.boards.IntPair;
 
 public class Puzzle1 extends PuzzleCommon
 {
@@ -43,22 +42,6 @@ public class Puzzle1 extends PuzzleCommon
         return count;
     }
     
-    
-    IntPair parse(String s)
-    {
-        var parts = s.split("-");
-        var v1 = parseInt(parts[0]);
-        var v2 = parseInt(parts[1]);
-        return new IntPair(v1, v2);
-    }
-    
-    boolean fullyContains(IntPair p1, IntPair p2)
-    {
-        return (p1.getX() <= p2.getX() && p1.getY() >= p2.getY())
-            || (p2.getX() <= p1.getX() && p2.getY() >= p1.getY());
-            
-    }
-    
     public void solve()
         throws Exception
     {
@@ -74,17 +57,12 @@ public class Puzzle1 extends PuzzleCommon
         
 //        ArrayList<String> lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-        int result = 0;
-        for (String line : lines)
-        {
-            var parts = line.split(",");
-            var p1 = parse(parts[0]);
-            var p2 = parse(parts[1]);
-            if (fullyContains(p1, p2))
-                result++;
-        }
-        System.out.println(result);
+//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
         
     }
 }
