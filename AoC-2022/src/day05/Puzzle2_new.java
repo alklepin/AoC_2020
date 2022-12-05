@@ -6,13 +6,13 @@ import java.util.Stack;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2_new extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2_new().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -42,6 +42,14 @@ public class Puzzle1 extends PuzzleCommon
         }
         return count;
     }
+
+    static class MoveInfo
+    {
+        int count;
+        int from;
+        int to;
+    }
+    
     
     public void solve()
         throws Exception
@@ -83,6 +91,7 @@ public class Puzzle1 extends PuzzleCommon
         }
 
         var moveInfo = groups.get(1);
+        Stack<Character> buffer = new Stack<>();
         for (var line : moveInfo)
         {
             var parsed = parse("move (\\d+) from (\\d+) to (\\d+)", line);
@@ -93,7 +102,11 @@ public class Puzzle1 extends PuzzleCommon
             var target = stacks.get(to-1);
             for (int cnt = 0; cnt < count; cnt++)
             {
-                target.push(source.pop());
+                buffer.push(source.pop());
+            }
+            while (!buffer.isEmpty())
+            {
+                target.push(buffer.pop());
             }
         }
 

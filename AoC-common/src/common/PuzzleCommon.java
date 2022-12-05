@@ -142,6 +142,12 @@ public class PuzzleCommon
     public ArrayList<LinesGroup> readAllLineGroups(String localFile)
         throws IOException
     {
+        return readAllLineGroups(localFile, false);
+    }
+    
+    public ArrayList<LinesGroup> readAllLineGroups(String localFile, boolean preserveSpaces)
+        throws IOException
+    {
         ArrayList<LinesGroup> groups = new ArrayList<>();
         try (InputStream fis = loadLocalFile(localFile))
         {
@@ -150,7 +156,9 @@ public class PuzzleCommon
                 LinesGroup current = null;
                 while (scanner.hasNextLine())
                 {
-                    String line = scanner.nextLine().trim();
+                    String line = scanner.nextLine();
+                    if (!preserveSpaces)
+                        line = line.trim();
                     if (line.length() == 0)
                     {
                         if (current != null)
