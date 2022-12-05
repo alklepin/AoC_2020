@@ -1,22 +1,31 @@
 package common.regexp;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.channels.IllegalSelectorException;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FieldsParser<T>
 {
-    private String m_pattern;
+    private Pattern m_pattern;
     private Class<T> m_clazz;
     private HashMap<String, FieldSetter> setters = new HashMap<>();
 
+    public static <T> FieldsParser getFor(String pattern, Class<T> clazz)
+    {
+        return new FieldsParser<T>(pattern, clazz);
+    }
+    
     public FieldsParser(String pattern, Class<T> clazz)
     {
-        m_pattern = pattern;
+        m_pattern = Pattern.compile(pattern);
         m_clazz = clazz;
         for (var field : clazz.getDeclaredFields())
         {
             var fname = field.getName();
-            var ftype = field.getClass();
+            var ftype = field.getType();
             FieldSetter setter = null;
             if (ftype.equals(String.class))
             {
@@ -25,6 +34,10 @@ public class FieldsParser<T>
             if (ftype.equals(Integer.TYPE))
             {
                 setter = new IntSetter(field);
+            }
+            if (setter != null)
+            {
+                setters.put(fname,  setter);
             }
         }
     }
@@ -88,6 +101,50 @@ public class FieldsParser<T>
     
     public T parse(String line)
     {
-        return null;
+        T result;
+        try
+        {
+            result = m_clazz.getDeclaredConstructor().newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException
+            | IllegalArgumentException | InvocationTargetException
+            | NoSuchMethodException | SecurityException ex)
+        {
+            throw new IllegalStateException(ex);
+        }
+        var matcher = m_pattern.matcher(line);
+        if (matcher.find())
+        {
+            for (var entry : setters.entrySet())
+            {
+                var name = entry.getKey();
+                var setter = entry.getValue();
+                var value = matcher.group(name);
+                if (value != null)
+                    setter.setField(result, value);
+            }
+        }
+        return result;
+    }
+    
+    static class TestDTO
+    {
+        int row;
+        int col;
+        @Override
+        public String toString()
+        {
+            return "TestDTO [row=" + row + ", col=" + col + "]";
+        }
+        
+        
+    }
+    
+    public static void main(String [] args)
+    {
+        var line = "row=5 column=10";
+        var parser = FieldsParser.getFor("row=(?<row>\\d+) column=(?<col>\\d+)", TestDTO.class);
+        var result = parser.parse(line);
+        System.out.println(result);
     }
 }
