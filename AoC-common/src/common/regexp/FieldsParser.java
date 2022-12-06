@@ -1,5 +1,6 @@
 package common.regexp;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ public class FieldsParser<T>
     private Pattern m_pattern;
     private Class<T> m_clazz;
     private HashMap<String, FieldSetter> setters = new HashMap<>();
+    private Constructor<T> m_constructor;
 
     public static <T> FieldsParser<T> getFor(String pattern, Class<T> clazz)
     {
@@ -20,6 +22,15 @@ public class FieldsParser<T>
     {
         m_pattern = Pattern.compile(pattern);
         m_clazz = clazz;
+        try
+        {
+            m_constructor = m_clazz.getDeclaredConstructor();
+            m_constructor.setAccessible(true);
+        }
+        catch (NoSuchMethodException | SecurityException ex)
+        {
+            throw new IllegalStateException(ex);
+        }
         for (var field : clazz.getDeclaredFields())
         {
             var fname = field.getName();
@@ -142,11 +153,11 @@ public class FieldsParser<T>
         T result;
         try
         {
-            result = m_clazz.getDeclaredConstructor().newInstance();
+            result = m_constructor.newInstance();
         }
         catch (InstantiationException | IllegalAccessException
             | IllegalArgumentException | InvocationTargetException
-            | NoSuchMethodException | SecurityException ex)
+            | SecurityException ex)
         {
             throw new IllegalStateException(ex);
         }

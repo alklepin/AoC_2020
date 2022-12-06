@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import common.PuzzleCommon;
+import common.regexp.FieldsParser;
 
 public class Puzzle2_new extends PuzzleCommon
 {
@@ -90,17 +91,15 @@ public class Puzzle2_new extends PuzzleCommon
             }
         }
 
+        var parser = FieldsParser.getFor("move (?<count>\\d+) from (?<from>\\d+) to (?<to>\\d+)", MoveInfo.class);
         var moveInfo = groups.get(1);
         Stack<Character> buffer = new Stack<>();
         for (var line : moveInfo)
         {
-            var parsed = parse("move (\\d+) from (\\d+) to (\\d+)", line);
-            var count = parseInt(parsed[1]);
-            var from = parseInt(parsed[2]);
-            var to = parseInt(parsed[3]);
-            var source = stacks.get(from-1);
-            var target = stacks.get(to-1);
-            for (int cnt = 0; cnt < count; cnt++)
+            var move = parser.parse(line);
+            var source = stacks.get(move.from-1);
+            var target = stacks.get(move.to-1);
+            for (int cnt = 0; cnt < move.count; cnt++)
             {
                 buffer.push(source.pop());
             }
