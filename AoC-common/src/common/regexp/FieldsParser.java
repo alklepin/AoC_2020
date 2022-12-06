@@ -2,9 +2,7 @@ package common.regexp;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.channels.IllegalSelectorException;
 import java.util.HashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FieldsParser<T>
@@ -13,7 +11,7 @@ public class FieldsParser<T>
     private Class<T> m_clazz;
     private HashMap<String, FieldSetter> setters = new HashMap<>();
 
-    public static <T> FieldsParser getFor(String pattern, Class<T> clazz)
+    public static <T> FieldsParser<T> getFor(String pattern, Class<T> clazz)
     {
         return new FieldsParser<T>(pattern, clazz);
     }
@@ -34,6 +32,14 @@ public class FieldsParser<T>
             if (ftype.equals(Integer.TYPE))
             {
                 setter = new IntSetter(field);
+            }
+            if (ftype.equals(Integer.class))
+            {
+                setter = new IntegerSetter(field);
+            }
+            if (ftype.equals(Long.TYPE))
+            {
+                setter = new LongSetter(field);
             }
             if (setter != null)
             {
@@ -96,6 +102,38 @@ public class FieldsParser<T>
         {
             var intValue = Integer.parseInt(value);
             m_field.setInt(obj, intValue);
+        }
+    }
+
+    private static class IntegerSetter extends FieldSetter
+    {
+        public IntegerSetter(Field field)
+        {
+            super(field);
+        }
+        
+        @Override
+        public void setFieldImpl(Object obj, String value)
+            throws IllegalArgumentException, IllegalAccessException
+        {
+            var intValue = Integer.parseInt(value);
+            m_field.set(obj, Integer.valueOf(intValue));
+        }
+    }
+
+    private static class LongSetter extends FieldSetter
+    {
+        public LongSetter(Field field)
+        {
+            super(field);
+        }
+        
+        @Override
+        public void setFieldImpl(Object obj, String value)
+            throws IllegalArgumentException, IllegalAccessException
+        {
+            var longValue = Long.parseLong(value);
+            m_field.setLong(obj, longValue);
         }
     }
     
