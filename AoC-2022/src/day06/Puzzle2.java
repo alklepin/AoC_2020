@@ -1,19 +1,20 @@
 package day06;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -70,14 +71,14 @@ public class Puzzle1 extends PuzzleCommon
             count++;
             queue.add(c);
             set.add(c);
-            if (queue.size() == 4)
+            if (queue.size() == 14)
             {
                 set.clear();
                 for (var c1 : queue)
                 {
                     set.add(c1);
                 }
-                if (set.size() == 4)
+                if (set.size() == 14)
                 {
                     result = count;
                     break;

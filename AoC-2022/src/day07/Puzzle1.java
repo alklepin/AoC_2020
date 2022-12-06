@@ -1,9 +1,7 @@
-package day06;
+package day07;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 
 import common.PuzzleCommon;
 
@@ -57,41 +55,14 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-        ArrayList<String> lines = readAllLines("input1.txt");
-        
-        var line = lines.get(0);
-        var queue = new LinkedList<Character>();
-        var set = new HashSet<Character>();
-        
-        var result = -1;
-        int count = 0;
-        for (var c : line.toCharArray())
-        {
-            count++;
-            queue.add(c);
-            set.add(c);
-            if (queue.size() == 4)
-            {
-                set.clear();
-                for (var c1 : queue)
-                {
-                    set.add(c1);
-                }
-                if (set.size() == 4)
-                {
-                    result = count;
-                    break;
-                }
-                queue.poll();
-            }
-        }
+//        ArrayList<String> lines = readAllLines("input1.txt");
         
 //        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
 //        int result = 0;
 //        for (String line : lines)
 //        {
 //        }
-        System.out.println(result);
+//        System.out.println(result);
         
     }
 }
