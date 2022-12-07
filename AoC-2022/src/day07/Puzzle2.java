@@ -1,18 +1,19 @@
 package day07;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -146,20 +147,27 @@ public class Puzzle1 extends PuzzleCommon
         
         long result = 0;
         processDirs("/");
+
+        var s = new ArrayList<Long>(sizes.values());
+        Collections.sort(s);
         
-        for (var d : sizes.entrySet())
+        var rootSize = sizes.get("/");
+        var freeBefore = 70000000 - rootSize;
+        var needToFree = 30000000 - freeBefore;
+        
+        for (var cs : s)
         {
-            var name = d.getKey();
-            long size = d.getValue();
-            if (size <= 100000)
+            if (cs > needToFree)
             {
-                result += size;
+                result = cs;
+                break;
             }
         }
         
         System.out.println(result);
         
     }
+    
     
     private HashMap<String, Long> sizes = new HashMap<>();
     
