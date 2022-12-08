@@ -2,6 +2,7 @@ package common.queries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Spliterators;
@@ -129,6 +130,73 @@ public class Query<T> implements Iterable<T>
             counter++;
         }
         return counter;
+    }
+
+    private static class DefaultComparator<T> implements Comparator<T>
+    {
+        @SuppressWarnings("rawtypes")
+        private static DefaultComparator INSTANCE = new DefaultComparator();
+        
+        @SuppressWarnings("unchecked")
+        public static <T> Comparator<T> forType()
+        {
+            return (Comparator<T>)INSTANCE;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public int compare(T o1, T o2)
+        {
+            return ((Comparable<T>)o1).compareTo(o2);
+        }
+    }
+    
+    public T max()
+    {
+        return max(DefaultComparator.forType());
+    }
+    
+    public T max(Comparator<? super T> comparator)
+    {
+        T result = null;
+        var iterator = this.whereNotNull().iterator();
+        if (iterator.hasNext())
+        {
+            result = iterator.next();
+        }
+        while (iterator.hasNext())
+        {
+            var element = iterator.next();
+            if (comparator.compare(result, element) < 0)
+            {
+                result = element;
+            }
+        }
+        return result;
+    }
+    
+    public T min()
+    {
+        return min(DefaultComparator.forType());
+    }
+    
+    public T min(Comparator<? super T> comparator)
+    {
+        T result = null;
+        var iterator = this.whereNotNull().iterator();
+        if (iterator.hasNext())
+        {
+            result = iterator.next();
+        }
+        while (iterator.hasNext())
+        {
+            var element = iterator.next();
+            if (comparator.compare(result, element) > 0)
+            {
+                result = element;
+            }
+        }
+        return result;
     }
 
     public int count(Predicate<? super T> condition)

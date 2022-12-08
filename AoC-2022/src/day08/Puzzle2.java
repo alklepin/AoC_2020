@@ -6,15 +6,17 @@ import java.util.HashSet;
 
 import common.PuzzleCommon;
 import common.boards.Board2D;
+import common.boards.Generators;
 import common.boards.IntPair;
+import common.boards.Pair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -60,7 +62,9 @@ public class Puzzle1 extends PuzzleCommon
         
         ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
 //        ArrayList<String> lines = readAllLines("input1_test.txt");
+        
         Board2D board = new Board2D(lines.get(0).length(), lines.size());
+        
         for (var row = 0; row < board.getHeigth(); row++)
         {
             var line = lines.get(row);
@@ -69,55 +73,50 @@ public class Puzzle1 extends PuzzleCommon
                 board.setAtRC(row,  col, parseInt(line.substring(col, col+1)));
             }
         }
-        HashSet<IntPair> visible = new HashSet<>();
+        
+        IntPair bestPoint = new IntPair(-1, -1);
+        long bestScore = -1;
         for (int row = 0; row < board.getHeigth(); row++)
         {
-            int currentHeight = -1;
             for (int col = 0; col < board.getWidth(); col++)
             {
-                var height = board.getAtRC(row, col);
-                if (height > currentHeight)
+                var currentCell = new IntPair(row, col);
+                var d1 = distance(board, currentCell, Pair.of(1,0));
+                var d2 = distance(board, currentCell, Pair.of(-1,0));
+                var d3 = distance(board, currentCell, Pair.of(0,1));
+                var d4 = distance(board, currentCell, Pair.of(0,-1));
+                var scenicScore = ((long)d1) * d2 * d3 * d4;
+                if (scenicScore > bestScore)
                 {
-                    visible.add(new IntPair(row,  col));
-                    currentHeight = height;
-                }
-            }
-            currentHeight = -1;
-            for (int col = board.getWidth()-1; col >= 0; col--)
-            {
-                var height = board.getAtRC(row, col);
-                if (height > currentHeight)
-                {
-                    visible.add(new IntPair(row,  col));
-                    currentHeight = height;
+                    bestScore = scenicScore;
+                    bestPoint = currentCell;
                 }
             }
         }
         
-        for (int col = 0; col < board.getWidth(); col++)
+        System.out.println(bestScore);
+        
+    }
+    
+    private int distance(Board2D board, IntPair currentCell, IntPair delta)
+    {
+        var distance = 0;
+        var height = board.getAtRC(currentCell);
+        for (var cell : Generators.ray(currentCell, delta, 200))
         {
-            int currentHeight = -1;
-            for (int row = 0; row < board.getHeigth(); row++)
+            if (board.containsRC(cell))
             {
-                var height = board.getAtRC(row, col);
-                if (height > currentHeight)
+                distance++;
+                if (board.getAtRC(cell) >= height)
                 {
-                    visible.add(new IntPair(row,  col));
-                    currentHeight = height;
+                    break;
                 }
             }
-            currentHeight = -1;
-            for (int row = board.getHeigth()-1; row >= 0; row--)
+            else
             {
-                var height = board.getAtRC(row, col);
-                if (height > currentHeight)
-                {
-                    visible.add(new IntPair(row,  col));
-                    currentHeight = height;
-                }
+                break;
             }
         }
-        System.out.println(visible.size());
-        
+        return distance;
     }
 }

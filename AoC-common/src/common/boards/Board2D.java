@@ -9,7 +9,6 @@ import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 
-import common.boards.Generators.Neighbours4Generator;
 import common.boards.Generators.Neighbours8Generator;
 import common.queries.Query;
 import common.queries.Sequence;
@@ -20,7 +19,7 @@ public class Board2D
     private int[][] m_data;
     private int m_width;
     private int m_heigth;
-    
+
     public Board2D(int width, int heigth)
     {
         m_width = width;
@@ -471,6 +470,35 @@ public class Board2D
         }
         return data;
     }
+
+    public static Board2D parseAsChars(ArrayList<String> lines)
+    {
+        Board2D board = new Board2D(lines.get(0).length(), lines.size());
+        for (var row = 0; row < board.getHeigth(); row++)
+        {
+            var line = lines.get(row);
+            for (var col = 0; col < line.length(); col++)
+            {
+                board.setAtRC(row,  col, line.charAt(col));
+            }
+        }
+        return board;
+    }
+
+    public static Board2D parseAsInts(ArrayList<String> lines)
+    {
+        var width = lines.get(0).split(" ").length;
+        Board2D board = new Board2D(lines.get(0).length(), width);
+        for (var row = 0; row < board.getHeigth(); row++)
+        {
+            var numbers = lines.get(row).split(" ");
+            for (var col = 0; col < numbers.length; col++)
+            {
+                board.setAtRC(row,  col, Integer.parseInt(numbers[col]));
+            }
+        }
+        return board;
+    }
     
     public static void printArray(char [][] data)
     {
@@ -533,5 +561,29 @@ public class Board2D
     public Iterable<IntPair> neighbours8XY(IntPair start)
     {
         return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
+    }
+
+    public Iterable<IntPair> rayRC(IntPair currentCell, IntPair delta)
+    {
+        var count = Math.max(getWidth(), getHeigth());
+        return Query.wrap(Generators.ray(currentCell, delta, count))
+            .takeWhile(pointRC -> containsRC(pointRC));
+    }
+    
+    public Iterable<IntPair> rayXY(IntPair currentCell, IntPair delta)
+    {
+        var count = Math.max(getWidth(), getHeigth());
+        return Query.wrap(Generators.ray(currentCell, delta, count))
+            .takeWhile(pointRC -> containsXY(pointRC));
+    }
+    
+    public boolean containsRC(IntPair cell)
+    {
+        return cell.getX() >= 0 && cell.getX() < getHeigth() && cell.getY() >= 0 && cell.getY() < getWidth();
+    }
+
+    public boolean containsXY(IntPair cell)
+    {
+        return cell.getX() >= 0 && cell.getX() < getWidth() && cell.getY() >= 0 && cell.getY() < getHeigth();
     }
 }
