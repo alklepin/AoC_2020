@@ -81,7 +81,7 @@ public class LongPair
      * Returns Chebyshev length
      * @return
      */
-    public long lengthLInf()
+    public long lengthCheb()
     {
         return Math.max(Math.abs(m_x), Math.abs(m_y));
     }

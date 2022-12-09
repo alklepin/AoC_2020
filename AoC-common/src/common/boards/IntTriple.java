@@ -63,6 +63,23 @@ public class IntTriple
         return m_x*(long)m_x + m_y*(long)m_y + m_z*(long)m_z;
     }
 
+    /**
+     * Returns Manhattan length
+     * @return
+     */
+    public long lengthManh()
+    {
+        return Math.abs(m_x) + Math.abs(m_y) + Math.abs(m_z);
+    }
+
+    /**
+     * Returns Chebyshev length
+     * @return
+     */
+    public long lengthCheb()
+    {
+        return Math.max(Math.max(Math.abs(m_x), Math.abs(m_y)), Math.abs(m_z));
+    }
     
     
     @Override

@@ -99,7 +99,7 @@ public class Puzzle2_test extends PuzzleCommon
 
                     var diff = prevKnot.minus(currentKnot);
                     
-                    if (diff.lengthLInf() >= 2)
+                    if (diff.lengthCheb() >= 2)
                     {
                         diff = diff.signum();
                     }
