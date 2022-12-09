@@ -68,7 +68,20 @@ public class LongPair
     }
     
     
-    public long lengthL1()
+    /**
+     * Returns Manhattan length
+     * @return
+     */
+    public long lengthManh()
+    {
+        return Math.abs(m_x) + Math.abs(m_y);
+    }
+
+    /**
+     * Returns Chebyshev length
+     * @return
+     */
+    public long lengthLInf()
     {
         return Math.max(Math.abs(m_x), Math.abs(m_y));
     }
@@ -86,6 +99,33 @@ public class LongPair
         return true;
     }
 
+    public LongPair toRectangle(LongPair min, LongPair max)
+    {
+        long x = m_x;
+        long y = m_y;
+        if (min != null)
+        {
+            x = Math.max(x, min.m_x);
+            y = Math.max(y, min.m_y);
+        }
+        if (max != null)
+        {
+            x = Math.min(x, max.m_x);
+            y = Math.min(y, max.m_y);
+        }
+        return Pair.of(x, y);
+    }
+    
+    private static long signum(long value)
+    {
+        return value > 0 ? 1 : value < 0 ? -1 : 0;
+    }
+    
+    public LongPair signum()
+    {
+        return Pair.of(signum(m_x), signum(m_y));
+    }
+    
     @Override
     public String toString()
     {

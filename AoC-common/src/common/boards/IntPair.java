@@ -65,8 +65,20 @@ public class IntPair
         return new IntPair(m_x / number, m_y / number);
     }
     
-    
-    public int lengthL1()
+    /**
+     * Returns Manhattan length
+     * @return
+     */
+    public int lengthManh()
+    {
+        return Math.abs(m_x) + Math.abs(m_y);
+    }
+
+    /**
+     * Returns Chebyshev length
+     * @return
+     */
+    public int lengthLInf()
     {
         return Math.max(Math.abs(m_x), Math.abs(m_y));
     }
@@ -111,6 +123,33 @@ public class IntPair
         return true;
     }
 
+    public IntPair toRectangle(IntPair min, IntPair max)
+    {
+        int x = m_x;
+        int y = m_y;
+        if (min != null)
+        {
+            x = Math.max(x, min.m_x);
+            y = Math.max(y, min.m_y);
+        }
+        if (max != null)
+        {
+            x = Math.min(x, max.m_x);
+            y = Math.min(y, max.m_y);
+        }
+        return Pair.of(x, y);
+    }
+    
+    private static int signum(int value)
+    {
+        return value > 0 ? 1 : value < 0 ? -1 : 0;
+    }
+    
+    public IntPair signum()
+    {
+        return Pair.of(signum(m_x), signum(m_y));
+    }
+
     @Override
     public String toString()
     {
@@ -120,6 +159,16 @@ public class IntPair
     public boolean componentLessEq(IntPair next)
     {
         return m_x <= next.getX() && m_y <= next.getY();
+    }
+
+    public IntPair componentMin(IntPair other)
+    {
+        return Pair.of(Math.min(m_x, other.m_x), Math.min(m_y, other.m_y));
+    }
+
+    public IntPair componentMax(IntPair other)
+    {
+        return Pair.of(Math.max(m_x, other.m_x), Math.max(m_y, other.m_y));
     }
 
 }

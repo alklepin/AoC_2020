@@ -221,6 +221,21 @@ public class Board2D
             ps.println(sb.toString());
         }
     }
+
+    public void printAsStringsRev(PrintStream ps)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int rowIdx = m_data.length-1; rowIdx >= 0; rowIdx--)
+        {
+            int[] rowData = m_data[rowIdx];
+            sb.setLength(0);
+            for (int i = 0; i < rowData.length; i++)
+            {
+                sb.append((char)rowData[i]);
+            }
+            ps.println(sb.toString());
+        }
+    }
     
     @Override
     public Board2D clone()

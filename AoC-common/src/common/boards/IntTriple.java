@@ -102,6 +102,16 @@ public class IntTriple
         return String.format("(%s, %s, %s)", m_x, m_y, m_z);
     }
 
+    private static int signum(int value)
+    {
+        return value > 0 ? 1 : value < 0 ? -1 : 0;
+    }
+    
+    public IntTriple signum()
+    {
+        return new IntTriple(signum(m_x), signum(m_y), signum(m_z));
+    }
+    
     public boolean componentLessEq(IntTriple point1)
     {
         return m_x <= point1.m_x 
