@@ -45,7 +45,10 @@ public class Puzzle1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
+        var inputFile = "input1.txt";
+//        var inputFile = "input1_test.txt";
+        
+//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
 //        // System.out.println(groups.size());
 //        
 //        int result = 0;
@@ -55,9 +58,9 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        ArrayList<String> lines = readAllLines(inputFile);
         
-//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+//        ArrayList<String> lines = readAllLinesNonEmpty(inputFile);
 //        int result = 0;
 //        for (String line : lines)
 //        {
