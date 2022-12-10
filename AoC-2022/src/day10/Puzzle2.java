@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import common.PuzzleCommon;
+import common.boards.Board2D;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -82,14 +83,30 @@ public class Puzzle1 extends PuzzleCommon
                 }
             }
         }
-        var sum = 0l;
-        for (var idx = 20; idx < stepValue.size(); idx+= 40)
+//        var sum = 0l;
+//        for (var idx = 20; idx < stepValue.size(); idx+= 40)
+//        {
+//            var stepVal = stepValue.get(idx-1);
+//            sum += idx * stepVal; 
+//        }
+        
+//        System.out.println(sum);
+        Board2D board = new Board2D(40, 6);
+        for (int step = 1; step <= stepValue.size(); step++)
         {
-            var stepVal = stepValue.get(idx-1);
-            sum += idx * stepVal; 
+            var x = (step - 1) % 40;
+            var y = (step - 1) / 40;
+            long stepVal = stepValue.get(step-1);
+            char c;
+            if (stepVal - 1 <= x && stepVal + 1 >= x)
+            {
+                c = '#';
+            }
+            else
+                c = '.';
+            board.setAtXY(x, y, c);
         }
         
-        System.out.println(sum);
-        
+        board.printAsStrings(System.out);
     }
 }

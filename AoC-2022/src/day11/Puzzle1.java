@@ -1,4 +1,4 @@
-package day10;
+package day11;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,39 +57,12 @@ public class Puzzle1 extends PuzzleCommon
         
 //        ArrayList<String> lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input1_test.txt");
-        ArrayList<Long> stepValue = new ArrayList<>();
-        long currentValue = 1;
-        int result = 0;
-        for (String line : lines)
-        {
-            var parts = line.split(" ");
-            switch (parts[0])
-            {
-                case "addx":
-                {
-                    stepValue.add(currentValue);
-                    stepValue.add(currentValue);
-                    currentValue += parseInt(parts[1]);
-                    System.out.println("Step: " + stepValue.size() + " value: " + currentValue);
-                    break;
-                }
-                case "noop":
-                {
-                    stepValue.add(currentValue);
-                    break;
-                }
-            }
-        }
-        var sum = 0l;
-        for (var idx = 20; idx < stepValue.size(); idx+= 40)
-        {
-            var stepVal = stepValue.get(idx-1);
-            sum += idx * stepVal; 
-        }
-        
-        System.out.println(sum);
+//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
         
     }
 }
