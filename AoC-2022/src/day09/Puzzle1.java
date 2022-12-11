@@ -59,10 +59,10 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input1_test.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLinesNonEmpty("input1_test.txt");
         var visited = new HashSet<IntPair>();
         int result = 0;
         IntPair head = Pair.of(0,0);

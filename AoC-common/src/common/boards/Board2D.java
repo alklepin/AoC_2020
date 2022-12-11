@@ -4,11 +4,13 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 
+import common.LinesGroup;
 import common.boards.Generators.Neighbours8Generator;
 import common.queries.Query;
 import common.queries.Sequence;
@@ -486,7 +488,21 @@ public class Board2D
         return data;
     }
 
-    public static Board2D parseAsChars(ArrayList<String> lines)
+    public static Board2D parseAsChars(List<String> lines)
+    {
+        Board2D board = new Board2D(lines.get(0).length(), lines.size());
+        for (var row = 0; row < board.getHeigth(); row++)
+        {
+            var line = lines.get(row);
+            for (var col = 0; col < line.length(); col++)
+            {
+                board.setAtRC(row,  col, line.charAt(col));
+            }
+        }
+        return board;
+    }
+    
+    public static Board2D parseAsChars(LinesGroup lines)
     {
         Board2D board = new Board2D(lines.get(0).length(), lines.size());
         for (var row = 0; row < board.getHeigth(); row++)
@@ -500,7 +516,7 @@ public class Board2D
         return board;
     }
 
-    public static Board2D parseAsInts(ArrayList<String> lines)
+    public static Board2D parseAsInts(List<String> lines)
     {
         var width = lines.get(0).split(" ").length;
         Board2D board = new Board2D(lines.get(0).length(), width);

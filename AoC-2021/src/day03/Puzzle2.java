@@ -56,17 +56,17 @@ public class Puzzle2 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLinesNonEmpty("input2.txt");
         int result1 = 0;
         int result2 = 0;
         
         ArrayList<Integer> data = new ArrayList<Integer>();
         {
             ArrayList<String> filteredLines = new ArrayList<>();
-            filteredLines.addAll(lines);
+            filteredLines.addAll(lines.asCollection());
             int pos = 0;
             while (filteredLines.size() > 1 && pos < 12)
             {
@@ -101,7 +101,7 @@ public class Puzzle2 extends PuzzleCommon
         }        
         {
             ArrayList<String> filteredLines = new ArrayList<>();
-            filteredLines.addAll(lines);
+            filteredLines.addAll(lines.asCollection());
             int pos = 0;
             while (filteredLines.size() > 1 && pos < 12)
             {

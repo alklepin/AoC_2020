@@ -1,8 +1,7 @@
 package day12;
 import static common.geometry.Vect2I.vector;
 
-import java.util.ArrayList;
-
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.geometry.Vect2I;
 
@@ -18,8 +17,8 @@ public class Puzzle2New extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         int result = 0;
         Vect2I current = vector(0,0);
         Vect2I waypoint = vector(10, 1);

@@ -1,12 +1,9 @@
 package day11;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.Generators;
-import common.boards.IntPair;
 import common.queries.Query;
 
 public class Puzzle1New extends PuzzleCommon
@@ -56,8 +53,8 @@ public class Puzzle1New extends PuzzleCommon
         throws Exception
     {
         
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         int height = lines.size();
         int width = lines.get(0).length();
         

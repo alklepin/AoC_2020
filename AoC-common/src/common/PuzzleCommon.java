@@ -51,28 +51,28 @@ public class PuzzleCommon
         
     }
     
-    public ArrayList<String> readAllLinesNonEmpty(String localFile, boolean doTrim)
+    public LinesGroup readAllLinesNonEmpty(String localFile, boolean doTrim)
         throws IOException
     {
         return readAllLines(localFile, true, doTrim);
     }
     
-    public ArrayList<String> readAllLinesNonEmpty(String localFile)
+    public LinesGroup readAllLinesNonEmpty(String localFile)
         throws IOException
     {
         return readAllLines(localFile, true, true);
     }
     
-    public ArrayList<String> readAllLines(String localFile)
+    public LinesGroup readAllLines(String localFile)
         throws IOException
     {
         return readAllLines(localFile, false, true);
     }
     
-    public ArrayList<String> readAllLines(String localFile, boolean skipEmpty, boolean doTrim)
+    public LinesGroup readAllLines(String localFile, boolean skipEmpty, boolean doTrim)
         throws IOException
     {
-        ArrayList<String> lines = new ArrayList<>();
+        LinesGroup lines = new LinesGroup();
         try (InputStream fis = loadLocalFile(localFile))
         {
             try (Scanner scanner = new Scanner(toUTF8Reader(fis)))
@@ -83,7 +83,7 @@ public class PuzzleCommon
                     if (doTrim)
                         line = line.trim();
                     if (!skipEmpty || line.length() > 0)
-                    lines.add(line);
+                    lines.addLine(line);
                 }
             }
         }

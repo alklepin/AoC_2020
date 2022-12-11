@@ -50,8 +50,8 @@ public class Puzzle2_test extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLines("input1_test.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLines("input1_test.txt");
         var board = Board2D.parseAsChars(lines);
 
         var bestScore = -1;

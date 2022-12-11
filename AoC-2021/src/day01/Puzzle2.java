@@ -57,7 +57,7 @@ public class Puzzle2 extends PuzzleCommon
 //        System.out.println(result);
 
         
-        ArrayList<String> lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLines("input1.txt");
         int result = 0;
         ArrayList<Integer> data = new ArrayList<Integer>();
         for (String line : lines)

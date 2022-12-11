@@ -59,8 +59,8 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLines("input1_test.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLines("input1_test.txt");
         Board2D board = new Board2D(lines.get(0).length(), lines.size());
         for (var row = 0; row < board.getHeigth(); row++)
         {

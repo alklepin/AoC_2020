@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
-import common.Tuple;
 import common.boards.Board2D;
 import common.boards.IntPair;
 import common.boards.Pair;
@@ -346,12 +346,12 @@ public class Puzzle3 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1_1.txt", false);
-//        ArrayList<String> lines = readAllLinesNonEmpty("input4.txt", false);
-//        ArrayList<String> lines = readAllLinesNonEmpty("input3.txt", false);
-//        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt", false);
+        LinesGroup lines = readAllLinesNonEmpty("input1_1.txt", false);
+//        LinesGroup lines = readAllLinesNonEmpty("input4.txt", false);
+//        LinesGroup lines = readAllLinesNonEmpty("input3.txt", false);
+//        LinesGroup lines = readAllLinesNonEmpty("input2.txt", false);
         
         Board2D board = new Board2D(13, 7);
         for (int i = 0; i < 7; i++)

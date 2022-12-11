@@ -1,10 +1,10 @@
 package day21;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle1 extends PuzzleCommon
@@ -24,8 +24,8 @@ public class Puzzle1 extends PuzzleCommon
         HashMap<String, String> alergToIngr = new HashMap<>();
         HashMap<String, HashSet<String>> alergToIngrSet = new HashMap<>();
         
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         int result = 0;
         for (String line : lines)
         {

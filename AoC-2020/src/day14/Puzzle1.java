@@ -51,8 +51,8 @@ public class Puzzle1 extends PuzzleCommon
         long andMask = 0;
         long orMask = 0;
         
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         for (String line : lines)
         {
             String[] parts = line.split(" = ");

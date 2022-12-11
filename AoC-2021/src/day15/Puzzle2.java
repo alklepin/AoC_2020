@@ -60,11 +60,11 @@ public class Puzzle2 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input3.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLinesNonEmpty("input2.txt");
+//        LinesGroup lines = readAllLinesNonEmpty("input3.txt");
         var dim = lines.get(0).length();
         Board2D board0 = new Board2D(dim, dim);
         int result = 0;

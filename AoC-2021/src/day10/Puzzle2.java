@@ -58,10 +58,10 @@ public class Puzzle2 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-//        ArrayList<String> lines = readAllLinesNonEmpty("input2.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLinesNonEmpty("input2.txt");
         long result = 0;
         ArrayList<Long> scores = new ArrayList<>();
         for (String line : lines)

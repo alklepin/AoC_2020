@@ -1,12 +1,11 @@
 package day17;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
-import common.geometry.Vect3I;
 import common.geometry.Vect4I;
 
 public class Puzzle2 extends PuzzleCommon
@@ -34,8 +33,8 @@ public class Puzzle2 extends PuzzleCommon
         HashMap<Vect4I, Integer> board = new HashMap<>();
         HashMap<Vect4I, Integer> boardNext = new HashMap<>();
         
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         int result = 0;
         int x,y,z;
         

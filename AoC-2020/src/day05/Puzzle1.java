@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle1 extends PuzzleCommon
@@ -43,7 +44,7 @@ public class Puzzle1 extends PuzzleCommon
 //            }
 //        }
 
-        ArrayList<String> lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLines("input1.txt");
         int maxSeatId = -1;
         for (String line : lines)
         {

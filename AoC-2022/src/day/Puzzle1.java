@@ -58,9 +58,9 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines(inputFile);
+//        LinesGroup lines = readAllLines(inputFile);
         
-//        ArrayList<String> lines = readAllLinesNonEmpty(inputFile);
+//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
 //        int result = 0;
 //        for (String line : lines)
 //        {

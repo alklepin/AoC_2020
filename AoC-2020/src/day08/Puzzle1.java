@@ -66,7 +66,7 @@ public class Puzzle1 extends PuzzleCommon
         throws Exception
     {
         ArrayList<Command> program = new ArrayList<>();
-        ArrayList<String> lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLines("input1.txt");
         long result = 0;
         for (String line : lines)
         {

@@ -1,10 +1,8 @@
 package day07;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.graph.Graph;
 
@@ -32,7 +30,7 @@ public class Puzzle1New extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLines("input1.txt");
         int result = 0;
         for (String line : lines)
         {

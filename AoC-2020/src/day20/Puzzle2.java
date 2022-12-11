@@ -144,8 +144,8 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input2.txt");
-//        ArrayList<String> lines = readAllLines("test2.txt");
+        LinesGroup lines = readAllLines("input2.txt");
+//        LinesGroup lines = readAllLines("test2.txt");
 
         char[][] matrix1 = new char[lines.size()][];
         char[][] matrix2 = new char[lines.size()][];

@@ -1,8 +1,6 @@
 package day01;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle2 extends PuzzleCommon
@@ -18,7 +16,7 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLines("input1.txt");
         long result = 0;
         for (String line : lines)
         {

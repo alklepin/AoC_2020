@@ -51,8 +51,8 @@ public class Puzzle2 extends PuzzleCommon
     {
         HashMap<Long, Long> memory = new HashMap<>();
         
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test2.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test2.txt");
         String mask = ""; 
         for (String line : lines)
         {

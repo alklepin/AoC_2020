@@ -1,6 +1,7 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -76,5 +77,10 @@ public class LinesGroup implements Iterable<String>
     public void reverse()
     {
         Collections.reverse(lines);
+    }
+    
+    public Collection<String> asCollection()
+    {
+        return Collections.unmodifiableCollection(lines);
     }
 }

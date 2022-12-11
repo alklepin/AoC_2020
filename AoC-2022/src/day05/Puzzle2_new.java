@@ -119,9 +119,9 @@ public class Puzzle2_new extends PuzzleCommon
         }
         
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
-//        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+//        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
 //        int result = 0;
 //        for (String line : lines)
 //        {

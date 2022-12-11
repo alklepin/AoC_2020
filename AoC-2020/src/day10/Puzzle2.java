@@ -51,7 +51,7 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLines("input1.txt");
         int result = 0;
         ArrayList<Integer> values = new ArrayList<>();
         for (String line : lines)

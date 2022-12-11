@@ -56,7 +56,7 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("input1.txt");
         
 //        var l = "[[[[[9,8],1],2],3],4]";
 //        var l = "[7,[6,[5,[4,[3,2]]]]]";
@@ -78,7 +78,7 @@ public class Puzzle1 extends PuzzleCommon
 //        
 //        System.exit(0);
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt");
         int result = 0;
         ArrayList<Node> numbers = new ArrayList<Node>();
         for (String line : lines)

@@ -48,8 +48,8 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         int result = 0;
         int time = parseInt(lines.get(0), 0);
         ArrayList<IntPair> busesIdx = new ArrayList<>();

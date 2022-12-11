@@ -1,12 +1,10 @@
 package day24;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.IntPair;
-import common.boards.IntTriple;
 
 public class Puzzle2 extends PuzzleCommon
 {
@@ -38,8 +36,8 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        ArrayList<String> lines = readAllLines("input1.txt");
-//        ArrayList<String> lines = readAllLines("test.txt");
+        LinesGroup lines = readAllLines("input1.txt");
+//        LinesGroup lines = readAllLines("test.txt");
         int result = 0;
         HashSet<IntPair> tiles = new HashSet<>();
         for (String line : lines)
