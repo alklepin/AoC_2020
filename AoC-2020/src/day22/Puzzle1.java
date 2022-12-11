@@ -3,8 +3,8 @@ package day22;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.queries.Query;
 

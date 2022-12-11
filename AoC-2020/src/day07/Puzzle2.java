@@ -3,8 +3,8 @@ package day07;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle2 extends PuzzleCommon

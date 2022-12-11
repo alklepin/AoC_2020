@@ -3,6 +3,7 @@ package day18;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import day18.solver.Processor;
 

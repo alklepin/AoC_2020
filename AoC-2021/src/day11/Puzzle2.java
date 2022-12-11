@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import common.IntValue;
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators;
 import common.boards.IntPair;
-import common.boards.Pair;
 
 public class Puzzle2 extends PuzzleCommon
 {

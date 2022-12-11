@@ -3,16 +3,12 @@ package day05;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import common.IntValue;
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators;
 import common.boards.Generators.RayGenerator;
 import common.boards.Pair;
-import common.geometry.Line;
-import common.geometry.Segment;
 import common.geometry.SegmentInt;
-import common.geometry.Vect2D;
 
 public class Puzzle2 extends PuzzleCommon
 {

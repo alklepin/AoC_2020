@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.Tuple;
-import common.boards.IntTriple;
 import common.geometry.CubeInt;
 
 public class Puzzle2 extends PuzzleCommon

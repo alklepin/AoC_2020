@@ -2,8 +2,8 @@ package day13;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle1 extends PuzzleCommon

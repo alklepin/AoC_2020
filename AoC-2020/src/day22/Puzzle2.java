@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.graph.Pair;
 import common.queries.Query;

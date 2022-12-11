@@ -2,11 +2,10 @@ package day08;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators;
 import common.boards.IntPair;
 import common.boards.Pair;
 import common.queries.Query;

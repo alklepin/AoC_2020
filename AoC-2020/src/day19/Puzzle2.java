@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle2 extends PuzzleCommon

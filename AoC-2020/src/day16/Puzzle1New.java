@@ -2,8 +2,8 @@ package day16;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.IntPair;
 import common.queries.Query;

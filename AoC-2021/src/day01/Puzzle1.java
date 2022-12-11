@@ -3,6 +3,7 @@ package day01;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle1 extends PuzzleCommon

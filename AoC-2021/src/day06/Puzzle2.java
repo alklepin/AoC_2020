@@ -3,8 +3,8 @@ package day06;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
-import common.boards.Board2D;
 
 public class Puzzle2 extends PuzzleCommon
 {

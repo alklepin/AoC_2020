@@ -1,10 +1,10 @@
 package day20;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.IntPair;
 import common.queries.Query;

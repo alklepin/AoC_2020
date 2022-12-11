@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 
 public class Puzzle2 extends PuzzleCommon

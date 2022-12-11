@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.graph.Graph;
 import common.graph.TraverseState;

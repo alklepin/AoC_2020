@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.IntPair;
-import common.graph.Graph;
 
 public class Puzzle2 extends PuzzleCommon
 {

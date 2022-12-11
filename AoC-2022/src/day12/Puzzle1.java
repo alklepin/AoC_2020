@@ -1,6 +1,5 @@
-package day08;
+package day12;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import common.LinesGroup;
@@ -46,7 +45,10 @@ public class Puzzle1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        ArrayList<LinesGroup> groups = readAllLineGroups("input1.txt");
+        var inputFile = "input1.txt";
+//        var inputFile = "input1_test.txt";
+        
+//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
 //        // System.out.println(groups.size());
 //        
 //        int result = 0;
@@ -56,29 +58,14 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        ArrayList<String> lines = readAllLines("input1.txt");
+//        ArrayList<String> lines = readAllLines(inputFile);
         
-        ArrayList<String> lines = readAllLinesNonEmpty("input1.txt");
-        int result = 0;
-        for (String line : lines)
-        {
-            var parts = line.split("\\|");
-            var source = parts[0].split(" ");
-            var target = parts[1].split(" ");
-            for (var s : target)
-            {
-                switch (s.length())
-                {
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 7:
-                        result++;
-                        break;
-                }
-            }
-        }
-        System.out.println(result);
+//        ArrayList<String> lines = readAllLinesNonEmpty(inputFile);
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
         
     }
 }

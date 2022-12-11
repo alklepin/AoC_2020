@@ -5,23 +5,24 @@ import java.util.Arrays;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.Strings;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public Monkey parseGroup(LinesGroup group)
     {
         var monkey = new Monkey();
-        monkey.items = Query.wrap(group.get(1).split(": |, "))
+        monkey.items = Strings.tokenize(group.line(1), ": |, ")
             .skip(1)
-            .select(item -> parseInt(item)).toList();
+            .select(item -> Long.valueOf(parseInt(item))).toList();
         var opLine = group.get(2);
         var opLineParts = opLine.split(" ");
         if (opLine.indexOf("+") >= 0)
@@ -57,16 +58,16 @@ public class Puzzle1 extends PuzzleCommon
     
     static class Monkey
     {
-        ArrayList<Integer> items = new ArrayList<>();
+        ArrayList<Long> items = new ArrayList<>();
         OpType opType;
         int operand;
         int div = 1;
         int ifTrue;
         int ifFalse;
         
-        int worryLevelForItem(int idx)
+        long worryLevelForItem(int idx, long modulo)
         {
-            int level = items.get(idx);
+            long level = items.get(idx);
             level = switch (opType)
                 {
                     case Add -> level + operand;
@@ -75,11 +76,11 @@ public class Puzzle1 extends PuzzleCommon
                 };
 //            double l3 = level / 3.0;
 //            level = (int)Math.round(l3);
-            level = level / 3;
+            level = level % modulo;
             return level;
         }
 
-        int dispatchTo(int level)
+        int dispatchTo(long level)
         {
             if (level % div == 0)
                 return ifTrue;
@@ -98,18 +99,23 @@ public class Puzzle1 extends PuzzleCommon
         // System.out.println(groups.size());
         
         ArrayList<Monkey> monkeys = new ArrayList<>();
-        int result = 0;
         for (LinesGroup group : groups)
         {
             monkeys.add(group.processGroup(this::parseGroup));
         }
         
-        System.out.println("Initial stat");
+        System.out.println("Initial state");
         printMonkeys(monkeys);
+
+        var modulo = 1;
+        for (int mIdx = 0; mIdx < monkeys.size(); mIdx++)
+        {
+            modulo *= monkeys.get(mIdx).div;
+        }
         
-        int[] inspected = new int[monkeys.size()];
+        long[] inspected = new long[monkeys.size()];
         
-        for (int round = 1; round <= 20; round++)
+        for (int round = 1; round <= 10000; round++)
         {
             for (int mIdx = 0; mIdx < monkeys.size(); mIdx++)
             {
@@ -117,19 +123,22 @@ public class Puzzle1 extends PuzzleCommon
                 inspected[mIdx] += monkey.items.size();
                 for (int itemIdx = 0; itemIdx < monkey.items.size(); itemIdx++)
                 {
-                    var level = monkey.worryLevelForItem(itemIdx);
+                    var level = monkey.worryLevelForItem(itemIdx, modulo);
                     var dispatchTo = monkey.dispatchTo(level);
                     monkeys.get(dispatchTo).items.add(level);
                 }
                 monkey.items.clear();
             }
             
-            System.out.println("Round "+round);
-            printMonkeys(monkeys);
+//            System.out.println("Round "+round);
+//            printMonkeys(monkeys);
         }
+
+        System.out.println("Final state");
+        printMonkeys(monkeys);
         
         Arrays.sort(inspected);
-        result = inspected[inspected.length-1] * inspected[inspected.length-2]; 
+        long result = inspected[inspected.length-1] * inspected[inspected.length-2]; 
         
         System.out.println(result);
     }

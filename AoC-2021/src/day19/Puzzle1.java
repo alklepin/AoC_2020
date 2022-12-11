@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import common.Tuple;
+import common.LinesGroup;
 import common.PuzzleCommon;
-import common.boards.IntTriple;
+import common.Tuple;
 import common.geometry.Rotations3D;
 import common.geometry.Vect3I;
 import common.queries.Query;
