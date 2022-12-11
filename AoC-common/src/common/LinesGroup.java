@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import common.queries.Query;
+
 public class LinesGroup implements Iterable<String>
 {
     public static interface GroupProcessorAction
@@ -49,6 +51,16 @@ public class LinesGroup implements Iterable<String>
     public String line(int pos)
     {
         return lines.get(pos);
+    }
+
+    public Query<String> lineTokens(int pos)
+    {
+        return Strings.tokenize(lines.get(pos));
+    }
+
+    public Query<String> lineTokens(int pos, String regexp)
+    {
+        return Strings.tokenize(lines.get(pos), regexp);
     }
     
     public int size()

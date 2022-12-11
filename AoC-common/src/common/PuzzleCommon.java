@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import common.queries.Query;
+
 public class PuzzleCommon
 {
     public static final String EnglishCharsLow = "abcdefghijklmnopqrstuvwxyz";
@@ -149,6 +151,23 @@ public class PuzzleCommon
     public static int parseInt(String value)
     {
         return Integer.parseInt(value);
+    }
+
+    public static long parseLong(String value)
+    {
+        return Long.parseLong(value);
+    }
+
+    public static int parseInt(Iterable<String> iterable, int tokenIdx)
+    {
+        var token = Query.wrap(iterable).single(tokenIdx);
+        return parseInt(token);
+    }
+    
+    public static int parseInt(Iterable<String> iterable, int tokenIdx, int defaultValue)
+    {
+        var token = Query.wrap(iterable).single(tokenIdx);
+        return parseInt(token, defaultValue);
     }
     
     public static boolean fitsRange(String value, int rangeStart, int rangeEnd)

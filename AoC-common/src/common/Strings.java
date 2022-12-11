@@ -8,4 +8,9 @@ public class Strings
     {
         return Query.wrap(line.split(regexp));
     }
+
+    public static Query<String> tokenize(String line)
+    {
+        return Query.wrap(line.split(" "));
+    }
 }

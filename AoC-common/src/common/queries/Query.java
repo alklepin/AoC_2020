@@ -219,7 +219,20 @@ public class Query<T> implements Iterable<T>
     {
         Iterator<T> iter = iterator();
         if (iter.hasNext())
-            return iterator().next();
+            return iter.next();
+        return null;
+    }
+
+    public T single(int index)
+    {
+        Iterator<T> iter = iterator();
+        while (iter.hasNext() && index > 0)
+        {
+            iter.next();
+            index--;
+        }
+        if (index == 0 && iter.hasNext())
+            return iter.next();
         return null;
     }
     

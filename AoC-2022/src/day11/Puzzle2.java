@@ -20,10 +20,10 @@ public class Puzzle2 extends PuzzleCommon
     public Monkey parseGroup(LinesGroup group)
     {
         var monkey = new Monkey();
-        monkey.items = Strings.tokenize(group.line(1), ": |, ")
+        monkey.items = group.lineTokens(1, ": |, ")
             .skip(1)
-            .select(item -> Long.valueOf(parseInt(item))).toList();
-        var opLine = group.get(2);
+            .select(Puzzle2::parseLong).toList();
+        var opLine = group.line(2);
         var opLineParts = opLine.split(" ");
         if (opLine.indexOf("+") >= 0)
         {
@@ -44,9 +44,9 @@ public class Puzzle2 extends PuzzleCommon
                 monkey.opType = OpType.Mul;
             }
         }
-        monkey.div = parseInt(group.get(3).split(" ")[3]);
-        monkey.ifTrue = parseInt(group.get(4).split(" ")[5]);
-        monkey.ifFalse = parseInt(group.get(5).split(" ")[5]);
+        monkey.div = parseInt(group.lineTokens(3), 3);
+        monkey.ifTrue = parseInt(group.lineTokens(4), 5); 
+        monkey.ifFalse = parseInt(group.lineTokens(5), 5);
         
         return monkey;
     }
@@ -74,8 +74,6 @@ public class Puzzle2 extends PuzzleCommon
                     case Mul -> level * operand;
                     case Sq -> level * level;
                 };
-//            double l3 = level / 3.0;
-//            level = (int)Math.round(l3);
             level = level % modulo;
             return level;
         }
