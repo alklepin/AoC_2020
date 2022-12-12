@@ -48,11 +48,14 @@ public class Segment
         return p;
     }
 
+    public Vect2D asVector()
+    {
+        return m_point2.minus(m_point1);
+    }
+    
     @Override
     public String toString()
     {
         return "Segment [m_point1=" + m_point1 + ", m_point2=" + m_point2 + "]";
     }
-
-    
 }
