@@ -31,6 +31,9 @@ public class Query<T> implements Iterable<T>
 
     public static <Type> Query<Type> wrap(Iterable<Type> source)
     {
+        if (source instanceof Query)
+            return (Query<Type>)source;
+        
         return new Query<Type>(source);
     }
     

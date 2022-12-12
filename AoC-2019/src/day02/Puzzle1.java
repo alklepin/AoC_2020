@@ -1,9 +1,10 @@
-package day;
+package day02;
 
 import java.util.HashMap;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.queries.Query;
 
 public class Puzzle1 extends PuzzleCommon
 {
@@ -58,14 +59,40 @@ public class Puzzle1 extends PuzzleCommon
 //        }
 //        System.out.println(result);
         
-//        LinesGroup lines = readAllLines(inputFile);
+        LinesGroup lines = readAllLines(inputFile);
+        var memory = lines.lineTokens(0, ",").select(token -> parseLong(token)).toList();
+        memory.set(1, 12l);
+        memory.set(2, 2l);
+        boolean running = true;
+        int idx = 0;
+        while (running)
+        {
+            var op = memory.get(idx);
+            if (op == 99)
+            {
+                running = false;
+                break;
+            }
+            else if (op == 1)
+            {
+                var res = memory.get(memory.get(idx + 1).intValue()) + memory.get(memory.get(idx + 2).intValue());
+                var addr = memory.get(idx + 3);
+                memory.set(addr.intValue(), res);
+            }
+            else if (op == 2)
+            {
+                var res = memory.get(memory.get(idx + 1).intValue()) * memory.get(memory.get(idx + 2).intValue());
+                var addr = memory.get(idx + 3);
+                memory.set(addr.intValue(), res);
+            }
+            else
+            {
+                throw new IllegalStateException();
+            }
+            idx += 4;
+        }
         
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        System.out.println(memory.get(0));
         
     }
 }

@@ -153,7 +153,7 @@ public class IntPair
     @Override
     public String toString()
     {
-        return "IntPair [m_x=" + m_x + ", m_y=" + m_y + "]";
+        return "(" + m_x + ", " + m_y + ")";
     }
 
     public boolean componentLessEq(IntPair next)

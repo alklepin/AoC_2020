@@ -82,53 +82,62 @@ public class Puzzle2 extends PuzzleCommon
 
         board.setAtXY(start, 'a');
         board.setAtXY(end, 'z');
-        
-        LinkedList<IntPair> queue = new LinkedList<>();
-        HashSet<IntPair> visited = new HashSet<>();
-        HashMap<IntPair, IntPair> visitedFrom = new HashMap<>();
-        visited.add(start);
-        queue.add(start);
-        while (queue.size() > 0)
-        {
-            IntPair current = queue.poll();
-            char currentHeight = board.getCharAtXY(current);
-            for (var next : board.neighbours4XY(current))
-            {
-                if (!board.containsXY(next) || visited.contains(next))
-                    continue;
 
-                char nextHeight = board.getCharAtXY(next);
-                if (nextHeight - currentHeight > 1)
-                    continue;
-                
-                visited.add(next);
-                visitedFrom.put(next, current);
-                if (next.equals(end))
-                {
-                    break;
-                }
-                queue.add(next);
-            }
-        }
-        
-        if (!visited.contains(end))
-            throw new IllegalStateException();
-        
-        ArrayList<IntPair> result = new ArrayList<>();
-        IntPair current = end;
-        while (current != null)
+        int min = Integer.MAX_VALUE;
+        for (var cell : board.allCellsXY())
         {
-            result.add(current);
-            current = visitedFrom.get(current);
-        }
-        Collections.reverse(result);
-        
+            var c = board.getCharAtXY(cell);
+            if (c != 'a')
+                continue;
+            
+            start = cell;
+            LinkedList<IntPair> queue = new LinkedList<>();
+            HashSet<IntPair> visited = new HashSet<>();
+            HashMap<IntPair, IntPair> visitedFrom = new HashMap<>();
+            visited.add(start);
+            queue.add(start);
+            while (queue.size() > 0)
+            {
+                IntPair current = queue.poll();
+                char currentHeight = board.getCharAtXY(current);
+                for (var next : board.neighbours4XY(current))
+                {
+                    if (!board.containsXY(next) || visited.contains(next))
+                        continue;
+    
+                    char nextHeight = board.getCharAtXY(next);
+                    if (nextHeight - currentHeight > 1)
+                        continue;
+                    
+                    visited.add(next);
+                    visitedFrom.put(next, current);
+                    if (next.equals(end))
+                    {
+                        break;
+                    }
+                    queue.add(next);
+                }
+            }
+            
+            if (!visited.contains(end))
+                continue;
+            
+            ArrayList<IntPair> result = new ArrayList<>();
+            IntPair current = end;
+            while (current != null)
+            {
+                result.add(current);
+                current = visitedFrom.get(current);
+            }
+            Collections.reverse(result);
+            min = Math.min(min, result.size());
+        }        
         
 //        int result = 0;
 //        for (String line : lines)
 //        {
 //        }
-        System.out.println(result.size()-1);
+        System.out.println(min-1);
         
     }
 }

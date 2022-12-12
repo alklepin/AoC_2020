@@ -9,6 +9,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 
 import common.LinesGroup;
 import common.boards.Generators.Neighbours8Generator;
@@ -262,15 +263,46 @@ public class Board2D
     
     public Iterable<IntPair> allCellsRC()
     {
+        return allCellsRCImpl();
+    }
+    
+    public Iterable<IntPair> allCellsXY()
+    {
+        return allCellsXYImpl();
+    }
+    
+    private Query<IntPair> allCellsRCImpl()
+    {
         return Query.range(0, m_width).selectMany(
             col -> Query.range(0, m_heigth).select(row -> Pair.of(row, col)));
     }
 
-    public Iterable<IntPair> allCellsXY()
+    private Query<IntPair> allCellsXYImpl()
     {
         return Query.range(0, m_width).selectMany(
             col -> Query.range(0, m_heigth).select(row -> Pair.of(col, row)));
     }
+
+    public Query<IntPair> findXY(Predicate<? super IntPair> predicate)
+    {
+        return allCellsXYImpl().where(predicate);
+    }
+
+    public Query<IntPair> findRC(Predicate<? super IntPair> predicate)
+    {
+        return allCellsRCImpl().where(predicate);
+    }
+
+    public Query<IntPair> findCharXY(char value)
+    {
+        return allCellsXYImpl().where(cell -> getCharAtXY(cell) == value);
+    }
+
+    public Query<IntPair> findCharRC(char value)
+    {
+        return allCellsRCImpl().where(cell -> getCharAtXY(cell) == value);
+    }
+    
     
     public ArrayList<ArrayList<IntPair>> connectedComponentsXY(ArrayList<IntPair> starts, 
         Function<IntPair, Iterable<IntPair>> movesGenerator,
