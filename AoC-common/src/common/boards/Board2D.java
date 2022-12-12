@@ -100,6 +100,11 @@ public class Board2D
     {
         return (char)m_data[cell.getX()][cell.getY()];
     }
+
+    public char getCharAtXY(IntPair cell)
+    {
+        return (char)m_data[cell.getY()][cell.getX()];
+    }
     
     public String getRowAsString(int row)
     {
@@ -258,13 +263,13 @@ public class Board2D
     public Iterable<IntPair> allCellsRC()
     {
         return Query.range(0, m_width).selectMany(
-            row -> Query.range(0, m_heigth).select(col -> Pair.of(row, col)));
+            col -> Query.range(0, m_heigth).select(row -> Pair.of(row, col)));
     }
 
     public Iterable<IntPair> allCellsXY()
     {
         return Query.range(0, m_width).selectMany(
-            row -> Query.range(0, m_heigth).select(col -> Pair.of(col, row)));
+            col -> Query.range(0, m_heigth).select(row -> Pair.of(col, row)));
     }
     
     public ArrayList<ArrayList<IntPair>> connectedComponentsXY(ArrayList<IntPair> starts, 
