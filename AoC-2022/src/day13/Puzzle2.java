@@ -1,18 +1,19 @@
 package day13;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -151,6 +152,11 @@ public class Puzzle1 extends PuzzleCommon
             result.append(']');
             return result.toString();
         }
+        
+        public String toString()
+        {
+            return print();
+        }
 
         @Override
         public int compareTo(ListNode other)
@@ -177,6 +183,8 @@ public class Puzzle1 extends PuzzleCommon
         ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
 //        // System.out.println(groups.size());
 //        
+        ArrayList<ListNode> allPackets = new ArrayList<>();
+        
         int result = 0;
         int index = 0;
         for (LinesGroup group : groups)
@@ -189,17 +197,37 @@ public class Puzzle1 extends PuzzleCommon
             var nodeRight = new ListNode();
             nodeRight.parse(lineRight, 0);
   
-            System.out.println(nodeLeft.print());
-            System.out.println(nodeRight.print());
-
-            System.out.println(nodeLeft.compareTo(nodeRight));
+//            System.out.println(nodeLeft.print());
+//            System.out.println(nodeRight.print());
+//
+//            System.out.println(nodeLeft.compareTo(nodeRight));
+//            
+//            System.out.println();
             
-            System.out.println();
-            
-            if (nodeLeft.compareTo(nodeRight) <= 0)
-                result += index;
+            allPackets.add(nodeLeft);
+            allPackets.add(nodeRight);
         }
-        System.out.println(result);
+        var divider1 = new ListNode();
+        divider1.parse("[[2]]", 0);
+        allPackets.add(divider1);
+
+        var divider2 = new ListNode();
+        divider2.parse("[[6]]", 0);
+        allPackets.add(divider2);
+        
+        Collections.sort(allPackets);
+        
+        var idx1 = allPackets.indexOf(divider1);
+        var idx2 = allPackets.indexOf(divider2);
+        
+        for (var p : allPackets)
+        {
+            System.out.println(p);
+        }
+        
+        System.out.println(idx1);
+        System.out.println(idx2);
+        System.out.println((idx1+1) * (idx2+1));
         
     }
 }
