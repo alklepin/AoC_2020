@@ -8,13 +8,13 @@ import common.boards.Board2D;
 import common.boards.Generators;
 import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public void solve()
@@ -52,7 +52,14 @@ public class Puzzle1 extends PuzzleCommon
         minX = Math.min(minX, sandSource.getX());
         minY = Math.min(minY, sandSource.getY());
         
+        var addSegment = new ArrayList<IntPair>();
+        addSegment.add(IntPair.of(sandSource.getX() - maxY - 2, maxY + 2));
+        addSegment.add(IntPair.of(sandSource.getX() + maxY + 2, maxY + 2));
+        maxY = maxY + 2;
+        maxX = Math.max(maxX, sandSource.getX() + maxY + 2);
+        minX = Math.min(minX, sandSource.getX() - maxY - 2);
         
+        segments.add(addSegment);
         var base = new IntPair(minX, minY);
         
         sandSource = sandSource.minus(base);
@@ -89,6 +96,7 @@ public class Puzzle1 extends PuzzleCommon
         while (running)
         {
             var sand = sandSource.copy();
+            var steps = 0;
             var sandMoves = true;
             while (sandMoves)
             {
@@ -101,6 +109,7 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         sand = next;
                         sandMoves = true;
+                        steps++;
                         continue;
                     }
                 }
@@ -117,6 +126,7 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         sand = next;
                         sandMoves = true;
+                        steps++;
                         continue;
                     }
                 }
@@ -133,6 +143,7 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         sand = next;
                         sandMoves = true;
+                        steps++;
                         continue;
                     }
                 }
@@ -142,6 +153,8 @@ public class Puzzle1 extends PuzzleCommon
                     running = false;
                 }
             }
+            if (steps == 0)
+                running = false;
             if (running)
             {
                 count++;
@@ -151,6 +164,6 @@ public class Puzzle1 extends PuzzleCommon
         
         board.printAsStrings(System.out);
         System.out.println();
-        System.out.println(count);
+        System.out.println(count+1);
     }
 }

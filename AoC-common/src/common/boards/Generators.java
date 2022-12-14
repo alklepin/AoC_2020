@@ -40,6 +40,11 @@ public class Generators
         return new RayGenerator(start, delta, count);
     }
     
+    public static Iterable<IntPair> ray(IntPair start, IntPair delta, int count, boolean includeStart)
+    {
+        return new RayGenerator(start, delta, count, includeStart);
+    }
+    
     public static class RayGenerator
         implements Iterable<IntPair>
     {

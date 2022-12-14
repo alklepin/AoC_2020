@@ -5,30 +5,28 @@ import java.util.ArrayList;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
+import common.boards.Bounds;
 import common.boards.Generators;
 import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2Test extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2Test().solve();
     }
     
     public void solve()
         throws Exception
     {
-        var inputFile = "input1.txt";
-//        var inputFile = "input1_test.txt";
+//        var inputFile = "input1.txt";
+        var inputFile = "input1_test.txt";
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int result = 0;
-        int maxX = 0;
-        int maxY = 0;
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
+        var bounds = new Bounds();
         var segments = new ArrayList<ArrayList<IntPair>>();
         for (String line : lines)
         {
@@ -38,27 +36,30 @@ public class Puzzle1 extends PuzzleCommon
             {
                 var pair = IntPair.from(s);
                 segment.add(pair);
-                maxX = Math.max(maxX, pair.getX());
-                maxY = Math.max(maxY, pair.getY());
-                minX = Math.min(minX, pair.getX());
-                minY = Math.min(minY, pair.getY());
+                bounds.extendBy(pair);
             }
             segments.add(segment);
         }
         
         var sandSource = new IntPair(500, 0);
-        maxX = Math.max(maxX, sandSource.getX());
-        maxY = Math.max(maxY, sandSource.getY());
-        minX = Math.min(minX, sandSource.getX());
-        minY = Math.min(minY, sandSource.getY());
+        bounds.extendBy(sandSource);
         
+        var addSegment = new ArrayList<IntPair>();
+        var maxY = bounds.max().getY();
+        var floorLeft = IntPair.of(sandSource.getX() - maxY - 2, maxY + 2);
+        var floorRight = IntPair.of(sandSource.getX() + maxY + 2, maxY + 2);
+
+        addSegment.add(floorLeft);
+        addSegment.add(floorRight);
+        bounds.extendBy(floorLeft);
+        bounds.extendBy(floorRight);
         
-        var base = new IntPair(minX, minY);
+        segments.add(addSegment);
+        var base = bounds.min();
         
         sandSource = sandSource.minus(base);
 
-        
-        var board = new Board2D(maxX-minX+1, maxY-minY+1);
+        var board = new Board2D(bounds);
         board.setAll('.');
         for (var segment : segments)
         {
@@ -89,6 +90,7 @@ public class Puzzle1 extends PuzzleCommon
         while (running)
         {
             var sand = sandSource.copy();
+            var steps = 0;
             var sandMoves = true;
             while (sandMoves)
             {
@@ -101,6 +103,7 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         sand = next;
                         sandMoves = true;
+                        steps++;
                         continue;
                     }
                 }
@@ -117,6 +120,7 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         sand = next;
                         sandMoves = true;
+                        steps++;
                         continue;
                     }
                 }
@@ -133,6 +137,7 @@ public class Puzzle1 extends PuzzleCommon
                     {
                         sand = next;
                         sandMoves = true;
+                        steps++;
                         continue;
                     }
                 }
@@ -142,6 +147,8 @@ public class Puzzle1 extends PuzzleCommon
                     running = false;
                 }
             }
+            if (steps == 0)
+                running = false;
             if (running)
             {
                 count++;
@@ -151,6 +158,6 @@ public class Puzzle1 extends PuzzleCommon
         
         board.printAsStrings(System.out);
         System.out.println();
-        System.out.println(count);
+        System.out.println(count+1);
     }
 }
