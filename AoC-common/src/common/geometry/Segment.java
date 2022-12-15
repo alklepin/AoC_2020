@@ -18,6 +18,12 @@ public class Segment
         this.m_point2 = point2;
     }
     
+    public Segment(IntPair point1, IntPair point2)
+    {
+        this.m_point1 = point1.asVector();
+        this.m_point2 = point2.asVector();
+    }
+    
     public Vect2D getPoint1()
     {
         return m_point1;

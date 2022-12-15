@@ -115,15 +115,15 @@ public class Puzzle2Test2 extends PuzzleCommon
                 var p2r = s2.location.add(IntPair.RIGHT.mult(d2+1));
                 var p2d = s2.location.add(IntPair.DOWN.mult(d2+1));
                 
-                var s1lu = new Segment(p1l.asVector(), p1u.asVector());
-                var s1ur = new Segment(p1u.asVector(), p1r.asVector());
-                var s1rd = new Segment(p1r.asVector(), p1d.asVector());
-                var s1dl = new Segment(p1d.asVector(), p1l.asVector());
+                var s1lu = new Segment(p1l, p1u);
+                var s1ur = new Segment(p1u, p1r);
+                var s1rd = new Segment(p1r, p1d);
+                var s1dl = new Segment(p1d, p1l);
 
-                var s2lu = new Segment(p2l.asVector(), p2u.asVector());
-                var s2ur = new Segment(p2u.asVector(), p2r.asVector());
-                var s2rd = new Segment(p2r.asVector(), p2d.asVector());
-                var s2dl = new Segment(p2d.asVector(), p2l.asVector());
+                var s2lu = new Segment(p2l, p2u);
+                var s2ur = new Segment(p2u, p2r);
+                var s2rd = new Segment(p2r, p2d);
+                var s2dl = new Segment(p2d, p2l);
                 
                 Vect2D p;
 

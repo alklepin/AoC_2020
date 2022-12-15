@@ -98,6 +98,15 @@ public class IntPair
         return Math.max(Math.abs(m_x), Math.abs(m_y));
     }
 
+    /**
+     * Returns Euclidean length
+     * @return
+     */
+    public double length()
+    {
+        return Math.sqrt(m_x * m_x + m_y * m_y);
+    }
+
     @Override
     public int hashCode()
     {
