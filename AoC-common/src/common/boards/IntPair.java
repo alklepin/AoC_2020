@@ -4,7 +4,17 @@ import common.geometry.Vect2D;
 
 public class IntPair
 {
-    public static IntPair ZERO = Pair.of(0,  0);
+    public static final IntPair ZERO = Pair.of(0,  0);
+    
+    public static final IntPair LEFT = IntPair.of(-1, 0);
+    public static final IntPair RIGHT = IntPair.of(1, 0);
+    public static final IntPair UP = IntPair.of(0, 1);
+    public static final IntPair DOWN = IntPair.of(0, -1);
+
+    public static final IntPair UP_LEFT = IntPair.of(-1, 1);
+    public static final IntPair UP_RIGHT = IntPair.of(1, 1);
+    public static final IntPair DOWN_LEFT = IntPair.of(-1, -1);
+    public static final IntPair DOWN_RIGHT = IntPair.of(1, -1);
     
     private int m_x;
     private int m_y;
@@ -12,6 +22,11 @@ public class IntPair
     public static IntPair of(int x, int y)
     {
         return new IntPair(x, y);
+    }
+
+    public static IntPair of(String x, String y)
+    {
+        return new IntPair(Integer.parseInt(x), Integer.parseInt(y));
     }
     
     public Vect2D asVector()
@@ -41,20 +56,10 @@ public class IntPair
         return m_x;
     }
     
-    public void setX(int x)
-    {
-        this.m_x = x;
-    }
-    
     public int getY()
     {
         return m_y;
     }
-    public void setY(int y)
-    {
-        this.m_y = y;
-    }
-    
     public IntPair add(IntPair other)
     {
         return new IntPair(m_x + other.m_x, m_y + other.m_y);
@@ -133,6 +138,9 @@ public class IntPair
         return true;
     }
 
+    /**
+     * Limits coordinates by given rectangle 
+     */
     public IntPair toRectangle(IntPair min, IntPair max)
     {
         int x = m_x;

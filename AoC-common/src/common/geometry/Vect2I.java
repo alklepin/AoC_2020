@@ -7,6 +7,17 @@ public class Vect2I
     public static final Vect2I EAST = new Vect2I(1, 0);
     public static final Vect2I WEST = new Vect2I(-1, 0);
     
+    public static final Vect2I LEFT = Vect2I.of(-1, 0);
+    public static final Vect2I RIGHT = Vect2I.of(1, 0);
+    public static final Vect2I UP = Vect2I.of(0, 1);
+    public static final Vect2I DOWN = Vect2I.of(0, -1);
+
+    public static final Vect2I UP_LEFT = Vect2I.of(-1, 1);
+    public static final Vect2I UP_RIGHT = Vect2I.of(1, 1);
+    public static final Vect2I DOWN_LEFT = Vect2I.of(-1, -1);
+    public static final Vect2I DOWN_RIGHT = Vect2I.of(1, -1);
+    
+    
     private int m_x;
     private int m_y;
 
@@ -30,17 +41,10 @@ public class Vect2I
     {
         return m_x;
     }
-    public void setX(int x)
-    {
-        this.m_x = x;
-    }
+
     public int getY()
     {
         return m_y;
-    }
-    public void setY(int y)
-    {
-        this.m_y = y;
     }
     
     public Vect2I add(Vect2I other)
@@ -116,7 +120,7 @@ public class Vect2I
     @Override
     public String toString()
     {
-        return "IntPair [m_x=" + m_x + ", m_y=" + m_y + "]";
+        return "(" + m_x + ", " + m_y + ")";
     }
 
     

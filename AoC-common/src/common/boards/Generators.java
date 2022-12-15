@@ -45,6 +45,24 @@ public class Generators
         return new RayGenerator(start, delta, count, includeStart);
     }
     
+    public static Iterable<IntPair> rhomb(IntPair center, int radius)
+    {
+        return Query.concat(
+            ray(center.add(IntPair.LEFT.mult(radius)), IntPair.UP_RIGHT, radius, true),
+            ray(center.add(IntPair.UP.mult(radius)), IntPair.DOWN_RIGHT, radius, true),
+            ray(center.add(IntPair.RIGHT.mult(radius)), IntPair.DOWN_LEFT, radius, true),
+            ray(center.add(IntPair.DOWN.mult(radius)), IntPair.UP_LEFT, radius, true));
+    }
+
+    public static Iterable<IntPair> rect(IntPair topLeft, int width, int height)
+    {
+        return Query.concat(
+            ray(topLeft, IntPair.RIGHT, width, true),
+            ray(topLeft.add(IntPair.RIGHT.mult(width)), IntPair.DOWN, height, true),
+            ray(topLeft.add(IntPair.RIGHT.mult(width)).add(IntPair.DOWN.mult(height)), IntPair.LEFT, width, true),
+            ray(topLeft.add(IntPair.DOWN.mult(height)), IntPair.UP, height, true));
+    }
+    
     public static class RayGenerator
         implements Iterable<IntPair>
     {
