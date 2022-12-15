@@ -55,8 +55,8 @@ public class Puzzle2Test extends PuzzleCommon
         for (String line : lines)
         {
             var data = parse("Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)", line);
-            var location = IntPair.of(parseInt(data[1]), parseInt(data[2])); 
-            var beacon = IntPair.of(parseInt(data[3]), parseInt(data[4]));
+            var location = IntPair.of(data[1], data[2]); 
+            var beacon = IntPair.of(data[3], data[4]);
             var sensor = new Sensor(location, beacon);
             sensors.add(sensor);
             beacons.add(beacon);
