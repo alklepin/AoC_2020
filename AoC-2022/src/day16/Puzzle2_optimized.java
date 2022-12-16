@@ -8,6 +8,7 @@ import java.util.HashMap;
 import common.Convert;
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.StopWatch;
 import common.graph.Graph;
 import common.queries.Query;
 
@@ -34,6 +35,8 @@ public class Puzzle2_optimized extends PuzzleCommon
     public void solve()
         throws Exception
     {
+        var sw = new StopWatch();
+        
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
         
@@ -96,6 +99,7 @@ public class Puzzle2_optimized extends PuzzleCommon
             pressureByMinute[openedValves] = sum;
         }        
         
+        sw.reset("Precalc");
         
         var nextStates = new int[1 << 27];
         int[] currentStates = null;
@@ -154,6 +158,8 @@ public class Puzzle2_optimized extends PuzzleCommon
             }
         }
 
+        sw.reset("Mail loop");
+        
         int[] bestForMask = new int[valveStatesCount];
         for (var openedValves = 0; openedValves < valveStatesCount; openedValves++)
         {
@@ -179,7 +185,48 @@ public class Puzzle2_optimized extends PuzzleCommon
                     maxPressure = pressure;
             }
         }        
+        sw.reset("Result");
 
+//        maxPressure = 0;
+//        int openValvesMy = 0;
+//        int openValvesEl = 0;
+//        int bounds = 1;
+//        for (int idx = 0; idx < nonZeroNodes.size(); idx++)
+//        {
+//            bounds *= 3;
+//        }
+//        
+//        for (int idx = 0; idx < bounds; idx++)
+//        {
+//            var value = idx;
+//            openValvesMy = 0;
+//            openValvesEl = 0;
+//            while (value > 0)
+//            {
+//                openValvesMy *= 2;
+//                openValvesEl *= 2;
+//                switch (value % 3)
+//                {
+//                    case 0: 
+//                    {
+//                        openValvesMy += 1;
+//                        break;
+//                    }
+//                    case 1: 
+//                    {
+//                        openValvesEl += 1;
+//                        break;
+//                    }
+//                }
+//                value /= 3;
+//            }
+//            var pressure = bestForMask[openValvesMy] + bestForMask[openValvesEl];
+//            if (pressure >= maxPressure)
+//                maxPressure = pressure;
+//            
+//        }
+//        sw.reset("Result alt");
+            
         System.out.println(maxPressure);
     }
     
