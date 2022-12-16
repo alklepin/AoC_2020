@@ -72,7 +72,8 @@ public class Puzzle2 extends PuzzleCommon
         {
             System.out.println(line);
             // Valve VN has flow rate=0; tunnels lead to valves LW, TK
-            var parts = parse("Valve ([A-Z][A-Z]) has flow rate=(\\d+); tunnels? leads? to valves? (.*)", line);
+//            var parts = parse("Valve ([A-Z][A-Z]) has flow rate=(\\d+); tunnels? leads? to valves? (.*)", line);
+            var parts = parse("Valve (\\w{2}) has flow rate=(\\d+); tunnels? leads? to valves? (.*)", line);
             var node = new Node();
             node.nodeIdx = nodeIdx;
             node.name = parts[1];
