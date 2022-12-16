@@ -8,13 +8,13 @@ import common.LinesGroup;
 import common.PuzzleCommon;
 import common.graph.Graph;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle1_optimized extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle1_optimized().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -49,8 +49,10 @@ public class Puzzle1 extends PuzzleCommon
     {
         public String name;
         public int pressure;
-        public ArrayList<String> next = new ArrayList();
-        
+        public ArrayList<String> nextList = new ArrayList();
+        public int[] next;
+
+        public int nodeIdx;
         public int valveBit;
     }
     
@@ -62,20 +64,24 @@ public class Puzzle1 extends PuzzleCommon
         
         var nonZeroNodes = new ArrayList<Node>();
         ArrayList<Node> nodes = new ArrayList<>();
-//        HashMap<String, Node> nodesMap = new HashMap<>();
+        HashMap<String, Node> nodesMap = new HashMap<>();
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int result = 0;
+        int nodeIdx = 0;
         for (String line : lines)
         {
             System.out.println(line);
             // Valve VN has flow rate=0; tunnels lead to valves LW, TK
             var parts = parse("Valve ([A-Z][A-Z]) has flow rate=(\\d+); tunnels? leads? to valves? (.*)", line);
             var node = new Node();
+            node.nodeIdx = nodeIdx;
             node.name = parts[1];
             node.pressure = parseInt(parts[2]);
-            Collections.addAll(node.next, parts[3].split(", "));
+            Collections.addAll(node.nextList, parts[3].split(", "));
             nodes.add(node);
-  //          nodesMap.put(node.name, node);
+            nodeIdx++;
+            
+            nodesMap.put(node.name, node);
             
             if (node.pressure > 0)
             {
@@ -83,22 +89,19 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         
+        for (var n : nodes)
+        {
+            int[] nextNodes = new int[n.nextList.size()];
+            for (int idx = 0; idx <nextNodes.length; idx++)
+            {
+                nextNodes[idx] = nodesMap.get(n.nextList.get(idx)).nodeIdx;
+            }
+            n.next = nextNodes;
+        }
+        
+        
         Collections.sort(nonZeroNodes, (n1, n2) -> Integer.compare(n2.pressure, n1.pressure));
         
-        var graph = new Graph<String, Node>(() -> new Node());
-        for (var node : nodes)
-        {
-            graph.addNode(node.name);
-        }
-        graph.addNode("**"); // ephemeral node
-        for (var node : nodes)
-        {
-            for (var next : node.next)
-            {
-                graph.addEdge(node.name, next, 1);
-            }
-        }
-
         for (var idx = 0; idx < nonZeroNodes.size(); idx++)
         {
             nonZeroNodes.get(idx).valveBit = idx;
@@ -106,19 +109,9 @@ public class Puzzle1 extends PuzzleCommon
         
         int valveStatesCount = 1 << nonZeroNodes.size();
 
-        var knownStates = new HashMap<State, Integer>();
-//        var nextStates = new HashMap<State, State>();
         
-        for (var openedValves = 0; openedValves < valveStatesCount; openedValves++)
-        {
-            for (var node : nodes)
-            {
-                var st = new State(node.name, 0, openedValves);
-                knownStates.put(st,0);
-            }
-        }
+        int [] pressureByMinute = new int[valveStatesCount];
         
-        ArrayList<Integer> pressureByMinute = new ArrayList<>();
         for (var openedValves = 0; openedValves < valveStatesCount; openedValves++)
         {
             var value = openedValves;
@@ -129,58 +122,70 @@ public class Puzzle1 extends PuzzleCommon
                     sum += nonZeroNodes.get(idx).pressure;
                 value /= 2;
             }
-            pressureByMinute.add(sum);
+            pressureByMinute[openedValves] = sum;
         }        
+        
+        
+        var currentStates = new int[1 << 27];
+        var prevStates = new int[1 << 27];
+        
+        for (var openedValves = 0; openedValves < valveStatesCount; openedValves++)
+        {
+            for (var node : nodes)
+            {
+                var state = encodeState(node.nodeIdx, 0, openedValves);
+                currentStates[state] = 0;
+            }
+        }
         
         for (int timeRemaining = 1; timeRemaining <= 30; timeRemaining++)
         {
+            prevStates = currentStates;
+            currentStates = new int[1 << 27];
+            
             for (var openedValves = 0; openedValves < valveStatesCount; openedValves++)
             {
                 for (var cave : nodes)
                 {
-                    State fromStateMax = null;
                     var maxPressure = 0;
-                    for (var from : cave.next)
+                    for (var nextIdx = cave.next.length - 1; nextIdx >= 0; nextIdx--)
                     {
-                        var fromState = new State(from, timeRemaining - 1, openedValves);
-                        var fromPressure = knownStates.get(fromState);
-                        var stepPressure = fromPressure + pressureByMinute.get(openedValves);
-                        if (stepPressure > maxPressure || 
-                            (stepPressure == maxPressure && fromStateMax == null))
+                        var fromIdx = cave.next[nextIdx];
+                        var from = nodes.get(fromIdx);
+                        var fromState = encodeState(fromIdx, 0, openedValves);
+                        var fromPressure = prevStates[fromState];
+                        var stepPressure = fromPressure + pressureByMinute[openedValves];
+                        if (stepPressure > maxPressure)
                         {
                             maxPressure = Math.max(maxPressure, stepPressure);
-                            fromStateMax = fromState;
                         }
                     }
                     
                     if (cave.pressure > 0)
                     {
-                        var isOpened = (openedValves >> cave.valveBit) % 2 == 0;
-                        if (isOpened)
+                        var isClosed = (openedValves >> cave.valveBit) % 2 == 0;
+                        if (isClosed)
                         {
                             var changedValves = openedValves | (1 << cave.valveBit);
-                            var fromState = new State(cave.name, timeRemaining - 1, changedValves);
-                            var fromPressure = knownStates.get(fromState);
-                            var stepPressure = fromPressure + pressureByMinute.get(openedValves);
-                            if (stepPressure > maxPressure || 
-                                (stepPressure == maxPressure && fromStateMax == null))
+                            var fromState = encodeState(cave.nodeIdx, 0, changedValves);
+                            var fromPressure = prevStates[fromState];
+                            var stepPressure = fromPressure + pressureByMinute[openedValves];
+                            if (stepPressure > maxPressure)
                             {
                                 maxPressure = Math.max(maxPressure, stepPressure);
-                                fromStateMax = fromState;
                             }
                         }
                     }
-                    var state = new State(cave.name, timeRemaining, openedValves);
-                    knownStates.put(state, maxPressure);
-                    //nextStates.put(state, fromStateMax);
+                    var state = encodeState(cave.nodeIdx, 0, openedValves);
+                    currentStates[state] = maxPressure;
                     //System.out.println(""+state + " -> "+maxPressure+ ", from: " + fromStateMax.cave);
                 }
             }
         }
 
 
-        var state = new State("AA", 30, 0);
-        var pressure = knownStates.get(state);
+        var state = encodeState(nodesMap.get("AA").nodeIdx, 0, 0);
+        var pressure = currentStates[state];
         System.out.println(pressure);
 //        
 //        
@@ -192,6 +197,11 @@ public class Puzzle1 extends PuzzleCommon
 //            System.out.println("" + node.name + " -> " + node.pressure + ", " + pathLength);
 //            
 //        }
+    }
+    
+    public int encodeState(int me, int elephant, int openedValves)
+    {
+        return openedValves + (me << 15) + (elephant << 21); 
     }
     
     static class State
