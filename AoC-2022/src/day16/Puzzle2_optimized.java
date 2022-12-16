@@ -34,8 +34,8 @@ public class Puzzle2_optimized extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        var inputFile = "input1.txt";
-        var inputFile = "input1_test.txt";
+        var inputFile = "input1.txt";
+//        var inputFile = "input1_test.txt";
         
         var nonZeroNodes = new ArrayList<Cave>();
         ArrayList<Cave> nodes = new ArrayList<>();
@@ -170,8 +170,10 @@ public class Puzzle2_optimized extends PuzzleCommon
         var maxPressure = 0;
         for (var openedValvesMe = 0; openedValvesMe < valveStatesCount; openedValvesMe++)
         {
-            for (var openedValvesEl = 0; openedValvesEl < valveStatesCount; openedValvesEl++)
+            for (var openedValvesEl = openedValvesMe+1; openedValvesEl < valveStatesCount; openedValvesEl++)
             {
+                if ((openedValvesMe & openedValvesEl) != 0)
+                    continue;
                 var pressure = bestForMask[openedValvesMe] + bestForMask[openedValvesEl];
                 if (pressure >= maxPressure)
                     maxPressure = pressure;
