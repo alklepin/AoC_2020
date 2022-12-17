@@ -8,13 +8,13 @@ import common.boards.Board2D;
 import common.boards.IntPair;
 import common.boards.Pair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public void solve()
@@ -31,7 +31,9 @@ public class Puzzle1 extends PuzzleCommon
         int shapeIdx = 0;
         int commandIdx = 0;
         HashSet<IntPair> chamber = new HashSet<>();
-        for (int step = 0; step < 2022; step++)
+        var expectedLoopLength = commands.length * Shape.SHAPES.length * 200;
+        int[] heightAtAtep = new int[expectedLoopLength];
+        for (int step = 0; step < expectedLoopLength; step++)
         {
 //            System.out.println("Step: "+step);
             var rock = Shape.SHAPES[shapeIdx];
@@ -81,8 +83,34 @@ public class Puzzle1 extends PuzzleCommon
                 height = Math.max(height, newPoint.getY()+1);
             }
             shapeIdx = (shapeIdx + 1) % Shape.SHAPES.length;
+            heightAtAtep[step] = height;
 //            print(chamber, height);
         }
+
+        int[] line = new int[expectedLoopLength];
+        for (var p : chamber)
+        {
+            if (p.getY() < expectedLoopLength)
+                line[p.getY()] |= 1 << p.getX();
+        }
+//        int delta = 13405;
+        int delta = 161456000;
+        for (var idx = 2; idx < expectedLoopLength; idx++)
+        {
+            while (idx + delta < expectedLoopLength && line[idx] == line[idx+delta])
+                idx++;
+            if (idx + delta < expectedLoopLength)
+                delta++;
+        }
+        
+        System.out.println("Delta:" + delta);
+
+//        for (int idx = 0; idx < 2 * delta; idx++)
+        for (int idx = 0; idx < 200; idx++)
+        {
+            System.out.println(heightAtAtep[idx+delta] - heightAtAtep[idx]);
+        }
+        
         
         System.out.println(height);
         
