@@ -2,9 +2,36 @@ package common.boards;
 
 public class IntTriple
 {
+    
+    public final static IntTriple X_PLUS = IntTriple.of(1, 0, 0);  
+    public final static IntTriple X_MINUS = IntTriple.of(-1, 0, 0);
+    public final static IntTriple Y_PLUS = IntTriple.of(0, 1, 0);  
+    public final static IntTriple Y_MINUS = IntTriple.of(0, -1, 0);
+    public final static IntTriple Z_PLUS = IntTriple.of(0, 0, 1);  
+    public final static IntTriple Z_MINUS = IntTriple.of(0, 0, -1);
+    
+    public final static IntTriple[] NEIGHBOURS6 = 
+        new IntTriple[]{X_PLUS, X_MINUS, Y_PLUS, Y_MINUS, Z_PLUS, Z_MINUS};
+    
     private int m_x;
     private int m_y;
     private int m_z;
+
+    public static IntTriple of(int x, int y, int z)
+    {
+        return new IntTriple(x, y, z);
+    }
+
+    public static IntTriple of(String x, String y, String z)
+    {
+        return new IntTriple(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z));
+    }
+    
+    public static IntTriple from(String s)
+    {
+        var parts = s.split(",");
+        return new IntTriple(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+    }
     
     public IntTriple(int x, int y, int z)
     {
@@ -17,25 +44,15 @@ public class IntTriple
     {
         return m_x;
     }
-    public void setX(int x)
-    {
-        this.m_x = x;
-    }
+
     public int getY()
     {
         return m_y;
     }
-    public void setY(int y)
-    {
-        this.m_y = y;
-    }
+
     public int getZ()
     {
         return m_z;
-    }
-    public void setZ(int z)
-    {
-        this.m_z = z;
     }
     
     public IntTriple add(IntTriple other)
@@ -159,6 +176,19 @@ public class IntTriple
             Math.min(m_y, point1.m_y),
             Math.min(m_z, point1.m_z)
             );
+    }
+
+    public boolean inRectangle(IntTriple min, IntTriple max)
+    {
+        if ((min != null) && !componentGreaterEq(min))
+        {
+            return false;
+        }
+        if ((max != null) && !componentLessEq(max))
+        {
+            return false;
+        }
+        return true;
     }
 
     

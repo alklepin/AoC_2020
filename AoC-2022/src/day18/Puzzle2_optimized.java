@@ -6,15 +6,18 @@ import java.util.HashSet;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Bounds3D;
+import common.boards.Generators;
 import common.boards.IntTriple;
+import common.graph.ImplicitGraph;
+import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2_optimized extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2_optimized().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -53,45 +56,38 @@ public class Puzzle1 extends PuzzleCommon
 
         HashSet<IntTriple> cubes = new HashSet<>();
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        int result = 0;
         var bounds = new Bounds3D();
         for (String line : lines)
         {
-            var parts = line.split(",");
-            var p = new IntTriple(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+            var p = IntTriple.from(line);
             cubes.add(p);
             bounds.extendBy(p);
         }
-        var count = cubes.size() * 6;
+        
         var min = bounds.min();
         var max = bounds.max();
+        System.out.println(min);
+        System.out.println(max);
+
+        var exteriorMin = min.add(IntTriple.of(-1, -1, -1));
+        var exteriorMax = max.add(IntTriple.of(1, 1, 1));
+        
+        var state = ImplicitGraph.BFS(exteriorMin, null, p ->
+            Generators.neighbours6_3D(p, exteriorMin, exteriorMax)
+                .where(n -> !cubes.contains(n))
+            );
+        
+        var exterior = state.visited();
+
+        var count = cubes.size() * 6;
+        
         for (var p : cubes)
         {
-            IntTriple n;
-
-            n =  p.add(IntTriple.of(1, 0, 0));
-            if (cubes.contains(n))
-                count--;
-
-            n =  p.add(IntTriple.of(-1, 0, 0));
-            if (cubes.contains(n))
-                count--;
-
-            n =  p.add(IntTriple.of(0, 1, 0));
-            if (cubes.contains(n))
-                count--;
-            
-            n =  p.add(IntTriple.of(0, -1, 0));
-            if (cubes.contains(n))
-                count--;
-
-            n =  p.add(IntTriple.of(0, 0, 1));
-            if (cubes.contains(n))
-                count--;
-
-            n =  p.add(IntTriple.of(0, 0, -1));
-            if (cubes.contains(n))
-                count--;
+            for (var n : Generators.neighbours6_3D(p, null, null))
+            {
+                if (cubes.contains(n) || !exterior.contains(n))
+                    count--;
+            }
         }
         
         

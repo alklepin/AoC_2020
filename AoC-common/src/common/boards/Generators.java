@@ -29,6 +29,13 @@ public class Generators
     {
         return new Neighbours4Generator(start, min, max);
     }
+
+    public static Query<IntTriple> neighbours6_3D(IntTriple start, IntTriple min, IntTriple max)
+    {
+        return Query.wrap(IntTriple.NEIGHBOURS6)
+            .select(point -> point.add(start))
+            .where(point -> point.inRectangle(min, max));
+    }
     
     public static Iterable<IntPair> ray(int startX, int startY, int dx, int dy, int count)
     {
@@ -155,7 +162,7 @@ public class Generators
     }
     
     public static class Neighbours8Generator 
-    implements Iterable<IntPair>
+        implements Iterable<IntPair>
     {
         
         private IntPair m_start;
@@ -186,7 +193,6 @@ public class Generators
                 .select(pair -> pair.add(m_start))
                 .where(pair -> pair.inRectangle(m_min, m_max)).iterator();
         }
-        
     }
     
     public static class Neighbours4Generator 
@@ -217,6 +223,30 @@ public class Generators
                 .select(pair -> pair.add(m_start))
                 .where(pair -> pair.inRectangle(m_min, m_max)).iterator();
         }
-        
     }
+    
+    public static class Neighbours6Generator3D 
+        implements Iterable<IntTriple>
+    {
+        
+        private IntTriple m_start;
+        private IntTriple m_min;
+        private IntTriple m_max;
+        
+        public Neighbours6Generator3D(IntTriple start, IntTriple min, IntTriple max)
+        {
+            m_start = start;
+            m_min = min;
+            m_max = max;
+        }
+        
+        @Override
+        public Iterator<IntTriple> iterator()
+        {
+            return Query.wrap(IntTriple.NEIGHBOURS6)
+                .select(point -> point.add(m_start))
+                .where(point -> point.inRectangle(m_min, m_max)).iterator();
+        }
+    }
+    
 }

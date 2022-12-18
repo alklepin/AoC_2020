@@ -29,6 +29,12 @@ public class IntPair
         return new IntPair(Integer.parseInt(x), Integer.parseInt(y));
     }
     
+    public static IntPair from(String s)
+    {
+        var parts = s.split(",");
+        return new IntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+    }
+    
     public Vect2D asVector()
     {
         return new Vect2D(m_x, m_y);
@@ -196,12 +202,6 @@ public class IntPair
     public IntPair componentMax(IntPair other)
     {
         return Pair.of(Math.max(m_x, other.m_x), Math.max(m_y, other.m_y));
-    }
-
-    public static IntPair from(String s)
-    {
-        var parts = s.split(",");
-        return new IntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
 
 }

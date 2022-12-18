@@ -7,14 +7,16 @@ import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Bounds3D;
 import common.boards.IntTriple;
+import common.graph.ImplicitGraph;
+import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -62,35 +64,56 @@ public class Puzzle1 extends PuzzleCommon
             cubes.add(p);
             bounds.extendBy(p);
         }
-        var count = cubes.size() * 6;
         var min = bounds.min();
         var max = bounds.max();
+        System.out.println(min);
+        System.out.println(max);
+
+        var exteriorMin = min.add(IntTriple.of(-1, -1, -1));
+        var exteriorMax = max.add(IntTriple.of(1, 1, 1));
+        var exteriorBounds = new Bounds3D();
+        exteriorBounds.extendBy(exteriorMax);
+        exteriorBounds.extendBy(exteriorMin);
+        
+        IntTriple [] neighbours = 
+            new IntTriple[] {IntTriple.of(1, 0, 0),IntTriple.of(-1, 0, 0),IntTriple.of(0, 1, 0),IntTriple.of(0, -1, 0),IntTriple.of(0, 0, 1),IntTriple.of(0, 0, -1)};
+        
+        var state = ImplicitGraph.BFS(exteriorMin, null, p ->
+            Query.wrap(neighbours)
+                .select(n -> p.add(n))
+                .where(n -> exteriorBounds.contains(n) && !cubes.contains(n))
+            );
+        
+        var exterior = state.visited();
+
+        var count = cubes.size() * 6;
+        
         for (var p : cubes)
         {
             IntTriple n;
 
             n =  p.add(IntTriple.of(1, 0, 0));
-            if (cubes.contains(n))
+            if (cubes.contains(n) || !exterior.contains(n))
                 count--;
 
             n =  p.add(IntTriple.of(-1, 0, 0));
-            if (cubes.contains(n))
+            if (cubes.contains(n) || !exterior.contains(n))
                 count--;
 
             n =  p.add(IntTriple.of(0, 1, 0));
-            if (cubes.contains(n))
+            if (cubes.contains(n) || !exterior.contains(n))
                 count--;
             
             n =  p.add(IntTriple.of(0, -1, 0));
-            if (cubes.contains(n))
+            if (cubes.contains(n) || !exterior.contains(n))
                 count--;
 
             n =  p.add(IntTriple.of(0, 0, 1));
-            if (cubes.contains(n))
+            if (cubes.contains(n) || !exterior.contains(n))
                 count--;
 
             n =  p.add(IntTriple.of(0, 0, -1));
-            if (cubes.contains(n))
+            if (cubes.contains(n) || !exterior.contains(n))
                 count--;
         }
         

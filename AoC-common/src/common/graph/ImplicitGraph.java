@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class ImplicitGraph
 {
@@ -45,6 +46,11 @@ public class ImplicitGraph
             Collections.reverse(result);
             
             return result.get(0).equals(start) ? result : null;
+        }
+        
+        public Set<TNode> visited()
+        {
+            return visitedFrom.keySet();
         }
     }
     

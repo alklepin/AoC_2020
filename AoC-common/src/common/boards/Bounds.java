@@ -5,10 +5,31 @@ public class Bounds
     private IntPair min;
     private IntPair max;
     
+    public static Bounds of(Iterable<IntPair> points)
+    {
+        return new Bounds(points);
+    }
+
+    public static Bounds of(IntPair... points)
+    {
+        return new Bounds(points);
+    }
+    
+    
     public Bounds()
     {
         max = IntPair.of(Integer.MIN_VALUE, Integer.MIN_VALUE);
         min = IntPair.of(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+    
+    public Bounds(Iterable<IntPair> points)
+    {
+        extendBy(points);
+    }
+    
+    public Bounds(IntPair... points)
+    {
+        extendBy(points);
     }
     
     public IntPair min()
@@ -27,6 +48,18 @@ public class Bounds
         min = min.componentMin(p);
     }
 
+    public void extendBy(Iterable<IntPair> points)
+    {
+        for (var p : points)
+            extendBy(p);
+    }
+
+    public void extendBy(IntPair... points)
+    {
+        for (var p : points)
+            extendBy(p);
+    }
+    
     public int height()
     {
         return Math.max(0, max.getY() - min.getY());
