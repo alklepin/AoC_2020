@@ -56,21 +56,15 @@ public class Puzzle2_optimized extends PuzzleCommon
 
         HashSet<IntTriple> cubes = new HashSet<>();
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        var bounds = new Bounds3D();
         for (String line : lines)
         {
-            var p = IntTriple.from(line);
-            cubes.add(p);
-            bounds.extendBy(p);
+            cubes.add(IntTriple.from(line));
         }
-        
-        var min = bounds.min();
-        var max = bounds.max();
-        System.out.println(min);
-        System.out.println(max);
 
-        var exteriorMin = min.add(IntTriple.of(-1, -1, -1));
-        var exteriorMax = max.add(IntTriple.of(1, 1, 1));
+        var bounds = Bounds3D.of(cubes);
+        
+        var exteriorMin = bounds.min().add(IntTriple.of(-1, -1, -1));
+        var exteriorMax = bounds.max().add(IntTriple.of(1, 1, 1));
         
         var state = ImplicitGraph.BFS(exteriorMin, null, p ->
             Generators.neighbours6_3D(p, exteriorMin, exteriorMax)
@@ -79,19 +73,12 @@ public class Puzzle2_optimized extends PuzzleCommon
         
         var exterior = state.visited();
 
-        var count = cubes.size() * 6;
-        
-        for (var p : cubes)
-        {
-            for (var n : Generators.neighbours6_3D(p, null, null))
-            {
-                if (cubes.contains(n) || !exterior.contains(n))
-                    count--;
-            }
-        }
-        
-        
-        System.out.println(count);
+        var result = cubes.size() * 6 -
+            Query.wrap(cubes)
+            .selectMany(p -> Generators.neighbours6_3D(p, null, null))
+            .where(n -> cubes.contains(n) || !exterior.contains(n))
+            .count();
+        System.out.println(result);
         
     }
 }

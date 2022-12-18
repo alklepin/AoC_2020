@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Stack;
 
 public class ImplicitGraph
 {
@@ -67,7 +68,7 @@ public class ImplicitGraph
             {
                 if (visitedFrom.containsKey(next))
                     continue;
-
+                
                 visitedFrom.put(next, current);
                 if (end != null && next.equals(end))
                 {
@@ -79,4 +80,32 @@ public class ImplicitGraph
         visitedFrom.remove(start);
         return new SearchResult<TNode>(start, end, visitedFrom);
     }
+
+    public static <TNode> SearchResult<TNode> DFS(TNode start, TNode end, MoveGenerator<TNode> moveGenerator)
+    {
+        Stack<TNode> stack = new Stack<>();
+        HashMap<TNode, TNode> visitedFrom = new HashMap<>();
+        visitedFrom.put(start, start);
+        stack.add(start);
+        while (stack.size() > 0)
+        {
+            TNode current = stack.pop();
+            for (var next : moveGenerator.nextNodes(current))
+            {
+                if (visitedFrom.containsKey(next))
+                    continue;
+
+                visitedFrom.put(next, current);
+                if (end != null && next.equals(end))
+                {
+                    break;
+                }
+                stack.add(next);
+            }
+        }
+        visitedFrom.remove(start);
+        return new SearchResult<TNode>(start, end, visitedFrom);
+    }
+    
+    
 }
