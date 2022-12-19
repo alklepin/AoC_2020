@@ -1,9 +1,11 @@
 package day19;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.boards.IntTriple;
 
 public class Puzzle1 extends PuzzleCommon
 {
@@ -14,33 +16,27 @@ public class Puzzle1 extends PuzzleCommon
         new Puzzle1().solve();
     }
     
-    public int processGroup(LinesGroup group)
+    static class Blueprint
     {
-        HashMap<Character, Integer> chars = new HashMap<>();
-        for (String line : group)
+        public IntTriple[] robotCosts;
+        
+        public Blueprint()
         {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
+            robotCosts = new IntTriple[4];
+            Arrays.fill(robotCosts, IntTriple.ZERO);
         }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
+        
+        public String toString()
         {
-            if (v == groupSize)
+            var result = new StringBuilder();
+            for (var v : robotCosts)
             {
-                count++;
+                result.append(v).append(' ');
             }
+            return result.toString();    
         }
-        return count;
     }
+    
     
     public void solve()
         throws Exception
@@ -48,24 +44,44 @@ public class Puzzle1 extends PuzzleCommon
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
         
-//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
-        
-//        LinesGroup lines = readAllLines(inputFile);
-        
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        var blueprints = new ArrayList<Blueprint>();
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        int result = 0;
+        for (String line : lines)
+        {
+            var blueprint = new Blueprint();
+            
+            var parts = line.split("Each (ore|clay|obsidian|geode) robot costs");
+            for (var idx = 1; idx < parts.length; idx++)
+            {
+                var resStrings = parse(" (\\d* ore)?.*(\\d+ clay)?.*(\\d+ obsidian)?\\. ?", parts[idx]);
+                var res = IntTriple.ZERO;
+                for (var resIdx = 1; resIdx < resStrings.length; resIdx++)
+                {
+                    var s = resStrings[resIdx];
+                    if (s == null)
+                        continue;
+                    var p = s.split(" ");
+                    var amount = parseInt(p[0]);
+                    switch (p[1])
+                    {
+                        case "ore":
+                            res = res.add(IntTriple.of(1, 0, 0).mult(amount));
+                            break;
+                        case "clay":
+                            res = res.add(IntTriple.of(0, 1, 0).mult(amount));
+                            break;
+                        case "obsidian":
+                            res = res.add(IntTriple.of(0, 0, 1).mult(amount));
+                            break;
+                    }
+                }
+                blueprint.robotCosts[idx-1] = res;
+            }
+            blueprints.add(blueprint);
+            System.out.println(blueprint);
+        }
+        System.out.println(result);
         
     }
 }

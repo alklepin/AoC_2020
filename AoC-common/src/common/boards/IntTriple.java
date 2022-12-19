@@ -3,6 +3,8 @@ package common.boards;
 public class IntTriple
 {
     
+    public final static IntTriple ZERO = IntTriple.of(0, 0, 0);  
+
     public final static IntTriple X_PLUS = IntTriple.of(1, 0, 0);  
     public final static IntTriple X_MINUS = IntTriple.of(-1, 0, 0);
     public final static IntTriple Y_PLUS = IntTriple.of(0, 1, 0);  
