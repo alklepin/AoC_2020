@@ -3,31 +3,30 @@ package day19;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
-import common.boards.IntQuadruple;
-import common.boards.IntTriple;
+import common.boards.ByteQuadruple;
 import common.graph.ImplicitGraph;
-import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     static class Blueprint
     {
-        public IntQuadruple[] robotCosts;
+        public ByteQuadruple[] robotCosts;
         
         public Blueprint()
         {
-            robotCosts = new IntQuadruple[4];
-            Arrays.fill(robotCosts, IntQuadruple.ZERO);
+            robotCosts = new ByteQuadruple[4];
+            Arrays.fill(robotCosts, ByteQuadruple.ZERO);
         }
         
         public String toString()
@@ -45,12 +44,11 @@ public class Puzzle1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        var inputFile = "input1.txt";
-        var inputFile = "input1_test.txt";
+        var inputFile = "input1.txt";
+//        var inputFile = "input1_test.txt";
         
         var blueprints = new ArrayList<Blueprint>();
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        int result = 0;
         for (String line : lines)
         {
             var blueprint = new Blueprint();
@@ -59,20 +57,20 @@ public class Puzzle1 extends PuzzleCommon
             for (var idx = 1; idx < parts.length; idx++)
             {
                 var resStrings = parts[idx].split("(\\.|and| )+");
-                var res = IntQuadruple.ZERO;
+                var res = ByteQuadruple.ZERO;
                 for (var resIdx = 0; resIdx < resStrings.length; resIdx+=2)
                 {
                     var amount = parseInt(resStrings[resIdx]);
                     switch (resStrings[resIdx+1])
                     {
                         case "ore":
-                            res = res.add(IntQuadruple.of(1, 0, 0, 0).mult(amount));
+                            res = res.add(ByteQuadruple.of(1, 0, 0, 0).mult(amount));
                             break;
                         case "clay":
-                            res = res.add(IntQuadruple.of(0, 1, 0, 0).mult(amount));
+                            res = res.add(ByteQuadruple.of(0, 1, 0, 0).mult(amount));
                             break;
                         case "obsidian":
-                            res = res.add(IntQuadruple.of(0, 0, 1, 0).mult(amount));
+                            res = res.add(ByteQuadruple.of(0, 0, 1, 0).mult(amount));
                             break;
                     }
                 }
@@ -81,13 +79,17 @@ public class Puzzle1 extends PuzzleCommon
             blueprints.add(blueprint);
             System.out.println(blueprint);
         }
+
+        var result = 1;
+
         
-        for (int idx = 0; idx < blueprints.size(); idx++)
+        for (int idx = 0; idx < 3; idx++)
         {
             var blueprint = blueprints.get(idx);
             var processor = new Processor(blueprint);
             var cost = processor.evaluate();
             System.out.println(String.format("Bp: %s cost: %s", idx+1, cost));
+            result *= cost;
         }
         
         System.out.println(result);
@@ -96,11 +98,11 @@ public class Puzzle1 extends PuzzleCommon
 
     static class State
     {
-        IntQuadruple resources;
-        IntQuadruple robots;
+        ByteQuadruple resources;
+        ByteQuadruple robots;
         int step;
 
-        public State(int step, IntQuadruple resources, IntQuadruple robots)
+        public State(int step, ByteQuadruple resources, ByteQuadruple robots)
         {
             this.resources = resources;
             this.robots = robots;
@@ -166,12 +168,12 @@ public class Puzzle1 extends PuzzleCommon
         
         private Iterable<State> nextMoves(State state)
         {
-            if (state.step >= 24)
+            if (state.step >= 32)
                 return Collections.emptyList();
 
             var nextResources = state.resources.add(state.robots);
             
-            var initialState = new State(0, nextResources, IntQuadruple.of(0, 0, 0, 0));
+            var initialState = new State(0, nextResources, ByteQuadruple.of(0, 0, 0, 0));
 
             var result = new ArrayList<State>();
 //                
@@ -180,45 +182,48 @@ public class Puzzle1 extends PuzzleCommon
             
             var res = state.resources;
             var rob = state.robots;
-            IntQuadruple newRes;
+            ByteQuadruple newRes;
 
-            newRes = res.minus(blueprint.robotCosts[0]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
+            newRes = res.minus(blueprint.robotCosts[3]);
+            if (newRes.componentGreaterEq(ByteQuadruple.ZERO))
             {
                 newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(1, 0, 0, 0))));
-            }
-            
-            newRes = res.minus(blueprint.robotCosts[1]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
-            {
-                newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(0, 1, 0, 0))));
+                result.add(new State(state.step+1, newRes, rob.add(ByteQuadruple.of(0, 0, 0, 1))));
             }
             
             newRes = res.minus(blueprint.robotCosts[2]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
+            if (newRes.componentGreaterEq(ByteQuadruple.ZERO))
             {
                 newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(0, 0, 1, 0))));
+                result.add(new State(state.step+1, newRes, rob.add(ByteQuadruple.of(0, 0, 1, 0))));
+            }
+
+            newRes = res.minus(blueprint.robotCosts[1]);
+            if (newRes.componentGreaterEq(ByteQuadruple.ZERO) && result.size() < 2 && state.step < 28)
+            {
+                newRes = newRes.add(state.robots);
+                result.add(new State(state.step+1, newRes, rob.add(ByteQuadruple.of(0, 1, 0, 0))));
+            }
+
+            newRes = res.minus(blueprint.robotCosts[0]);
+            if (newRes.componentGreaterEq(ByteQuadruple.ZERO) && result.size() < 2 && state.step < 26)
+            {
+                newRes = newRes.add(state.robots);
+                result.add(new State(state.step+1, newRes, rob.add(ByteQuadruple.of(1, 0, 0, 0))));
             }
             
-            newRes = res.minus(blueprint.robotCosts[3]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
-            {
-                newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(0, 0, 0, 1))));
-            }
-            if (result.size() < 3)
+
+//            if (result.size() < 3)
+            if (result.size() < 3 && res.getX() <= 20)
             {
                 result.add(new State(state.step+1, nextResources, state.robots));
             }
             
-            System.out.println("From state "+ state);
-            for (var r : result)
-            {
-                System.out.println("    "+ r);
-            }
+//            System.out.println("From state "+ state);
+//            for (var r : result)
+//            {
+//                System.out.println("    "+ r);
+//            }
             
 //            if (count++ % 1000 == 0)
 //              System.out.println("From state "+ state);
@@ -230,16 +235,30 @@ public class Puzzle1 extends PuzzleCommon
         
         private int evaluate()
         {
-            var initialState = new State(0, IntQuadruple.of(0, 0, 0, 0), new IntQuadruple(1, 0, 0, 0));
-            
-            var searchResult = ImplicitGraph.BFS(initialState, null, this::nextMoves);
-            var max = 0;
-            for (var s : searchResult.visited())
+            var initialState = new State(0, ByteQuadruple.of(0, 0, 0, 0), new ByteQuadruple(1, 0, 0, 0));
+            var currentStates = new HashSet<State>();
+            var nextStates = new HashSet<State>();
+            nextStates.add(initialState);
+            for (int step = 0; step < 32; step++)
             {
-                if (s.step == 24)
+                System.out.println("Step: "+step);
+                currentStates = nextStates;
+                nextStates = new HashSet<State>();
+                for (var s : currentStates)
                 {
-                    max = Math.max(max, s.robots.getK());
+                    for (var n : nextMoves(s))
+                    {
+                        nextStates.add(n);
+                    }
                 }
+                System.out.println("Front size: "+nextStates.size());
+                nextStates.removeAll(currentStates);
+                System.out.println("Front size (updated): "+nextStates.size());
+            }
+            var max = 0;
+            for (var s : nextStates)
+            {
+                max = Math.max(max, s.resources.getK());
             }
                 
             return max;

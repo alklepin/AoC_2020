@@ -3,21 +3,20 @@ package day19;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.IntQuadruple;
-import common.boards.IntTriple;
 import common.graph.ImplicitGraph;
-import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle1_v2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle1_v2().solve();
     }
     
     static class Blueprint
@@ -231,15 +230,27 @@ public class Puzzle1 extends PuzzleCommon
         private int evaluate()
         {
             var initialState = new State(0, IntQuadruple.of(0, 0, 0, 0), new IntQuadruple(1, 0, 0, 0));
-            
-            var searchResult = ImplicitGraph.BFS(initialState, null, this::nextMoves);
-            var max = 0;
-            for (var s : searchResult.visited())
+            var currentStates = new HashSet<State>();
+            var nextStates = new HashSet<State>();
+            nextStates.add(initialState);
+            for (int step = 0; step < 24; step++)
             {
-                if (s.step == 24)
+                System.out.println("Step: "+step);
+                currentStates = nextStates;
+                nextStates = new HashSet<State>();
+                for (var s : currentStates)
                 {
-                    max = Math.max(max, s.robots.getK());
+                    for (var n : nextMoves(s))
+                    {
+                        nextStates.add(n);
+                    }
                 }
+                System.out.println("Front size: "+nextStates.size());
+            }
+            var max = 0;
+            for (var s : nextStates)
+            {
+                max = Math.max(max, s.robots.getK());
             }
                 
             return max;
