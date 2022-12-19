@@ -11,13 +11,13 @@ import common.boards.IntTriple;
 import common.graph.ImplicitGraph;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle1_saved extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle1_saved().solve();
     }
     
     static class Blueprint
@@ -172,45 +172,45 @@ public class Puzzle1 extends PuzzleCommon
             var nextResources = state.resources.add(state.robots);
             
             var initialState = new State(0, nextResources, IntQuadruple.of(0, 0, 0, 0));
+            
+            var searchRes = ImplicitGraph.BFS(initialState, null, st -> {
+               ArrayList<State> states = new ArrayList<>();
+               var res = st.resources;
+               var rob = st.robots;
+               IntQuadruple newRes;
 
-            var result = new ArrayList<State>();
-//                
-//                .select(s -> new State(state.step+1, s.resources, state.robots.add(s.robots)))
-//                .toList();
+               newRes = res.minus(blueprint.robotCosts[0]);
+               if (newRes.componentGreaterEq(IntQuadruple.ZERO))
+               {
+                   states.add(new State(0, newRes, rob.add(IntQuadruple.of(1, 0, 0, 0))));
+               }
+               
+               newRes = res.minus(blueprint.robotCosts[1]);
+               if (newRes.componentGreaterEq(IntQuadruple.ZERO))
+               {
+                   states.add(new State(0, newRes, rob.add(IntQuadruple.of(0, 1, 0, 0))));
+               }
+               
+               newRes = res.minus(blueprint.robotCosts[2]);
+               if (newRes.componentGreaterEq(IntQuadruple.ZERO))
+               {
+                   states.add(new State(0, newRes, rob.add(IntQuadruple.of(0, 0, 1, 0))));
+               }
+               
+               newRes = res.minus(blueprint.robotCosts[3]);
+               if (newRes.componentGreaterEq(IntQuadruple.ZERO))
+               {
+                   states.add(new State(0, newRes, rob.add(IntQuadruple.of(0, 0, 0, 1))));
+               }
+               
+               return states;
+            });
+
+            
+            var result = Query.wrap(searchRes.visited())
+                .select(s -> new State(state.step+1, s.resources, state.robots.add(s.robots)))
+                .toList();
             result.add(new State(state.step+1, nextResources, state.robots));
-            
-            var res = state.resources;
-            var rob = state.robots;
-            IntQuadruple newRes;
-
-            newRes = res.minus(blueprint.robotCosts[0]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
-            {
-                newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(1, 0, 0, 0))));
-            }
-            
-            newRes = res.minus(blueprint.robotCosts[1]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
-            {
-                newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(0, 1, 0, 0))));
-            }
-            
-            newRes = res.minus(blueprint.robotCosts[2]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
-            {
-                newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(0, 0, 1, 0))));
-            }
-            
-            newRes = res.minus(blueprint.robotCosts[3]);
-            if (newRes.componentGreaterEq(IntQuadruple.ZERO))
-            {
-                newRes = newRes.add(state.robots);
-                result.add(new State(state.step+1, newRes, rob.add(IntQuadruple.of(0, 0, 0, 1))));
-            }
-
             
             System.out.println("From state "+ state);
             for (var r : result)
