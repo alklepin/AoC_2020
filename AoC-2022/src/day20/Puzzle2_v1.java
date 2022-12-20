@@ -36,8 +36,8 @@ public class Puzzle2_v1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        var inputFile = "input1.txt";
-        var inputFile = "input1_test.txt";
+        var inputFile = "input1.txt";
+//        var inputFile = "input1_test.txt";
 //        var inputFile = "input1_test2.txt";
         
         var states = new ArrayList<State>();
@@ -60,58 +60,10 @@ public class Puzzle2_v1 extends PuzzleCommon
         {
             for (var s : states)
             {
-                var shift = s.value;
+                var shift = s.value % (modulo-1);
 //                var shift = 22;
 
-                var div = shift / modulo;
                 var count = (shift) % modulo;
-                
-//                System.out.println(Arrays.toString(list));
-                
-                State[] tmp = new State[list.length-1];
-                for (var idx = 0; idx < tmp.length; idx++)
-                {
-                    if (idx < s.position)
-                    {
-                        tmp[idx] = list[idx]; 
-                    }
-                    else 
-                    {
-                        tmp[idx] = list[idx+1]; 
-                    }
-                }
-
-//                System.out.println(Arrays.toString(tmp));
-                
-                State[] tmp1 = new State[list.length-1];
-                for (var idx = 0; idx < tmp1.length; idx++)
-                {
-                    var st = tmp[toRange(idx+div, tmp1.length)];
-                    st.position = idx;
-                    tmp1[idx] = st;
-                }
-
-//                System.out.println(Arrays.toString(tmp1));
-
-                State[] tmp2 = new State[list.length];
-                for (var idx = 0; idx < tmp2.length; idx++)
-                {
-                    if (idx < s.position)
-                    {
-                        tmp2[idx] = tmp1[idx]; 
-                    }
-                    else if (idx > s.position)
-                    {
-                        tmp2[idx] = tmp1[idx-1]; 
-                    }
-                    else
-                    {
-                        tmp2[idx] = s;
-                    }
-                }
-                list = tmp2;
-                
-//                System.out.println(Arrays.toString(list));
                 
                 if (count > 0)
                 {
