@@ -1,6 +1,6 @@
 package day20;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
@@ -14,32 +14,17 @@ public class Puzzle1 extends PuzzleCommon
         new Puzzle1().solve();
     }
     
-    public int processGroup(LinesGroup group)
+    static class State
     {
-        HashMap<Character, Integer> chars = new HashMap<>();
-        for (String line : group)
+        int value;
+        int position;
+        
+        public State(int value, int position)
         {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
+            super();
+            this.value = value;
+            this.position = position;
         }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
-        {
-            if (v == groupSize)
-            {
-                count++;
-            }
-        }
-        return count;
     }
     
     public void solve()
@@ -48,24 +33,61 @@ public class Puzzle1 extends PuzzleCommon
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
         
-//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
+        var states = new ArrayList<State>();
         
-//        LinesGroup lines = readAllLines(inputFile);
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        State zeroState = null;
+        for (String line : lines)
+        {
+            var state = new State(parseInt(line), states.size());
+            states.add(state);
+            if (state.value == 0)
+                zeroState = state;
+        }
+        State[] list = states.toArray(new State[0]);
+        var modulo = list.length;
         
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        for (var s : states)
+        {
+            var count = s.value;
+            if (count > 0)
+            {
+                for (var idx = s.position; idx < s.position + count; idx++)
+                {
+                    var c = list[toRange(idx+1, modulo)];
+                    c.position = toRange(c.position - 1, modulo);
+                    list[toRange(idx, modulo)] = c;
+                }
+                s.position = toRange(s.position + count, modulo);
+                list[s.position] = s;
+            }
+            if (count < 0)
+            {
+                for (var idx = s.position; idx > s.position + count; idx--)
+                {
+                    var c = list[toRange(idx-1, modulo)];
+                    c.position = toRange(c.position + 1, modulo);
+                    list[toRange(idx, modulo)] = c;
+                }
+                s.position = toRange(s.position + count, modulo);
+                list[s.position] = s;
+            }
+        }
+        var result = 
+            list[(zeroState.position + 1000) % modulo].value
+            + list[(zeroState.position + 2000) % modulo].value
+            + list[(zeroState.position + 3000) % modulo].value;
+        System.out.println(result);
         
+    }
+    
+    static int toRange(int value, int modulo)
+    {
+        var res = (value % modulo);
+        if (res >= 0)
+            return res;
+        else
+            return (res + modulo) % modulo;
+            
     }
 }
