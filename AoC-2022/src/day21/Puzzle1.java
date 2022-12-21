@@ -41,6 +41,62 @@ public class Puzzle1 extends PuzzleCommon
         }
         return count;
     }
+
+    interface Value
+    {
+        long getValue();
+    }
+    
+    static class Constant implements Value
+    {
+        Long value;
+        
+        
+        public Constant(Long value)
+        {
+            super();
+            this.value = value;
+        }
+
+
+        @Override
+        public long getValue()
+        {
+            return value;
+        }
+    }
+
+    static class Operation implements Value
+    {
+        Value op1;
+        Value op2;
+        char op;
+        
+        
+        
+        public Operation(Value op1, Value op2, char op)
+        {
+            super();
+            this.op1 = op1;
+            this.op2 = op2;
+            this.op = op;
+        }
+
+
+
+        @Override
+        public long getValue()
+        {
+            return switch (op)
+                {
+                    case '+' -> op1.getValue() + op2.getValue();
+                    case '-' -> op1.getValue() - op2.getValue();
+                    case '*' -> op1.getValue() * op2.getValue();
+                    case '/' -> op1.getValue() / op2.getValue();
+                    default -> throw new IllegalStateException();
+                };
+        }
+    }
     
     public void solve()
         throws Exception
@@ -48,24 +104,30 @@ public class Puzzle1 extends PuzzleCommon
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
         
-//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
         
-//        LinesGroup lines = readAllLines(inputFile);
+        HashMap<String, String> exprs = new HashMap<>();
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        int result = 0;
+        for (String line : lines)
+        {
+            var parts = line.split(":");
+            exprs.put(parts[0].trim(), parts[1].trim());
+        }
+        Value value = parse("root", exprs);
+        System.out.println(value.getValue());
         
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
-        
+    }
+    
+    static Value parse(String name, HashMap<String, String> exprs)
+    {
+        var expr = exprs.get(name);
+        if (expr == null)
+            throw new IllegalStateException();
+        var complex = parse("(\\w+) ([+\\-*/]) (\\w+)", expr);
+        if (complex != null)
+        {
+            return new Operation(parse(complex[1], exprs), parse(complex[3], exprs), complex[2].charAt(0));
+        }
+        return new Constant(parseLong(expr));
     }
 }
