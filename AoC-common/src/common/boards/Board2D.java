@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 
 import common.LinesGroup;
 import common.boards.Generators.Neighbours8Generator;
+import common.geometry.Vect2I;
 import common.queries.Query;
 import common.queries.Sequence;
 
@@ -88,8 +89,18 @@ public class Board2D
     {
         return getAtXY(cell.getX(), cell.getY());
     }
+
+    public int getAtXY(Vect2I cell)
+    {
+        return getAtXY(cell.getX(), cell.getY());
+    }
     
     public void setAtXY(IntPair cell, int data)
+    {
+        setAtXY(cell.getX(), cell.getY(), data);
+    }
+    
+    public void setAtXY(Vect2I cell, int data)
     {
         setAtXY(cell.getX(), cell.getY(), data);
     }
@@ -548,13 +559,43 @@ public class Board2D
     
     public static Board2D parseAsChars(LinesGroup lines)
     {
-        Board2D board = new Board2D(lines.get(0).length(), lines.size());
+        var width = 0;
+        for (var line : lines)
+        {
+            width = Math.max(width, line.length());
+        }
+        Board2D board = new Board2D(width, lines.size());
         for (var row = 0; row < board.getHeigth(); row++)
         {
             var line = lines.get(row);
             for (var col = 0; col < line.length(); col++)
             {
                 board.setAtRC(row,  col, line.charAt(col));
+            }
+        }
+        return board;
+    }
+
+    public static Board2D parseAsCharsXY(LinesGroup lines)
+    {
+        return parseAsCharsXY(lines, ' ');
+    }
+    
+    public static Board2D parseAsCharsXY(LinesGroup lines, char defaultChar)
+    {
+        var width = 0;
+        for (var line : lines)
+        {
+            width = Math.max(width, line.length());
+        }
+        Board2D board = new Board2D(width, lines.size());
+        board.setAll(defaultChar);
+        for (var y = 0; y < board.getHeigth(); y++)
+        {
+            var line = lines.get(y);
+            for (var x = 0; x < line.length(); x++)
+            {
+                board.setAtXY(x,  y, line.charAt(x));
             }
         }
         return board;
@@ -658,6 +699,11 @@ public class Board2D
     }
 
     public boolean containsXY(IntPair cell)
+    {
+        return cell.getX() >= 0 && cell.getX() < getWidth() && cell.getY() >= 0 && cell.getY() < getHeigth();
+    }
+
+    public boolean containsXY(Vect2I cell)
     {
         return cell.getX() >= 0 && cell.getX() < getWidth() && cell.getY() >= 0 && cell.getY() < getHeigth();
     }

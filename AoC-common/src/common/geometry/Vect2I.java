@@ -1,5 +1,7 @@
 package common.geometry;
 
+import common.boards.IntPair;
+
 public class Vect2I
 {
     public static final Vect2I NORTH = new Vect2I(0, 1);
@@ -121,6 +123,21 @@ public class Vect2I
     public String toString()
     {
         return "(" + m_x + ", " + m_y + ")";
+    }
+
+    public Vect2I componentModulo(Vect2I dims)
+    {
+        var x = m_x % dims.getX();
+        if (x < 0)
+        {
+            x += dims.getX();  
+        }
+        var y = m_y % dims.getY();
+        if (y < 0)
+        {
+            y += dims.getY();  
+        }
+        return new Vect2I(x, y);
     }
 
     
