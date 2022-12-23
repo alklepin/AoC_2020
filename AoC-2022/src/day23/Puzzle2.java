@@ -11,13 +11,13 @@ import common.boards.Bounds;
 import common.boards.Generators;
 import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     static class Elf
@@ -144,7 +144,7 @@ public class Puzzle1 extends PuzzleCommon
         var currentDecision = 0;
         HashMap<IntPair, Elf> nextState;
         var round = 0;
-        while (hasMove)
+        while (hasMove && round < 10)
         {
             round++;
             hasMove = false;
@@ -182,8 +182,12 @@ public class Puzzle1 extends PuzzleCommon
             //printState(currentState);
         }
 
+        printState(currentState);
         
-        System.out.println(round);
+        Bounds bounds = Bounds.of(currentState.keySet());
+        var result = (bounds.width() + 1) * (bounds.height() + 1) - elves.size();
+        
+        System.out.println(result);
         
     }
     

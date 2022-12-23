@@ -44,8 +44,8 @@ public class Bounds
     
     public void extendBy(IntPair p)
     {
-        max = max.componentMax(p);
-        min = min.componentMin(p);
+        max = max != null ? max.componentMax(p) : p;
+        min = min != null ? min.componentMin(p) : p;
     }
 
     public void extendBy(Iterable<IntPair> points)
