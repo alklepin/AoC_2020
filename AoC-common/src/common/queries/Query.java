@@ -88,10 +88,16 @@ public class Query<T> implements Iterable<T>
         return new Query<T>(new WhereIterable<T>(m_source, e -> e != null));
     }
 
+    @SuppressWarnings("unchecked")
     @SafeVarargs
     public final Query<T> concat(Query<? extends T>... sources)
     {
-        return new Query<T>(new ConcatIterable<T>(sources));
+        @SuppressWarnings("rawtypes")
+        Query[] s = new Query[sources.length+1];
+        System.arraycopy(sources, 0, s, 1, sources.length);
+        s[0] = this;
+        
+        return new Query<T>(new ConcatIterable<T>((Iterable<? extends T> [])s));
     }
 
     @SafeVarargs

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
+import java.util.function.Function;
 
 public class ImplicitGraph
 {
@@ -79,6 +80,49 @@ public class ImplicitGraph
         }
         visitedFrom.remove(start);
         return new SearchResult<TNode>(start, end, visitedFrom);
+    }
+
+    public static <TNode> SearchResult<TNode> BFSStepped(TNode start, TNode end, MoveGenerator<TNode> moveGenerator, Runnable stepAction)
+    {
+        Function<TNode, Boolean> endCondition = (end != null) ? (next) -> next.equals(end) : (n) -> Boolean.FALSE;
+        var result = BFSSteppedCond(start, endCondition, moveGenerator, stepAction);
+        return new SearchResult<TNode>(start, end, result.visitedFrom);
+    }
+    
+    public static <TNode> SearchResult<TNode> BFSSteppedCond(TNode start, Function<TNode, Boolean> endCondition, MoveGenerator<TNode> moveGenerator, Runnable stepAction)
+    {
+        LinkedList<TNode> currentQueue = new LinkedList<>();
+        HashMap<TNode, TNode> visitedFrom = new HashMap<>();
+        visitedFrom.put(start, start);
+        currentQueue.add(start);
+        main_loop:
+        while (currentQueue.size() > 0)
+        {
+            LinkedList<TNode> nextQueue = new LinkedList<>();
+            while (currentQueue.size() > 0)
+            {
+                TNode current = currentQueue.poll();
+                for (var next : moveGenerator.nextNodes(current))
+                {
+                    if (visitedFrom.containsKey(next))
+                        continue;
+                    
+                    visitedFrom.put(next, current);
+                    if (endCondition.apply(next))
+                    {
+                        break main_loop;
+                    }
+                    nextQueue.add(next);
+                }
+            }
+            if (nextQueue.size() > 0)
+            {
+                stepAction.run();
+                currentQueue = nextQueue;
+            }
+        }
+        visitedFrom.remove(start);
+        return new SearchResult<TNode>(start, null, visitedFrom);
     }
 
     public static <TNode> SearchResult<TNode> DFS(TNode start, TNode end, MoveGenerator<TNode> moveGenerator)

@@ -21,13 +21,15 @@ public class Board2D
     implements Cloneable
 {
     private int[][] m_data;
-    private int m_width;
-    private int m_heigth;
+    private final int m_width;
+    private final int m_heigth;
+    private final IntPair m_dims;
 
     public Board2D(int width, int heigth)
     {
         m_width = width;
         m_heigth = heigth;
+        m_dims = IntPair.of(m_width, m_heigth);
         m_data = createDataArray(getWidth(), getHeigth());
     }
 
@@ -35,6 +37,7 @@ public class Board2D
     {
         m_width = bounds.width() + 1;
         m_heigth = bounds.height() + 1;
+        m_dims = IntPair.of(m_width, m_heigth);
         m_data = createDataArray(getWidth(), getHeigth());
     }
     
@@ -42,6 +45,7 @@ public class Board2D
     {
         m_width = other.m_width;
         m_heigth = other.m_heigth;
+        m_dims = IntPair.of(m_width, m_heigth);
         m_data = duplicateArray(other.m_data);
     }
 
@@ -55,6 +59,11 @@ public class Board2D
         return m_heigth;
     }
 
+    public IntPair dimensions()
+    {
+        return m_dims;
+    }
+    
     public int getAtRC(int row, int col)
     {
         return m_data[row][col];

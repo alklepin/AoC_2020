@@ -1,6 +1,7 @@
 package common.boards;
 
 import common.geometry.Vect2D;
+import common.geometry.Vect2I;
 
 public class IntPair
 {
@@ -204,4 +205,18 @@ public class IntPair
         return Pair.of(Math.max(m_x, other.m_x), Math.max(m_y, other.m_y));
     }
 
+    public IntPair componentModulo(IntPair dims)
+    {
+        var x = m_x % dims.getX();
+        if (x < 0)
+        {
+            x += dims.getX();  
+        }
+        var y = m_y % dims.getY();
+        if (y < 0)
+        {
+            y += dims.getY();  
+        }
+        return new IntPair(x, y);
+    }
 }
