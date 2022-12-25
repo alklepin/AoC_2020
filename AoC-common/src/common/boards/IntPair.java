@@ -1,7 +1,6 @@
 package common.boards;
 
 import common.geometry.Vect2D;
-import common.geometry.Vect2I;
 
 public class IntPair
 {
@@ -34,6 +33,60 @@ public class IntPair
     {
         var parts = s.split(",");
         return new IntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+    }
+    
+    public static IntPair decodeDirection(char c)
+    {
+        return switch (c) 
+        {
+            case '^' -> IntPair.UP;
+            case 'v' -> IntPair.DOWN;
+            case '>' -> IntPair.RIGHT;
+            case '<' -> IntPair.LEFT;
+            default -> null;
+        };
+    }
+    
+    public static IntPair decodeDirectionVInv(char c)
+    {
+        return switch (c) 
+        {
+            case '^' -> IntPair.DOWN;
+            case 'v' -> IntPair.UP;
+            case '>' -> IntPair.RIGHT;
+            case '<' -> IntPair.LEFT;
+            default -> null;
+        };
+    }    
+    
+    public static char asDirectionChar(IntPair p)
+    {
+        p = p.signum();
+        if (p.equals(UP))
+            return '^';
+        else if (p.equals(DOWN))
+            return 'v';
+        else if (p.equals(RIGHT))
+            return '>';
+        else if (p.equals(LEFT))
+            return '<';
+        else
+            return '\0';
+    }
+    
+    public static char asDirectionCharVInv(IntPair p)
+    {
+        p = p.signum();
+        if (p.equals(DOWN))
+            return '^';
+        else if (p.equals(UP))
+            return 'v';
+        else if (p.equals(RIGHT))
+            return '>';
+        else if (p.equals(LEFT))
+            return '<';
+        else
+            return '\0';
     }
     
     public Vect2D asVector()
@@ -70,6 +123,14 @@ public class IntPair
     public IntPair add(IntPair other)
     {
         return new IntPair(m_x + other.m_x, m_y + other.m_y);
+    }
+
+    public IntPair addBounded(IntPair other, Bounds bounds)
+    {
+        return minus(bounds.min())
+            .add(other)
+            .componentModulo(bounds.dim())
+            .add(bounds.min());
     }
 
     public IntPair minus(IntPair other)

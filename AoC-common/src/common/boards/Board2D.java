@@ -716,4 +716,15 @@ public class Board2D
     {
         return cell.getX() >= 0 && cell.getX() < getWidth() && cell.getY() >= 0 && cell.getY() < getHeigth();
     }
+
+    public void setBorder(char borderChar)
+    {
+        Arrays.fill(m_data[0], borderChar);
+        Arrays.fill(m_data[getHeigth()-1], borderChar);
+        for (var y = 1; y < getHeigth()-1; y++)
+        {
+            setAtXY(0, y, '#');
+            setAtXY(getWidth()-1, y, borderChar);
+        }
+    }
 }

@@ -41,6 +41,11 @@ public class Bounds
     {
         return max;
     }
+
+    public IntPair dim()
+    {
+        return max.minus(min);
+    }
     
     public void extendBy(IntPair p)
     {
