@@ -3,6 +3,7 @@ package day24;
 import java.nio.channels.IllegalSelectorException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import common.LinesGroup;
 import common.PuzzleCommon;

@@ -1,6 +1,6 @@
 package day25;
 
-import java.util.HashMap;
+import java.math.BigInteger;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
@@ -13,33 +13,73 @@ public class Puzzle1 extends PuzzleCommon
     {
         new Puzzle1().solve();
     }
+
+    static String digits = "=-012";
     
-    public int processGroup(LinesGroup group)
+    long decode(String line)
     {
-        HashMap<Character, Integer> chars = new HashMap<>();
-        for (String line : group)
+        long val = 0;
+        long base = 1;
+        for (int idx = line.length()-1; idx>=0; idx--)
         {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
+            var v = digits.indexOf(line.substring(idx, idx+1));
+            val += base * (v-2);
+            base *= 5;
         }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
+        return val;
+    }
+    
+//    String encode(long val)
+//    {
+//        StringBuilder result = new StringBuilder();
+//        var base = 1;
+//        while (val > 0)
+//        {
+//            int v = (int)(val % 5);
+//            val -= v;
+//            if (v >= 3)
+//            {
+//                v -= 5;
+//                val += base * 5; 
+//            }
+//            result.append(digits.charAt(v+2));
+//            val /= 5;
+//        }
+//        result.reverse();
+//        return result.toString();
+//    }
+//
+//    long decode(String line)
+//    {
+//        BigInteger val = BigInteger.valueOf(0);
+//        BigInteger base = BigInteger.valueOf(1)1;
+//        for (int idx = line.length()-1; idx>=0; idx--)
+//        {
+//            var v = digits.indexOf(line.substring(idx, idx+1));
+//            val = val.add(BigInteger.valueOf(-1)).multiply(BigInteger.valueOf(base));
+//            base *= 5;
+//        }
+//        return val;
+//    }
+//
+    String encode(long val)
+    {
+        StringBuilder result = new StringBuilder();
+        var base = 1;
+        while (val > 0)
         {
-            if (v == groupSize)
+            int v = (int)(val % 5);
+            val -= v;
+            if (v >= 3)
             {
-                count++;
+                v -= 5;
+                val += base * 5; 
             }
+            result.append(digits.charAt(v+2));
+            val /= 5;
         }
-        return count;
+        result.reverse();
+        return result.toString();
     }
     
     public void solve()
@@ -48,24 +88,31 @@ public class Puzzle1 extends PuzzleCommon
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
         
-//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        long result = 0;
+        for (String line : lines)
+        {
+            result += decode(line);
+        }
+        System.out.println(result);
+        System.out.println(encode(result));
         
-//        LinesGroup lines = readAllLines(inputFile);
-        
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        System.out.println(encode(1));
+        System.out.println(encode(2));
+        System.out.println(encode(3));
+        System.out.println(encode(4));
+        System.out.println(encode(5));
+        System.out.println(encode(6));
+        System.out.println(encode(7));
+        System.out.println(encode(8));
+        System.out.println(encode(9));
+        System.out.println(encode(10));
+        System.out.println(encode(15));
+        System.out.println(encode(20));
+        System.out.println(encode(2022));
+        System.out.println(encode(12345));
+        System.out.println(encode(314159265));
+        System.out.println(decode("1121-1110-1=0"));
         
     }
 }
