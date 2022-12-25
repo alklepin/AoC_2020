@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ImplicitGraph
 {
@@ -56,45 +57,59 @@ public class ImplicitGraph
         }
     }
     
+//    public static <TNode> SearchResult<TNode> BFS(TNode start, TNode end, MoveGenerator<TNode> moveGenerator)
+//    {
+//        LinkedList<TNode> queue = new LinkedList<>();
+//        HashMap<TNode, TNode> visitedFrom = new HashMap<>();
+//        visitedFrom.put(start, start);
+//        queue.add(start);
+//        while (queue.size() > 0)
+//        {
+//            TNode current = queue.poll();
+//            for (var next : moveGenerator.nextNodes(current))
+//            {
+//                if (visitedFrom.containsKey(next))
+//                    continue;
+//                
+//                visitedFrom.put(next, current);
+//                if (end != null && next.equals(end))
+//                {
+//                    break;
+//                }
+//                queue.add(next);
+//            }
+//        }
+//        visitedFrom.remove(start);
+//        return new SearchResult<TNode>(start, end, visitedFrom);
+//    }
+
+    public static Runnable emptyAction = () -> {};
+    
     public static <TNode> SearchResult<TNode> BFS(TNode start, TNode end, MoveGenerator<TNode> moveGenerator)
     {
-        LinkedList<TNode> queue = new LinkedList<>();
-        HashMap<TNode, TNode> visitedFrom = new HashMap<>();
-        visitedFrom.put(start, start);
-        queue.add(start);
-        while (queue.size() > 0)
-        {
-            TNode current = queue.poll();
-            for (var next : moveGenerator.nextNodes(current))
-            {
-                if (visitedFrom.containsKey(next))
-                    continue;
-                
-                visitedFrom.put(next, current);
-                if (end != null && next.equals(end))
-                {
-                    break;
-                }
-                queue.add(next);
-            }
-        }
-        visitedFrom.remove(start);
-        return new SearchResult<TNode>(start, end, visitedFrom);
+        Predicate<TNode> endCondition = (end != null) ? (next) -> next.equals(end) : (n) -> Boolean.FALSE;
+        var result = BFSSteppedCond(start, endCondition, moveGenerator, emptyAction);
+        return new SearchResult<TNode>(start, end, result.visitedFrom);
+    }
+    
+    public static <TNode> SearchResult<TNode> BFSCond(TNode start, Predicate<TNode> endCondition, MoveGenerator<TNode> moveGenerator)
+    {
+        return BFSSteppedCond(start, endCondition, moveGenerator, emptyAction);
     }
 
     public static <TNode> SearchResult<TNode> BFSStepped(TNode start, TNode end, MoveGenerator<TNode> moveGenerator, Runnable stepAction)
     {
-        Function<TNode, Boolean> endCondition = (end != null) ? (next) -> next.equals(end) : (n) -> Boolean.FALSE;
-        var result = BFSSteppedCond(start, endCondition, moveGenerator, stepAction);
-        return new SearchResult<TNode>(start, end, result.visitedFrom);
+        Predicate<TNode> endCondition = (end != null) ? (next) -> next.equals(end) : (n) -> Boolean.FALSE;
+        return BFSSteppedCond(start, endCondition, moveGenerator, stepAction);
     }
     
-    public static <TNode> SearchResult<TNode> BFSSteppedCond(TNode start, Function<TNode, Boolean> endCondition, MoveGenerator<TNode> moveGenerator, Runnable stepAction)
+    public static <TNode> SearchResult<TNode> BFSSteppedCond(TNode start, Predicate<TNode> endCondition, MoveGenerator<TNode> moveGenerator, Runnable stepAction)
     {
         LinkedList<TNode> currentQueue = new LinkedList<>();
         HashMap<TNode, TNode> visitedFrom = new HashMap<>();
         visitedFrom.put(start, start);
         currentQueue.add(start);
+        TNode end = null;
         main_loop:
         while (currentQueue.size() > 0)
         {
@@ -108,8 +123,9 @@ public class ImplicitGraph
                         continue;
                     
                     visitedFrom.put(next, current);
-                    if (endCondition.apply(next))
+                    if (endCondition.test(next))
                     {
+                        end = next;
                         break main_loop;
                     }
                     nextQueue.add(next);
@@ -122,7 +138,7 @@ public class ImplicitGraph
             }
         }
         visitedFrom.remove(start);
-        return new SearchResult<TNode>(start, null, visitedFrom);
+        return new SearchResult<TNode>(start, end, visitedFrom);
     }
 
     public static <TNode> SearchResult<TNode> DFS(TNode start, TNode end, MoveGenerator<TNode> moveGenerator)
