@@ -26,7 +26,7 @@ public class Puzzle2 extends PuzzleCommon
         int i = 0;
         for (String line : group)
         {
-            var numbers = line.split("\s+");
+            var numbers = line.split("\\s+");
             for (var j = 0; j < numbers.length; j++)
             {
                 var num = parseInt(numbers[j]);
