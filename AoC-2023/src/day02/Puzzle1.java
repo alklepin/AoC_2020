@@ -1,4 +1,4 @@
-package day01;
+package day02;
 
 import java.util.HashMap;
 
@@ -60,27 +60,12 @@ public class Puzzle1 extends PuzzleCommon
         
 //        LinesGroup lines = readAllLines(inputFile);
         
-        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        int result = 0;
-        for (String line : lines)
-        {
-            var first = -1;
-            var last = -1;
-            for (var idx = 0; idx < line.length(); idx++)
-            {
-                char c = line.charAt(idx);
-                var val = parseInt(""+c, -1);
-                if (val != -1)
-                {
-                    last = val;
-                    if (first == -1)
-                        first = val;
-                }
-            }
-            var value = first * 10 + last;
-            result += value;
-        }
-        System.out.println(result);
+//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
         
     }
 }
