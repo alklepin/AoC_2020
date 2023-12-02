@@ -5,15 +5,16 @@ import java.util.regex.Pattern;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.boards.IntTriple;
 import common.geometry.Vect3I;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -74,24 +75,21 @@ public class Puzzle1 extends PuzzleCommon
             
             var valid = true;
             var sets = infoSets.split(";");
+            var minData = new IntTriple(0,0,0);
             for (var set : sets)
             {
                 var data = parseSet(set);
-                if ((data.m_red > 12)
-                    || data.m_green > 13
-                    || data.m_blue > 14)
-                {
-                    valid = false;
-                }
+                minData = minData.componentMax(data);
             }
+            var p = minData.getX()*minData.getY()*minData.getZ();
             if (valid)
-                result += gameNum; 
+                result += p; 
         }
         System.out.println(result);
         
     }
     
-    public Data parseSet(String line)
+    public IntTriple parseSet(String line)
     {
         Pattern p = Pattern.compile("(\\d+) (green|blue|red)(?:\\, )?");
         int red = 0;
@@ -121,20 +119,6 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         
-        return new Data(red, green, blue);
-    }
-    
-    public static class Data
-    {
-        int m_red;
-        int m_green;
-        int m_blue;
-
-        public Data(int red, int green, int blue)
-        {
-            m_red = red;
-            m_green = green;
-            m_blue = blue;
-        }
+        return new IntTriple(red, green, blue);
     }
 }
