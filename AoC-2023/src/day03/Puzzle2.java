@@ -1,19 +1,22 @@
 package day03;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.Generators;
+import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -64,36 +67,57 @@ public class Puzzle1 extends PuzzleCommon
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         var board = Board2D.parseAsCharsXY(lines);
-        var result = 0;
+        var gears = new HashMap<IntPair, ArrayList<Integer>>();
+        
+        for (var p : board.allCellsXY())
+        {
+            if (board.getCharAtXY(p) == '*')
+                gears.put(p, new ArrayList<>());
+        }
+        
         for (var y = 0; y < board.getHeigth(); y++)
         {
             for (var x = 0; x < board.getWidth(); x++)
             {
-                if ("0123456789".indexOf(board.getAtXY(x, y)) >= 0)
+                var cell = new IntPair(x, y);
+                if ("0123456789".indexOf(board.getAtXY(cell)) >= 0)
                 {
-                    var good = false; 
+                    var g = new HashSet<IntPair>();
                     var b = new StringBuilder();
-                    b.append(board.getCharAtXY(x, y));
+                    b.append(board.getCharAtXY(cell));
                     for (var p : Generators.neighbours8(x, y, 0, 0, board.getWidth() - 1, board.getHeigth()-1))
                     {
-                        good |= "0123456789.".indexOf(board.getAtXY(p)) < 0;
+                        if (board.getCharAtXY(p) == '*')
+                            g.add(p);
                     }
                     x++;
-                    while (x < board.getWidth() && "0123456789".indexOf(board.getAtXY(x, y)) >= 0)
+                    cell = new IntPair(x, y);
+                    while (x < board.getWidth() && "0123456789".indexOf(board.getAtXY(cell)) >= 0)
                     {
                         b.append(board.getCharAtXY(x, y));
                         for (var p : Generators.neighbours8(x, y, 0, 0, board.getWidth()-1, board.getHeigth()-1))
                         {
-                            good |= "0123456789.".indexOf(board.getAtXY(p)) < 0;
+                            if (board.getCharAtXY(p) == '*')
+                                g.add(p);
                         }
                         x++;
+                        cell = new IntPair(x, y);
                     }
-                    if (good)
+                    var val = parseInt(b.toString());
+                    for (var gg : g)
                     {
-                        var val = parseInt(b.toString());
-                        result += val;
+                        gears.get(gg).add(val);
                     }
                 }
+            }
+        }
+        var result = 0;
+        for (var pair : gears.entrySet())
+        {
+            var list = pair.getValue(); 
+            if (list.size() == 2)
+            {
+                result += list.get(0) * list.get(1);
             }
         }
         System.out.println(result);

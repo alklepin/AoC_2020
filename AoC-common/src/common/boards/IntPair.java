@@ -148,6 +148,26 @@ public class IntPair
         return new IntPair(m_x / number, m_y / number);
     }
     
+    public IntPair nextRight()
+    {
+        return add(RIGHT);
+    }
+
+    public IntPair nextLeft()
+    {
+        return add(LEFT);
+    }
+
+    public IntPair nextUp()
+    {
+        return add(UP);
+    }
+
+    public IntPair nextDown()
+    {
+        return add(DOWN);
+    }
+    
     /**
      * Returns Manhattan length
      * @return

@@ -133,6 +133,11 @@ public class Board2D
     {
         return (char)m_data[cell.getY()][cell.getX()];
     }
+
+    public char getCharAtXY(int x, int y)
+    {
+        return (char)m_data[y][x];
+    }
     
     public String getRowAsString(int row)
     {
