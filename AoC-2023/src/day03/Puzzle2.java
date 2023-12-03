@@ -7,7 +7,6 @@ import java.util.HashSet;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators;
 import common.boards.IntPair;
 
 public class Puzzle2 extends PuzzleCommon
@@ -82,39 +81,38 @@ public class Puzzle2 extends PuzzleCommon
                 var cell = new IntPair(x, y);
                 if ("0123456789".indexOf(board.getAtXY(cell)) >= 0)
                 {
-                    var g = new HashSet<IntPair>();
+                    var curGears = new HashSet<IntPair>();
                     var b = new StringBuilder();
                     b.append(board.getCharAtXY(cell));
-                    for (var p : Generators.neighbours8(x, y, 0, 0, board.getWidth() - 1, board.getHeigth()-1))
+                    for (var p : board.neighbours8XY(cell))
                     {
                         if (board.getCharAtXY(p) == '*')
-                            g.add(p);
+                            curGears.add(p);
                     }
-                    x++;
-                    cell = new IntPair(x, y);
-                    while (x < board.getWidth() && "0123456789".indexOf(board.getAtXY(cell)) >= 0)
+                    cell = cell.nextRight();
+                    while (board.containsXY(cell) && "0123456789".indexOf(board.getAtXY(cell)) >= 0)
                     {
-                        b.append(board.getCharAtXY(x, y));
-                        for (var p : Generators.neighbours8(x, y, 0, 0, board.getWidth()-1, board.getHeigth()-1))
+                        b.append(board.getCharAtXY(cell));
+                        for (var p : board.neighbours8XY(cell))
                         {
                             if (board.getCharAtXY(p) == '*')
-                                g.add(p);
+                                curGears.add(p);
                         }
-                        x++;
-                        cell = new IntPair(x, y);
+                        cell = cell.nextRight();
                     }
+                    x = cell.getX();
+                    
                     var val = parseInt(b.toString());
-                    for (var gg : g)
+                    for (var gear : curGears)
                     {
-                        gears.get(gg).add(val);
+                        gears.get(gear).add(val);
                     }
                 }
             }
         }
         var result = 0;
-        for (var pair : gears.entrySet())
+        for (var list : gears.values())
         {
-            var list = pair.getValue(); 
             if (list.size() == 2)
             {
                 result += list.get(0) * list.get(1);
