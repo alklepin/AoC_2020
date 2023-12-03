@@ -16,30 +16,11 @@ public class Puzzle1 extends PuzzleCommon
     
     public int processGroup(LinesGroup group)
     {
-        HashMap<Character, Integer> chars = new HashMap<>();
+        var result = 0;
         for (String line : group)
         {
-            for (int i = 0; i < line.length(); i++)
-            {
-                char key = line.charAt(i);
-                int count = 0;
-                if (chars.get(key) != null)
-                {
-                    count = chars.get(key);
-                }
-                chars.put(key, count + 1);
-            }
         }
-        int count = 0;
-        int groupSize = group.size();
-        for (Integer v : chars.values())
-        {
-            if (v == groupSize)
-            {
-                count++;
-            }
-        }
-        return count;
+        return result;
     }
     
     public void solve()
