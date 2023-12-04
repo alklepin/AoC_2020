@@ -1,17 +1,18 @@
 package day04;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
         throws Exception
     {
-        new Puzzle1().solve();
+        new Puzzle2().solve();
     }
     
     public int processGroup(LinesGroup group)
@@ -43,9 +44,40 @@ public class Puzzle1 extends PuzzleCommon
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int result = 0;
+        ArrayList<Card> cards = new ArrayList<>();
         for (String line : lines)
         {
-            
+            cards.add(new Card(line));
+        }
+        
+        for (var idx = cards.size()-1; idx >= 0; idx--)
+        {
+            var card = cards.get(idx);
+            card.copies = 0;
+            for (var next = idx+1; next <= idx+card.cost; next++)
+            {
+                card.copies++;
+                card.copies += cards.get(next).copies;
+            }
+        }
+        
+        for (var card : cards)
+        {
+            result += 1;
+            result += card.copies;
+        }
+        
+        System.out.println(result);
+        
+    }
+    
+    public static class Card
+    {
+        public int cost;
+        public int copies;
+        
+        public Card(String line)
+        {
             var parts = line.split(":")[1].trim().split("\\|");
             var winning = parts[0].trim().split("\\s+");
             var numbers = parts[1].trim().split("\\s+");
@@ -55,22 +87,15 @@ public class Puzzle1 extends PuzzleCommon
                 var n = parseInt(s);
                 hsWinn.add(n);
             }
-            var cost = 1;
+            cost = 0;
             for (var s : numbers)
             {
                 var n = parseInt(s);
                 if (hsWinn.contains(n))
                 {
-                    cost *= 2;
+                    cost++;
                 }
             }
-            if (cost > 1)
-                cost = cost / 2;
-            else 
-                cost = 0;
-            result += cost;
         }
-        System.out.println(result);
-        
     }
 }

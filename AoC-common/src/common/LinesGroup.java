@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -83,4 +84,57 @@ public class LinesGroup implements Iterable<String>
     {
         return Collections.unmodifiableCollection(lines);
     }
+    
+    public void trimAll()
+    {
+        for (var idx = 0; idx < lines.size(); idx++)
+        {
+            lines.set(idx, lines.get(idx).trim());
+        }
+    }
+    
+    public void trimRightAll()
+    {
+        for (var idx = 0; idx < lines.size(); idx++)
+        {
+            var line = new StringBuilder(lines.get(idx));
+            while (line.charAt(line.length()-1) == ' ')
+                line.setLength(line.length()-1);
+            
+            lines.set(idx, line.toString());
+        }
+    }
+    
+    public ArrayList<LinesGroup> split(String regex)
+    {
+        var pattern = Pattern.compile(regex);
+        
+        ArrayList<LinesGroup> groups = new ArrayList<>();
+        LinesGroup current = null;
+        for (var line : lines)
+        {
+            if (pattern.matcher(line).matches())
+            {
+                if (current != null)
+                {
+                    groups.add(current);
+                    current = null;
+                }
+            }
+            else
+            {
+                if (current == null)
+                {
+                    current = new LinesGroup();
+                }
+                current.addLine(line);
+            }
+        }
+        if (current != null)
+        {
+            groups.add(current);
+        }
+        return groups;
+    }
+    
 }
