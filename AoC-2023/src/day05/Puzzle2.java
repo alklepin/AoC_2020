@@ -7,7 +7,7 @@ import java.util.HashMap;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -16,7 +16,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -25,30 +25,11 @@ public class Puzzle1 extends PuzzleCommon
         }
     }
     
-    public int processGroup(LinesGroup group)
-    {
-        var result = 0;
-        for (String line : group)
-        {
-        }
-        return result;
-    }
-    
     public void solve()
         throws Exception
     {
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
-        
-//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
         
         LinesGroup lines = readAllLines(inputFile);
         var groups = lines.split("\\s*");
@@ -69,23 +50,28 @@ public class Puzzle1 extends PuzzleCommon
         var tempToHumidityMap = parseMap(groups.get(6));
         var humidityToLocationMap = parseMap(groups.get(7));
         long result = Long.MAX_VALUE;
-        for (var seed : seeds)
+        for (var idx = 0; idx < seeds.size(); idx += 2)
         {
-            try
+            var rStart = seeds.get(idx);
+            var rLength = seeds.get(idx+1);
+            for (var seed = rStart; seed < rStart + rLength; seed++)
             {
-                var soil = seedToSoidMap.translate(seed);
-                var fert = soilToFertilizerMap.translate(soil);
-                var water = fertilizerToWaterMap.translate(fert);
-                var light = waterToLightMap.translate(water);
-                var temp = lightToTempMap.translate(light);
-                var humidity = tempToHumidityMap.translate(temp);
-                var location = humidityToLocationMap.translate(humidity);
-                if (location < result)
-                    result = location;
-            }
-            catch (Exception e)
-            {
-                // Ignore
+                try
+                {
+                    var soil = seedToSoidMap.translate(seed);
+                    var fert = soilToFertilizerMap.translate(soil);
+                    var water = fertilizerToWaterMap.translate(fert);
+                    var light = waterToLightMap.translate(water);
+                    var temp = lightToTempMap.translate(light);
+                    var humidity = tempToHumidityMap.translate(temp);
+                    var location = humidityToLocationMap.translate(humidity);
+                    if (location < result)
+                        result = location;
+                }
+                catch (Exception e)
+                {
+                    // Ignore
+                }
             }
         }
         

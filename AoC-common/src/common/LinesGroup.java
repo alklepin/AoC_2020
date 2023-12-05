@@ -50,6 +50,11 @@ public class LinesGroup implements Iterable<String>
         return lines.get(pos);
     }
 
+    public LineParser lineParser(int pos)
+    {
+        return new LineParser(lines.get(pos));
+    }
+
     public String line(int pos)
     {
         return lines.get(pos);
