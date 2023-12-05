@@ -6,14 +6,13 @@ import java.util.regex.Pattern;
 
 public class LineParser
 {
-    private String source;
-    private int startPos;
-    private int idx;
+    private final String source;
+    private final int startPos;
     
     public LineParser(String s)
     {
         source = s;
-        idx = 0;
+        startPos = 0;
     }
 
     public LineParser(String s, int startPos)
@@ -23,24 +22,23 @@ public class LineParser
         
         source = s;
         this.startPos = startPos; 
-        idx = startPos;
     }
     
     public LineParser skip(int length)
     {
-        idx += length;
-        return this;
+        return new LineParser(source, startPos + length);
     }
 
     public LineParser skipTill(String regex)
     {
         var pattern = Pattern.compile(regex);
         var matcher = pattern.matcher(source.substring(startPos));
+        var newPos = startPos;
         if (matcher.find())
         {
-            idx = matcher.end();
+            newPos = matcher.end();
         }
-        return this;
+        return new LineParser(source, newPos);
     }
     
     public ArrayList<String> listOfStrings()
@@ -75,6 +73,7 @@ public class LineParser
         var pattern = Pattern.compile(regexSeparator+"|$");
         var matcher = pattern.matcher(source);
         ArrayList<T> result = new ArrayList<>();
+        var idx = startPos;
         while (idx < source.length() && matcher.find(idx))
         {
             var str = source.substring(idx, matcher.start());
@@ -84,20 +83,25 @@ public class LineParser
         }
         return result;
     }
+
+    public LineParser segment(String regexSeparator)
+    {
+        var pattern = Pattern.compile(regexSeparator+"|$");
+        var matcher = pattern.matcher(source);
+        if (matcher.find(startPos))
+        {
+            return new LineParser(source.substring(startPos, matcher.start()));
+        }
+        return this;
+    }
     
     public String toString()
     {
-        return source.substring(idx);
+        return source.substring(startPos);
     }
 
     public <T> T parse(Function<LineParser, T> parser)
     {
         return parser.apply(this);
     }
-    
-//    String nextSegment(String regex)
-//    {
-//        var pattern = Pattern.compile(regex)
-//    }
-    
 }

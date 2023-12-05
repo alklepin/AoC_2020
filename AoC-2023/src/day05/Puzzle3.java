@@ -2,7 +2,6 @@ package day05;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 import common.LineParser;
 import common.LinesGroup;
@@ -17,30 +16,11 @@ public class Puzzle3 extends PuzzleCommon
         new Puzzle3().solve();
     }
     
-    public int processGroup(LinesGroup group)
-    {
-        var result = 0;
-        for (String line : group)
-        {
-        }
-        return result;
-    }
-    
     public void solve()
         throws Exception
     {
 //        var inputFile = "input1.txt";
         var inputFile = "input1_test.txt";
-        
-//        ArrayList<LinesGroup> groups = readAllLineGroups(inputFile);
-//        // System.out.println(groups.size());
-//        
-//        int result = 0;
-//        for (LinesGroup group : groups)
-//        {
-//            result += group.processGroup(this::processGroup);
-//        }
-//        System.out.println(result);
         
         LinesGroup lines = readAllLines(inputFile);
         var groups = lines.split("\\s*");
