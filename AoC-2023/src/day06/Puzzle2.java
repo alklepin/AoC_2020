@@ -3,7 +3,7 @@ package day06;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -12,7 +12,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -30,22 +30,13 @@ public class Puzzle1 extends PuzzleCommon
 //        LinesGroup lines = readAllLines(inputFile);
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        var times = lines.lineParser(0).skipTill(":").listOfInts();
-        var distance = lines.lineParser(1).skipTill(":").listOfInts();
-        var results = new int[times.size()];
-        for (var idx = 0; idx < results.length; idx++)
-        {
-            results[idx] = solve(times.get(idx), distance.get(idx));
-        }
-        int result = 1;
-        for (var idx = 0; idx < results.length; idx++)
-        {
-            result *= results[idx];
-        }
+        var time = parseInt(lines.lineParser(0).skipTill(":").toString().replace(" ", ""));
+        var distance = parseLong(lines.lineParser(1).skipTill(":").toString().replace(" ", ""));
+        long result = solve(time, distance);
         System.out.println(result);
     }
     
-    public int solve(int time, int distance)
+    public long solve(long time, long distance)
     {
         var result = 0;
         for (var pushTime = 0; pushTime < time; pushTime++)
