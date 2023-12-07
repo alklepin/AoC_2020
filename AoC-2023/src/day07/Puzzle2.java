@@ -8,7 +8,7 @@ import javax.imageio.plugins.tiff.ExifParentTIFFTagSet;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +17,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -72,8 +72,8 @@ public class Puzzle1 extends PuzzleCommon
         char[] cards;
         Type type;
         
-        private final String cardCharsStr = "23456789TJQKA";
-        private final char[] cardChars = "23456789TJQKA".toCharArray();
+        private final String cardCharsStr = "J23456789TQKA";
+        private final char[] cardChars = cardCharsStr.toCharArray();
         private int cost;
         
         public Hand(String cards, int cost)
@@ -93,9 +93,13 @@ public class Puzzle1 extends PuzzleCommon
         public Type findType()
         {
             var counters = new int[128];
+            var jokers = 0;
             for (var c : cards)
             {
-                counters[c]++;
+                if (c == 'J')
+                    jokers++;
+                else
+                    counters[c]++;
             }
             ArrayList<Integer> fingerprint = new ArrayList<>();
             for (var c : cardChars)
@@ -104,7 +108,7 @@ public class Puzzle1 extends PuzzleCommon
                 fingerprint.add(count);
             }
             Collections.sort(fingerprint, Hand::comparatorIntInv);
-            switch (fingerprint.get(0))
+            switch (fingerprint.get(0)+jokers)
             {
                 case 5:
                     return Type.FiveOfAKind;
