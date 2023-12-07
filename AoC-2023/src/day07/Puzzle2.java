@@ -108,30 +108,15 @@ public class Puzzle2 extends PuzzleCommon
                 fingerprint.add(count);
             }
             Collections.sort(fingerprint, Hand::comparatorIntInv);
-            switch (fingerprint.get(0)+jokers)
+            return switch (fingerprint.get(0)+jokers)
             {
-                case 5:
-                    return Type.FiveOfAKind;
-                case 4: 
-                    return Type.FourOfAKind;
-                case 3: 
-                {
-                    return fingerprint.get(1) == 2 ? Type.FullHouse : Type.ThreeOfAKind;
-                }
-                case 2:
-                {
-                    return fingerprint.get(1) == 2 ? Type.TwoPair : Type.OnePair;
-                }
-                case 1: 
-                {
-                    return Type.HighCard;
-                }
-                    
-                default:
-                {
-                    throw new IllegalStateException();
-                }
-            }
+                case 5 -> Type.FiveOfAKind;
+                case 4 -> Type.FourOfAKind;
+                case 3 -> fingerprint.get(1) == 2 ? Type.FullHouse : Type.ThreeOfAKind;
+                case 2 -> fingerprint.get(1) == 2 ? Type.TwoPair : Type.OnePair;
+                case 1 -> Type.HighCard;
+                default -> throw new IllegalStateException();
+            };
         }
         
         public static int comparatorIntInv(Integer i1, Integer i2)
