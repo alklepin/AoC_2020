@@ -26,7 +26,7 @@ public class Numbers
     
     public static long nok(long a, long b)
     {
-        return a * b / nod(a,b);
+        return a * (b / nod(a,b));
     }
 
     public static long nok(long... values)
@@ -38,7 +38,7 @@ public class Numbers
         var result = values[0];
         for (var idx = 1; idx < values.length; idx++)
         {
-            result = result * values[idx] / nod(result, values[idx]);
+            result = result * (values[idx] / nod(result, values[idx]));
         }
         return result;
     }
@@ -52,7 +52,7 @@ public class Numbers
         while (iter.hasNext())
         {
             var v = iter.next().longValue();
-            result = result * v / nod(result, v);
+            result = result * (v / nod(result, v));
         }
         return result;
     }
