@@ -1,14 +1,15 @@
 package day08;
 
-import common.PuzzleCommon;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import common.LinesGroup;
+import common.Numbers;
+import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -25,6 +26,9 @@ public class Puzzle1 extends PuzzleCommon
             System.out.printf("Time spent: %f sec\n", (end - start) / 1000.0);
         }
     }
+    
+    HashMap<String, Node> nodes = new HashMap<>();
+    String directions;
     
     public void solve()
         throws Exception
@@ -36,10 +40,10 @@ public class Puzzle1 extends PuzzleCommon
         
 //        LinesGroup lines = readAllLinesNonEmpty(inputFile);
         
-        String directions = lines.get(0);
+        directions = lines.get(0);
         lines = lines.remainder(2);
         
-        HashMap<String, Node> nodes = new HashMap<>();
+        ArrayList<String> startState = new ArrayList<>();
         
         Pattern p = Pattern.compile("(.*) = \\((.*), (.*)\\)");
         for (String line : lines)
@@ -51,6 +55,8 @@ public class Puzzle1 extends PuzzleCommon
                 String left = m.group(2);
                 String right = m.group(3);
                 nodes.put(from, new Node(left, right));
+                if (from.endsWith("A"))
+                    startState.add(from);
             }
             else
             {
@@ -59,10 +65,34 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         
+        ArrayList<Integer> lengths = new ArrayList<>();
+        for (var s : startState)
+        {
+            lengths.add(getPathLength(s));
+        }
+        var result = Numbers.nok(lengths);
+        
+        System.out.println(result);
+
+        
+//        System.out.println(getPathLength("AAA"));
+//        System.out.println(getPathLength("XFA"));
+//        System.out.println(getPathLength("SBA"));
+//        System.out.println(getPathLength("QJA"));
+//        System.out.println(getPathLength("BFA"));
+//        System.out.println(getPathLength("DFA"));
+
+//        System.out.println(getPathLength("BKZ"));
+        
+    }
+    
+    public int getPathLength(String from)
+    {
         int result = 0;
         int dirPos = 0;
-        var currentNode = "AAA";
-        while (!currentNode.equals("ZZZ"))
+        var currentNode = from;
+        var depth = 1;
+        while (depth > 0)
         {
             var n = nodes.get(currentNode);
             var d = directions.charAt(dirPos);
@@ -71,10 +101,11 @@ public class Puzzle1 extends PuzzleCommon
             
             currentNode = next;
             dirPos = (dirPos + 1) % directions.length();
+            if (currentNode.endsWith("Z"))
+                depth--;
         }
-        
-        System.out.println(result);
-        
+        System.out.println(currentNode);
+        return result;
     }
     
     public static class Node

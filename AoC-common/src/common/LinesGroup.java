@@ -109,6 +109,16 @@ public class LinesGroup implements Iterable<String>
             lines.set(idx, line.toString());
         }
     }
+
+    public LinesGroup remainder(int fromPos)
+    {
+        var result = new LinesGroup();
+        for (var idx = fromPos; idx < lines.size(); idx++)
+        {
+            result.addLine(lines.get(idx));
+        }
+        return result;
+    }
     
     public ArrayList<LinesGroup> split(String regex)
     {

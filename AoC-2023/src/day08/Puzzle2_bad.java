@@ -1,14 +1,15 @@
 package day08;
 
-import common.PuzzleCommon;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import common.LinesGroup;
+import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2_bad extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2_bad().solve();
         }
         finally
         {
@@ -30,7 +31,7 @@ public class Puzzle1 extends PuzzleCommon
         throws Exception
     {
         var inputFile = "input1.txt";
-//        var inputFile = "input1_test.txt";
+//        var inputFile = "input2_test.txt";
         
         LinesGroup lines = readAllLines(inputFile);
         
@@ -41,6 +42,7 @@ public class Puzzle1 extends PuzzleCommon
         
         HashMap<String, Node> nodes = new HashMap<>();
         
+        HashSet<String> startState = new HashSet<>();
         Pattern p = Pattern.compile("(.*) = \\((.*), (.*)\\)");
         for (String line : lines)
         {
@@ -51,6 +53,8 @@ public class Puzzle1 extends PuzzleCommon
                 String left = m.group(2);
                 String right = m.group(3);
                 nodes.put(from, new Node(left, right));
+                if (from.endsWith("A"))
+                    startState.add(from);
             }
             else
             {
@@ -61,20 +65,47 @@ public class Puzzle1 extends PuzzleCommon
         
         int result = 0;
         int dirPos = 0;
-        var currentNode = "AAA";
-        while (!currentNode.equals("ZZZ"))
+        var currentState = startState;
+        printState(currentState);
+        while (!isFinal(currentState))
         {
-            var n = nodes.get(currentNode);
-            var d = directions.charAt(dirPos);
-            String next = (d == 'L') ? n.m_left : n.m_right;  
+            var nextState = new HashSet<String>();
+            for (var s : currentState)
+            {
+                var n = nodes.get(s);
+                var d = directions.charAt(dirPos);
+                String next = (d == 'L') ? n.m_left : n.m_right;
+                nextState.add(next);
+            }
+
             result++;
-            
-            currentNode = next;
+            currentState = nextState;
+//            printState(nextState);
             dirPos = (dirPos + 1) % directions.length();
         }
         
         System.out.println(result);
         
+    }
+    
+    public static boolean isFinal(HashSet<String> list)
+    {
+        for (var l : list)
+        {
+            if (!l.endsWith("Z"))
+                return false;
+        }
+        return true;
+    }
+
+    public static void printState(HashSet<String> list)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (var l : list)
+        {
+            sb.append(l).append(',');
+        }
+        System.out.println(sb);
     }
     
     public static class Node

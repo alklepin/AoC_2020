@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import common.LinesGroup;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle3 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +17,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle3().solve();
         }
         finally
         {
@@ -25,6 +25,9 @@ public class Puzzle1 extends PuzzleCommon
             System.out.printf("Time spent: %f sec\n", (end - start) / 1000.0);
         }
     }
+    
+    HashMap<String, Node> nodes = new HashMap<>();
+    String directions;
     
     public void solve()
         throws Exception
@@ -36,10 +39,8 @@ public class Puzzle1 extends PuzzleCommon
         
 //        LinesGroup lines = readAllLinesNonEmpty(inputFile);
         
-        String directions = lines.get(0);
+        directions = lines.get(0);
         lines = lines.remainder(2);
-        
-        HashMap<String, Node> nodes = new HashMap<>();
         
         Pattern p = Pattern.compile("(.*) = \\((.*), (.*)\\)");
         for (String line : lines)
@@ -59,10 +60,24 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         
+//        System.out.println(getPathLength("AAA"));
+//        System.out.println(getPathLength("XFA"));
+//        System.out.println(getPathLength("SBA"));
+//        System.out.println(getPathLength("QJA"));
+//        System.out.println(getPathLength("BFA"));
+//        System.out.println(getPathLength("DFA"));
+
+        System.out.println(getPathLength("BKZ"));
+        
+    }
+    
+    public int getPathLength(String from)
+    {
         int result = 0;
         int dirPos = 0;
-        var currentNode = "AAA";
-        while (!currentNode.equals("ZZZ"))
+        var currentNode = from;
+        var depth = 1;
+        while (depth > 0)
         {
             var n = nodes.get(currentNode);
             var d = directions.charAt(dirPos);
@@ -71,10 +86,11 @@ public class Puzzle1 extends PuzzleCommon
             
             currentNode = next;
             dirPos = (dirPos + 1) % directions.length();
+            if (currentNode.endsWith("Z"))
+                depth--;
         }
-        
-        System.out.println(result);
-        
+        System.out.println(currentNode);
+        return result;
     }
     
     public static class Node
