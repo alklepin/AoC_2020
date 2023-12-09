@@ -1,12 +1,13 @@
 package day09;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import common.LineParser;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -15,7 +16,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -57,9 +58,10 @@ public class Puzzle1 extends PuzzleCommon
             list = diff(list);
         }
         long p = 0;
+        Collections.reverse(stack);
         for (var s : stack)
         {
-            p += s.get(s.size()-1);
+            p = -p + s.get(0);
         }
         return p;
 //        var result = new ArrayList<>();

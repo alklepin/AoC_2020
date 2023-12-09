@@ -1,4 +1,4 @@
-package day;
+package day10;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
