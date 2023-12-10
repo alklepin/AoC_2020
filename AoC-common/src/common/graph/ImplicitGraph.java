@@ -187,17 +187,19 @@ public class ImplicitGraph
     {
         Stack<TNode> stack = new Stack<>();
         HashMap<TNode, TNode> visitedFrom = new HashMap<>();
+        HashMap<TNode, TNode> reachedFrom = new HashMap<>();
         visitedFrom.put(start, start);
         stack.add(start);
         while (stack.size() > 0)
         {
             TNode current = stack.pop();
+            visitedFrom.put(current, reachedFrom.get(current));
             for (var next : moveGenerator.nextNodes(current))
             {
                 if (visitedFrom.containsKey(next))
                     continue;
 
-                visitedFrom.put(next, current);
+                reachedFrom.put(next, current);
                 if (end != null && next.equals(end))
                 {
                     break;

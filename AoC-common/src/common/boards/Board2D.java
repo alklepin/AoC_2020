@@ -123,6 +123,11 @@ public class Board2D
     {
         m_data[row][col] = value;
     }
+
+    public void setCharAtXY(IntPair cell, char value)
+    {
+        m_data[cell.getY()][cell.getX()] = value;
+    }
     
     public char getCharAt(IntPair cell)
     {
