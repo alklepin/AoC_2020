@@ -128,6 +128,11 @@ public class Board2D
     {
         m_data[cell.getY()][cell.getX()] = value;
     }
+
+    public void setCharAtXY(int x, int y, char value)
+    {
+        m_data[y][x] = value;
+    }
     
     public char getCharAt(IntPair cell)
     {
@@ -307,7 +312,7 @@ public class Board2D
     {
         return allCellsXYImpl();
     }
-    
+
     private Query<IntPair> allCellsRCImpl()
     {
         return Query.range(0, m_width).selectMany(
@@ -320,6 +325,50 @@ public class Board2D
             col -> Query.range(0, m_heigth).select(row -> Pair.of(col, row)));
     }
 
+    public Iterable<IntPair> rowCellsXY(int y)
+    {
+        return rowCellsXYImpl(y);
+    }
+    
+    public Iterable<IntPair> rowCellsRC(int y)
+    {
+        return rowCellsRCImpl(y);
+    }
+    
+    private Query<IntPair> rowCellsXYImpl(int y)
+    {
+        return Query.range(0, m_width)
+            .select(x -> Pair.of(x, y));
+    }
+    
+    private Query<IntPair> rowCellsRCImpl(int row)
+    {
+        return Query.range(0, m_width).select(
+            col -> Pair.of(col, row));
+    }
+    
+    public Iterable<IntPair> colCellsXY(int x)
+    {
+        return colCellsXYImpl(x);
+    }
+
+    public Iterable<IntPair> colCellsRC(int x)
+    {
+        return colCellsRCImpl(x);
+    }
+
+    private Query<IntPair> colCellsXYImpl(int x)
+    {
+        return Query.range(0, m_heigth)
+            .select(y -> Pair.of(x, y));
+    }
+
+    private Query<IntPair> colCellsRCImpl(int col)
+    {
+        return Query.range(0, m_heigth).select(
+            row -> Pair.of(col, row));
+    }
+    
     public Query<IntPair> findXY(Predicate<? super IntPair> predicate)
     {
         return allCellsXYImpl().where(predicate);

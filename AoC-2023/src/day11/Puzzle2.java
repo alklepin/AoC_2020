@@ -10,7 +10,7 @@ import common.graph.ImplicitGraph;
 import common.graph.ImplicitGraph.SearchState;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -19,7 +19,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -42,59 +42,45 @@ public class Puzzle1 extends PuzzleCommon
         Board2D sourceboard = Board2D.parseAsCharsXY(lines);
         board = sourceboard.clone();
         
+        
         for (var x = 0; x < board.getWidth(); x++)
         {
-            var isEmpty = Query.wrap(board.colCellsXY(x))
-                .all(cell -> board.getCharAtXY(cell) != '#');
+            var isEmpty = true;
+            for (var y = 0; y < board.getHeigth(); y++)
+            {
+                if (board.getCharAtXY(x, y) == '#')
+                {
+                    isEmpty = false;
+                    break;
+                }
+            }
             if (isEmpty)
             {
-                for (var cell : board.colCellsXY(x))
-                    board.setCharAtXY(cell, '#');                
+                for (var y = 0; y < board.getHeigth(); y++)
+                {
+                    board.setCharAtXY(x, y, '+');
+                }
             }
-//            var isEmpty = true;
-//            for (var y = 0; y < board.getHeigth(); y++)
-//            {
-//                if (board.getCharAtXY(x, y) == '#')
-//                {
-//                    isEmpty = false;
-//                    break;
-//                }
-//            }
-//            if (isEmpty)
-//            {
-//                for (var y = 0; y < board.getHeigth(); y++)
-//                {
-//                    board.setCharAtXY(x, y, '+');
-//                }
-//            }
         }
 
         for (var y = 0; y < board.getHeigth(); y++)
         {
-            var isEmpty = Query.wrap(board.rowCellsXY(y))
-                .all(cell -> board.getCharAtXY(cell) != '#');
+            var isEmpty = true;
+            for (var x = 0; x < board.getWidth(); x++)
+            {
+                if (board.getCharAtXY(x, y) == '#')
+                {
+                    isEmpty = false;
+                    break;
+                }
+            }
             if (isEmpty)
             {
-                for (var cell : board.rowCellsXY(y))
-                    board.setCharAtXY(cell, '#');                
+                for (var x = 0; x < board.getWidth(); x++)
+                {
+                    board.setCharAtXY(x, y, '+');
+                }
             }
-//            var isEmpty = true;
-//            for (var x = 0; x < board.getWidth(); x++)
-//            {
-//                if (board.getCharAtXY(x, y) == '#')
-//                {
-//                    isEmpty = false;
-//                    break;
-//                }
-//            }
-//            if (isEmpty)
-//            {
-//                for (var x = 0; x < board.getWidth(); x++)
-//                {
-//                    board.setCharAtXY(x, y, '+');
-//                }
-//            }
-            
         }
         HashSet<IntPair> galaxies = new HashSet<>();
         for (var cellId : board.allCellsXY())
@@ -103,10 +89,10 @@ public class Puzzle1 extends PuzzleCommon
                 galaxies.add(cellId);
         }
         
-        int result = 0;
+        long result = 0;
         for (var source : galaxies)
         {
-            var searchState = ImplicitGraph.Dijkstra(SearchState.of(source, 0), null, this::nextNodes);
+            var searchState = ImplicitGraph.Dijkstra(new SearchState<IntPair, Long>(source,0l), null, this::nextNodes);
             for (var galaxy : galaxies)
             {
                 result += searchState.distanceTo(galaxy);
@@ -119,16 +105,16 @@ public class Puzzle1 extends PuzzleCommon
         
     }
     
-    public Iterable<SearchState<IntPair, Integer>> nextNodes(SearchState<IntPair, Integer> current)
+    public Iterable<SearchState<IntPair, Long>> nextNodes(SearchState<IntPair, Long> current)
     {
         return Query.wrap(board.neighbours4XY(current.getNode()))
             .select((n) -> 
-                SearchState.of(n, 
+                new SearchState<IntPair, Long>(n, 
                     switch (board.getCharAtXY(n))
                     {
                         case '.' -> 1 + current.getDistance();
                         case '#' -> 1 + current.getDistance();
-                        case '+' -> 2 + current.getDistance();
+                        case '+' -> 1000000 + current.getDistance();
                         default -> throw new IllegalStateException();
                     })
             );

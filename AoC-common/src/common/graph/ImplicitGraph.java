@@ -226,6 +226,11 @@ public class ImplicitGraph
         private final TNode node;
         private final TDistance distance;
 
+        public static <TN, TD extends Comparable<? super TD>> SearchState<TN, TD> of(TN node, TD distance)
+        {
+            return new SearchState<TN, TD>(node, distance);
+        }
+        
         public SearchState(TNode nextNode, TDistance distance)
         {
             this.node = nextNode;
