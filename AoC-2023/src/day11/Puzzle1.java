@@ -39,34 +39,14 @@ public class Puzzle1 extends PuzzleCommon
 //        LinesGroup lines = readAllLines(inputFile);
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        Board2D sourceboard = Board2D.parseAsCharsXY(lines);
-        board = sourceboard.clone();
+        board = Board2D.parseAsCharsXY(lines);
         
         for (var x = 0; x < board.getWidth(); x++)
         {
             var isEmpty = Query.wrap(board.colCellsXY(x))
                 .all(cell -> board.getCharAtXY(cell) != '#');
             if (isEmpty)
-            {
-                for (var cell : board.colCellsXY(x))
-                    board.setCharAtXY(cell, '#');                
-            }
-//            var isEmpty = true;
-//            for (var y = 0; y < board.getHeigth(); y++)
-//            {
-//                if (board.getCharAtXY(x, y) == '#')
-//                {
-//                    isEmpty = false;
-//                    break;
-//                }
-//            }
-//            if (isEmpty)
-//            {
-//                for (var y = 0; y < board.getHeigth(); y++)
-//                {
-//                    board.setCharAtXY(x, y, '+');
-//                }
-//            }
+                board.fillColumnXY(x, '+');
         }
 
         for (var y = 0; y < board.getHeigth(); y++)
@@ -74,39 +54,17 @@ public class Puzzle1 extends PuzzleCommon
             var isEmpty = Query.wrap(board.rowCellsXY(y))
                 .all(cell -> board.getCharAtXY(cell) != '#');
             if (isEmpty)
-            {
-                for (var cell : board.rowCellsXY(y))
-                    board.setCharAtXY(cell, '#');                
-            }
-//            var isEmpty = true;
-//            for (var x = 0; x < board.getWidth(); x++)
-//            {
-//                if (board.getCharAtXY(x, y) == '#')
-//                {
-//                    isEmpty = false;
-//                    break;
-//                }
-//            }
-//            if (isEmpty)
-//            {
-//                for (var x = 0; x < board.getWidth(); x++)
-//                {
-//                    board.setCharAtXY(x, y, '+');
-//                }
-//            }
-            
+                board.fillRowXY(y, '+');
         }
-        HashSet<IntPair> galaxies = new HashSet<>();
-        for (var cellId : board.allCellsXY())
-        {
-            if (board.getCharAtXY(cellId) == '#')
-                galaxies.add(cellId);
-        }
+        
+        HashSet<IntPair> galaxies = Query.wrap(
+            board.findAllXY(cellId -> (board.getCharAtXY(cellId) == '#')))
+            .toSet();
         
         int result = 0;
         for (var source : galaxies)
         {
-            var searchState = ImplicitGraph.Dijkstra(SearchState.of(source, 0), null, this::nextNodes);
+            var searchState = ImplicitGraph.DijkstraLong(source, null, this::nextNodes);
             for (var galaxy : galaxies)
             {
                 result += searchState.distanceTo(galaxy);
@@ -119,7 +77,7 @@ public class Puzzle1 extends PuzzleCommon
         
     }
     
-    public Iterable<SearchState<IntPair, Integer>> nextNodes(SearchState<IntPair, Integer> current)
+    public Iterable<SearchState<IntPair, Long>> nextNodes(SearchState<IntPair, Long> current)
     {
         return Query.wrap(board.neighbours4XY(current.getNode()))
             .select((n) -> 

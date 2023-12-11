@@ -238,6 +238,29 @@ public class Board2D
         }
     }
     
+    public void fillColumnXY(int x, int value)
+    {
+        for (var cell : colCellsXY(x))
+            setAtXY(cell, value);
+    }
+    
+    public void fillColumnRC(int x, int value)
+    {
+        for (var cell : colCellsRC(x))
+            setAtXY(cell, value);
+    }
+    
+    public void fillRowXY(int y, int value)
+    {
+        for (var cell : rowCellsXY(y))
+            setAtXY(cell, value);
+    }
+
+    public void fillRowRC(int y, int value)
+    {
+        for (var cell : colCellsRC(y))
+            setAtXY(cell, value);
+    }
     
     public void printAsInts(PrintStream ps)
     {
@@ -311,6 +334,16 @@ public class Board2D
     public Iterable<IntPair> allCellsXY()
     {
         return allCellsXYImpl();
+    }
+
+    public Iterable<IntPair> findAllXY(Predicate<? super IntPair> predicateXY)
+    {
+        return Query.wrap(allCellsXY()).where(predicateXY);
+    }
+
+    public Iterable<IntPair> findAllRC(Predicate<? super IntPair> predicateRC)
+    {
+        return Query.wrap(allCellsRC()).where(predicateRC);
     }
 
     private Query<IntPair> allCellsRCImpl()

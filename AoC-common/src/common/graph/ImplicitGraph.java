@@ -310,6 +310,25 @@ public class ImplicitGraph
         }
     }
     
+    public static <TNode> 
+    SearchResultDijkstra<TNode, Long> DijkstraLong(
+        TNode start, 
+        Predicate<TNode> endCondition, 
+        MoveGeneratorDijkstra<TNode, Long> moveGenerator)
+    {
+        return Dijkstra(SearchState.of(start, 0l), endCondition, moveGenerator);
+    }
+
+    public static <TNode> 
+    SearchResultDijkstra<TNode, Double> DijkstraDouble(
+        TNode start, 
+        Predicate<TNode> endCondition, 
+        MoveGeneratorDijkstra<TNode, Double> moveGenerator)
+    {
+        return Dijkstra(SearchState.of(start, 0d), endCondition, moveGenerator);
+    }
+    
+    
     public static <TNode, TDistance extends Comparable<? super TDistance>> 
         SearchResultDijkstra<TNode, TDistance> Dijkstra(
             SearchState<TNode, TDistance> start, 
