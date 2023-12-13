@@ -4,7 +4,7 @@ import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -13,7 +13,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -48,9 +48,35 @@ public class Puzzle1 extends PuzzleCommon
     
     public int processBoard(Board2D board)
     {
+        var source = getBoardValue(board, -2 , -2);
+        var x = (source % 100) - 1;
+        var y = (source / 100) - 1;
+        for (var cell : board.allCellsXY())
+        {
+            var saved = board.getCharAtXY(cell);
+            if (saved == '.')
+                board.setCharAtXY(cell, '#');
+            else
+                board.setCharAtXY(cell, '.');
+            var i = getBoardValue(board, x, y);
+            if (i > 0 && i != source)
+            {
+                System.out.println("Smudged at: "+cell);
+                System.out.println("Value: "+i);
+                board.printAsStrings(System.out);
+                return i;
+            }
+            board.setCharAtXY(cell, saved);
+        }
+        return 0;
+    }
+    public int getBoardValue(Board2D board, int exceptX, int exceptY)
+    {
         var result = 0;
         for (var x = 0; x < board.getWidth(); x++)
         {
+            if (x == exceptX)
+                continue;
             if (isMirroredAfterCol(board, x))
             {
                 result += x + 1;
@@ -61,6 +87,8 @@ public class Puzzle1 extends PuzzleCommon
         }
         for (var y = 0; y < board.getHeigth(); y++)
         {
+            if (y == exceptY)
+                continue;
             if (isMirroredAfterRow(board, y))
             {
                 result += (y + 1)*100;
