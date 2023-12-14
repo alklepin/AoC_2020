@@ -87,7 +87,7 @@ public class Puzzle2_th extends PuzzleCommon
             result += n;
         }
         System.out.println(result);
-        es.close();
+        es.shutdownNow();
     }
     
     static class State
