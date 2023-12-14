@@ -2,6 +2,8 @@ package day14;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.boards.Board2D;
+import common.boards.IntPair;
 
 public class Puzzle1 extends PuzzleCommon
 {
@@ -27,14 +29,40 @@ public class Puzzle1 extends PuzzleCommon
         var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
         
-//        LinesGroup lines = readAllLines(inputFile);
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        Board2D board = Board2D.parseAsCharsXY(lines);
+        for (var y = 0; y < board.getHeigth(); y++)
+        {
+            for (var x = 0; x < board.getWidth(); x++)
+            {
+                var cell = IntPair.of(x, y);
+                if (board.getCharAtXY(cell) == 'O')
+                {
+                    var next = cell.add(IntPair.DOWN);
+                    while (board.containsXY(next) && board.getCharAtXY(next) == '.')
+                    {
+                        next = next.add(IntPair.DOWN);
+                    }
+                    next = next.add(IntPair.UP);
+                    if (!cell.equals(next)) 
+                    {
+                        board.setCharAtXY(cell, '.');
+                        board.setCharAtXY(next, 'O');
+                    }
+                }
+            }
+        }
+        board.printAsStrings(System.out);
         
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        long result = 0;
+        for (var cell : board.allCellsXY())
+        {
+            if (board.getCharAtXY(cell) == 'O')
+            {
+                result += (board.getHeigth() - cell.getY());
+            }
+        }        
+        System.out.println(result);
         
     }
 }
