@@ -151,5 +151,10 @@ public class LinesGroup implements Iterable<String>
         }
         return groups;
     }
+
+    public ArrayList<LinesGroup> splitByEmptyLines()
+    {
+        return split("\\s*");
+    }
     
 }

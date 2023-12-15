@@ -1,4 +1,4 @@
-package day15;
+package day16;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
@@ -29,25 +29,12 @@ public class Puzzle1 extends PuzzleCommon
         
 //        LinesGroup lines = readAllLines(inputFile);
         
-        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        String line = lines.get(0);
-        var parts = line.split(",");
-        long result = 0;
-        for (var part : parts)
-        {
-            result += hash(part);
-        }
-        System.out.println(result);
-    }
-    
-    public long hash(String s)
-    {
-        int result = 0;
-        for (var c : s.toCharArray())
-        {
-            result += c;
-            result = (result * 17) % 256;
-        }
-        return result;
+//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
+        
     }
 }
