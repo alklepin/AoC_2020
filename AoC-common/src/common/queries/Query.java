@@ -24,6 +24,11 @@ public class Query<T> implements Iterable<T>
         return m_source.iterator();
     }
 
+    public static <Type> Query<Type> empty()
+    {
+        return new Query<Type>(EmptyIterable.instance());
+    }
+    
     public static Query<Integer> range(int start, int count)
     {
         return new Query<Integer>(new RangeIterable(start, count));
@@ -41,6 +46,18 @@ public class Query<T> implements Iterable<T>
     public static <Type> Query<Type> wrap(Type... array)
     {
         return new Query<Type>(Arrays.asList(array));
+    }
+    
+    @SafeVarargs
+    public static <T> Query<T> sequenceOf(Query<T>... sources)
+    {
+        @SuppressWarnings("unchecked")
+        Iterable<T>[] srcs = new Iterable[sources.length];
+        for (var idx = 0; idx < sources.length; idx++)
+        {
+            srcs[idx] = sources[idx].m_source;
+        }
+        return new Query<T>(new ConcatIterable<T>(srcs));
     }
     
     public <TTarget> Query<TTarget> select(Converter<? super T, ? extends TTarget> converter)
@@ -104,6 +121,19 @@ public class Query<T> implements Iterable<T>
     public static <T> Iterable<T> concat(Iterable<? extends T>... sources)
     {
         return new ConcatIterable<T>(sources);
+    }
+
+    @SafeVarargs
+    public final Query<T> concat(T... sources)
+    {
+        return this.concat(Query.wrap(sources));
+    }
+
+    @SafeVarargs
+    public final Query<T> add(T... sources)
+    {
+        m_source = concat(m_source, Query.wrap(sources));
+        return this;
     }
     
     public ArrayList<T> toList()

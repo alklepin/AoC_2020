@@ -9,10 +9,11 @@ import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.IntPair;
+import common.boards.Pair;
 import common.graph.ImplicitGraph;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2_1 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -21,7 +22,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2_1().solve();
         }
         finally
         {
@@ -47,20 +48,31 @@ public class Puzzle1 extends PuzzleCommon
         
         int result = 0;
         
-        State start = new State(IntPair.of(0, 0), IntPair.RIGHT);
-        
-        var searchResult = ImplicitGraph.BFS(start, null, this::nextNodes);
-        var visitedCells = new HashSet<IntPair>();
-        for (var s : searchResult.visited())
-        {
-            visitedCells.add(s.cell);
-        }
-        result = visitedCells.size();
+        var starts = Query.sequenceOf( 
+            board.rowCellsXY(0).select(c -> new State(c, IntPair.UP)),
+            board.rowCellsXY(board.getHeigth()-1).select(c -> new State(c, IntPair.DOWN)),
+            board.colCellsXY(0).select(c -> new State(c, IntPair.RIGHT)),
+            board.colCellsXY(board.getWidth()-1).select(c -> new State(c, IntPair.LEFT)))
+            ;
+            
+//        var starts = Query.wrap(new State(Pair.of(0, 0), IntPair.RIGHT));
         var bb = board.clone();
-        for (var c : visitedCells)
+        
+        for (var start : starts)
         {
-            bb.setCharAtXY(c, '#');
+            var searchResult = ImplicitGraph.BFS(start, null, this::nextNodes);
+            var visitedCells = new HashSet<IntPair>();
+            for (var s : searchResult.visited())
+            {
+                visitedCells.add(s.cell);
+            }
+            result = Math.max(result, visitedCells.size());
+            for (var c : visitedCells)
+            {
+                bb.setCharAtXY(c, '#');
+            }
         }
+        
             
         
         bb.printAsStrings(System.out);
@@ -70,71 +82,43 @@ public class Puzzle1 extends PuzzleCommon
         
     }
     
-    
-    static char dirToChar(IntPair dir)
-    {
-        if (dir == IntPair.DOWN)
-            return '^';
-        if (dir == IntPair.UP)
-            return 'v';
-        if (dir == IntPair.LEFT)
-            return '<';
-        if (dir == IntPair.RIGHT)
-            return '>';
-        throw new IllegalStateException();
-    }
-    
     public Iterable<State> nextNodes(State current)
     {
         IntPair nextDir;
         IntPair nextCell;
 //        boardCopy.setCharAtXY(current.cell, '#');
+        Query<State> result = Query.empty();
         switch (board.getCharAtXY(current.cell))
         {
             case '.':
             {
-                boardCopy.setCharAtXY(current.cell, dirToChar(current.direction));
-                
-                nextCell = current.cell.add(current.direction);
-                nextDir = current.direction;
-                if (board.containsXY(nextCell))
-                    return Query.wrap(new State(nextCell, nextDir));
-                else
-                    return Collections.EMPTY_LIST;
+                boardCopy.setCharAtXY(current.cell, current.direction.asDirectionCharVInv());
+                result = Query.wrap(current.next(current.direction));
+                break;
             }
             case '\\':
             {
                 if (current.direction.equals(IntPair.UP))
-                    nextDir = IntPair.RIGHT;
+                    result.add(current.next(IntPair.RIGHT));
                 else if (current.direction.equals(IntPair.LEFT))
-                    nextDir = IntPair.DOWN;
+                    result.add(current.next(IntPair.DOWN));
                 else if (current.direction.equals(IntPair.DOWN))
-                    nextDir = IntPair.LEFT;
+                    result.add(current.next(IntPair.LEFT));
                 else //if (current.direction.equals(IntPair.RIGHT))
-                    nextDir = IntPair.UP;
-                
-                nextCell = current.cell.add(nextDir);
-                if (board.containsXY(nextCell))
-                    return Query.wrap(new State(nextCell, nextDir));
-                else
-                    return Collections.EMPTY_LIST;
+                    result.add(current.next(IntPair.UP));
+                break;
             }
             case '/':
             {
                 if (current.direction.equals(IntPair.UP))
-                    nextDir = IntPair.LEFT;
+                    result.add(current.next(IntPair.LEFT));
                 else if (current.direction.equals(IntPair.LEFT))
-                    nextDir = IntPair.UP;
+                    result.add(current.next(IntPair.UP));
                 else if (current.direction.equals(IntPair.DOWN))
-                    nextDir = IntPair.RIGHT;
+                    result.add(current.next(IntPair.RIGHT));
                 else //if (current.direction.equals(IntPair.RIGHT))
-                    nextDir = IntPair.DOWN;
-                
-                nextCell = current.cell.add(nextDir);
-                if (board.containsXY(nextCell))
-                    return Query.wrap(new State(nextCell, nextDir));
-                else
-                    return Collections.EMPTY_LIST;
+                    result.add(current.next(IntPair.DOWN));
+                break;
             }
             case '|':
             {
@@ -142,19 +126,14 @@ public class Puzzle1 extends PuzzleCommon
                 if ((current.direction.equals(IntPair.UP))
                     || (current.direction.equals(IntPair.DOWN)))
                 {
-                    nextCell = current.cell.add(current.direction);
-                    r.add(new State(nextCell, current.direction));
+                    result.add(current.next(current.direction));
                 }
                 else
                 {
-                    nextDir = IntPair.UP;
-                    nextCell = current.cell.add(nextDir);
-                    r.add(new State(nextCell, nextDir));
-                    nextDir = IntPair.DOWN;
-                    nextCell = current.cell.add(nextDir);
-                    r.add(new State(nextCell, nextDir));
+                    result.add(current.next(IntPair.UP));
+                    result.add(current.next(IntPair.DOWN));
                 }
-                return Query.wrap(r).where(s -> board.containsXY(s.cell));
+                break;
             }
             case '-':
             {
@@ -162,23 +141,19 @@ public class Puzzle1 extends PuzzleCommon
                 if ((current.direction.equals(IntPair.LEFT))
                     || (current.direction.equals(IntPair.RIGHT)))
                 {
-                    nextCell = current.cell.add(current.direction);
-                    r.add(new State(nextCell, current.direction));
+                    result.add(current.next(current.direction));
                 }
                 else
                 {
-                    nextDir = IntPair.LEFT;
-                    nextCell = current.cell.add(nextDir);
-                    r.add(new State(nextCell, nextDir));
-                    nextDir = IntPair.RIGHT;
-                    nextCell = current.cell.add(nextDir);
-                    r.add(new State(nextCell, nextDir));
+                    result.add(current.next(IntPair.LEFT));
+                    result.add(current.next(IntPair.RIGHT));
                 }
-                return Query.wrap(r).where(s -> board.containsXY(s.cell));
+                break;
             }
             default:
                 throw new IllegalSelectorException();
         }
+        return result.where(s -> board.containsXY(s.cell));
     }
     
     static class State
@@ -189,6 +164,11 @@ public class Puzzle1 extends PuzzleCommon
         {
             this.cell = cell;
             this.direction = direction;
+        }
+        
+        public State next(IntPair dir)
+        {
+            return new State(cell.add(dir), dir);
         }
         
         @Override

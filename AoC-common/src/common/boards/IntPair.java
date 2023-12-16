@@ -59,6 +59,11 @@ public class IntPair
         };
     }    
     
+    public char asDirectionChar()
+    {
+        return asDirectionChar(this);
+    }
+    
     public static char asDirectionChar(IntPair p)
     {
         p = p.signum();
@@ -72,6 +77,11 @@ public class IntPair
             return '<';
         else
             return '\0';
+    }
+    
+    public char asDirectionCharVInv()
+    {
+        return asDirectionCharVInv(this);
     }
     
     public static char asDirectionCharVInv(IntPair p)

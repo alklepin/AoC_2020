@@ -12,7 +12,7 @@ public class ConcatIterable<T> implements Iterable<T>
     {
         m_sources = sources;
     }
-    
+
     public Iterator<T> iterator()
     {
         return new ConcatIterator();

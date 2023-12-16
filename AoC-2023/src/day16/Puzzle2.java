@@ -12,7 +12,7 @@ import common.boards.IntPair;
 import common.graph.ImplicitGraph;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -21,7 +21,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -47,28 +47,38 @@ public class Puzzle1 extends PuzzleCommon
         
         int result = 0;
         
-        State start = new State(IntPair.of(0, 0), IntPair.RIGHT);
-        
-        var searchResult = ImplicitGraph.BFS(start, null, this::nextNodes);
-        var visitedCells = new HashSet<IntPair>();
-        for (var s : searchResult.visited())
-        {
-            visitedCells.add(s.cell);
-        }
-        result = visitedCells.size();
-        var bb = board.clone();
-        for (var c : visitedCells)
-        {
-            bb.setCharAtXY(c, '#');
-        }
+        var starts = Query.wrap(board.rowCellsXY(0)).select(c -> new State(c, IntPair.UP))
+            .concat(Query.wrap(board.rowCellsXY(board.getHeigth()-1)).select(c -> new State(c, IntPair.DOWN)))
+            .concat(Query.wrap(board.colCellsXY(0)).select(c -> new State(c, IntPair.RIGHT)))
+            .concat(Query.wrap(board.colCellsXY(board.getWidth()-1)).select(c -> new State(c, IntPair.LEFT)))
+            ;
             
         
-        bb.printAsStrings(System.out);
+        for (var start : starts)
+        {
+            var searchResult = ImplicitGraph.BFS(start, null, this::nextNodes);
+            var visitedCells = new HashSet<IntPair>();
+            for (var s : searchResult.visited())
+            {
+                visitedCells.add(s.cell);
+            }
+            result = Math.max(result, visitedCells.size());
+//            var bb = board.clone();
+//            for (var c : visitedCells)
+//            {
+//                bb.setCharAtXY(c, '#');
+//            }
+        }
+        
+            
+        
+//        bb.printAsStrings(System.out);
 ///        boardCopy.printAsStrings(System.out);
         
         System.out.println(result+1);
         
     }
+    
     
     
     static char dirToChar(IntPair dir)

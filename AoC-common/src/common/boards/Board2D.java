@@ -358,12 +358,12 @@ public class Board2D
             col -> Query.range(0, m_heigth).select(row -> Pair.of(col, row)));
     }
 
-    public Iterable<IntPair> rowCellsXY(int y)
+    public Query<IntPair> rowCellsXY(int y)
     {
         return rowCellsXYImpl(y);
     }
     
-    public Iterable<IntPair> rowCellsRC(int y)
+    public Query<IntPair> rowCellsRC(int y)
     {
         return rowCellsRCImpl(y);
     }
@@ -380,12 +380,12 @@ public class Board2D
             col -> Pair.of(col, row));
     }
     
-    public Iterable<IntPair> colCellsXY(int x)
+    public Query<IntPair> colCellsXY(int x)
     {
         return colCellsXYImpl(x);
     }
 
-    public Iterable<IntPair> colCellsRC(int x)
+    public Query<IntPair> colCellsRC(int x)
     {
         return colCellsRCImpl(x);
     }
