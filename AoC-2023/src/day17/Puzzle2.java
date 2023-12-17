@@ -9,7 +9,7 @@ import common.graph.ImplicitGraph;
 import common.graph.ImplicitGraph.SearchState;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -18,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -28,6 +28,7 @@ public class Puzzle1 extends PuzzleCommon
     }
     
     Board2D board;
+//    Board2D boardCopy;
     
     public void solve()
         throws Exception
@@ -39,65 +40,65 @@ public class Puzzle1 extends PuzzleCommon
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         board = Board2D.parseAsCharsXY(lines);
-
-//        var starts = Query.sequenceOf( 
-//            board.rowCellsXY(0).select(c -> new State(c, IntPair.UP)),
-//            board.rowCellsXY(board.getHeigth()-1).select(c -> new State(c, IntPair.DOWN)),
-//            board.colCellsXY(0).select(c -> new State(c, IntPair.RIGHT)),
-//            board.colCellsXY(board.getWidth()-1).select(c -> new State(c, IntPair.LEFT)))
-//            ;
             
         var starts = Query.wrap(
-            new State(Pair.of(0, 0), IntPair.LEFT, 0),
-            new State(Pair.of(0, 0), IntPair.DOWN, 0));
+            new State(Pair.of(0, 0), IntPair.RIGHT, -1),
+            new State(Pair.of(0, 0), IntPair.UP, -1));
         var result = Integer.MAX_VALUE;
         var end = Pair.of(board.getWidth() -1, board.getHeigth() - 1);
         for (var start : starts)
         {
-            var bb = board.clone();
+//            var bb = board.clone();
+//            boardCopy = board.clone();
             var searchResult = ImplicitGraph.DijkstraLong(
                 start, 
                 node -> end.equals(node.cell), 
                 this::nextNodes);
             
+//            boardCopy.printAsStrings(System.out);
+
             var pathCost = 0;
             for (var s : searchResult.getPath())
             {
-                var v = (board.getAtXY(s.cell) - '0');
+                var v = charToInt(board.getCharAtXY(s.cell));
                 pathCost += v;
-                bb.setCharAtXY(s.cell, '#');
+//                bb.setCharAtXY(s.cell, '#');
             }
-            bb.printAsStrings(System.out);
-            System.out.println();
+//            bb.printAsStrings(System.out);
+
+//            System.out.println();
             result = Math.min(result, pathCost);
         }
         
-        System.out.println(result - (board.getAtXY(0,0) - '0'));
-        
+        System.out.println(result - charToInt(board.getCharAtXY(0,0)));
     }
     
     public Iterable<SearchState<State, Long>> nextNodes(SearchState<State, Long> current)
     {
-//        boardCopy.setCharAtXY(current.cell, '#');
-        var currentCell = current.getNode().cell;
         var currentState = current.getNode();
-        var dirs = Query.wrap(board.neighbours4XY(currentCell))
-            .select(c -> c.minus(currentCell))
-            .where(d -> !d.equals(currentState.direction.mult(-1))
-                && (currentState.steps < 2 || !d.equals(currentState.direction)))
+        var currentCell = currentState.cell;
+//        boardCopy.setCharAtXY(currentCell, '#');
+        var dirs = board.directions4XY(currentCell)
+            .where(d -> 
+            {
+                if (d.equals(currentState.dir.reverse()))
+                    return false;
+                if (d.equals(currentState.dir))
+                    return currentState.steps < 9;
+                return currentState.steps >= 3;
+            })
             .toList();
         
         var nextStates = Query.wrap(dirs)
             .select(d -> currentState.next(d))
             .select(s -> SearchState.of(s, 
-                (long)board.getAtXY(s.cell)-'0'+current.getDistance()));
+                current.getDistance() + charToInt(board.getCharAtXY(s.cell))));
         
 //        System.out.println("From: "+current.getNode());
 //        for (var s : nextStates)
 //        {
 //            System.out.println("To: "+s.getNode());
 //        }
-        
         return nextStates;
     }
     
@@ -105,18 +106,18 @@ public class Puzzle1 extends PuzzleCommon
     static class State
     {
         IntPair cell;
-        IntPair direction;
+        IntPair dir;
         int steps;
         public State(IntPair cell, IntPair direction, int steps)
         {
             this.cell = cell;
-            this.direction = direction;
+            this.dir = direction;
             this.steps = steps;
         }
         
         public State next(IntPair dir)
         {
-            var newSteps = (direction.equals(dir)) ? steps + 1 : 0;
+            var newSteps = (dir.equals(dir)) ? steps + 1 : 0;
             return new State(cell.add(dir), dir, newSteps);
         }
 
@@ -127,7 +128,7 @@ public class Puzzle1 extends PuzzleCommon
             int result = 1;
             result = prime * result + ((cell == null) ? 0 : cell.hashCode());
             result = prime * result
-                + ((direction == null) ? 0 : direction.hashCode());
+                + ((dir == null) ? 0 : dir.hashCode());
             result = prime * result + steps;
             return result;
         }
@@ -149,12 +150,12 @@ public class Puzzle1 extends PuzzleCommon
             }
             else if (!cell.equals(other.cell))
                 return false;
-            if (direction == null)
+            if (dir == null)
             {
-                if (other.direction != null)
+                if (other.dir != null)
                     return false;
             }
-            else if (!direction.equals(other.direction))
+            else if (!dir.equals(other.dir))
                 return false;
             if (steps != other.steps)
                 return false;
@@ -164,7 +165,7 @@ public class Puzzle1 extends PuzzleCommon
         @Override
         public String toString()
         {
-            return "State [cell=" + cell + ", direction=" + direction
+            return "State [cell=" + cell + ", direction=" + dir
                 + ", steps=" + steps + "]";
         }
         

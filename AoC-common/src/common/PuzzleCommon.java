@@ -136,6 +136,11 @@ public class PuzzleCommon
         return groups;
     }
     
+    public static int charToInt(char c)
+    {
+        return c - '0';
+    }
+    
     public static int parseInt(String value, int defValue)
     {
         try

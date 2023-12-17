@@ -1,5 +1,6 @@
 package common.queries;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -144,6 +145,46 @@ public class Query<T> implements Iterable<T>
             result.add(value);
         }
         return result;
+    }
+
+    public String join()
+    {
+        return join(", ");
+    }
+    
+    public String join(String separator)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (var item : this)
+        {
+            sb.append(item).append(separator);
+        }
+        if (sb.length() > 0)
+            sb.setLength(sb.length()-separator.length());
+        return sb.toString();
+    }
+
+    public T[] toArray(Class<T> clazz)
+    {
+        var list = toList();
+        @SuppressWarnings("unchecked")
+        T[] result = (T[])Array.newInstance(clazz, list.size());
+        list.toArray(result);
+        return result;
+    }
+
+    public T[] toArray()
+    {
+        var list = toList();
+        if (list.size() > 0)
+        {
+            var clazz = list.get(0).getClass();
+            @SuppressWarnings("unchecked")
+            T[] result = (T[])Array.newInstance(clazz, list.size());
+            list.toArray(result);
+            return result;
+        }
+        return null;
     }
 
     public HashSet<T> toSet()

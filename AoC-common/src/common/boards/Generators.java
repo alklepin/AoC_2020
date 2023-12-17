@@ -15,9 +15,9 @@ public class Generators
         return new Neighbours8Generator(new IntPair(startX, startY), new IntPair(minX,  minY), new IntPair(maxX, maxY));
     }
     
-    public static Iterable<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
+    public static Query<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
     {
-        return new Neighbours8Generator(start, min, max);
+        return Query.wrap(new Neighbours8Generator(start, min, max));
     }
     
     public static Iterable<IntPair> neighbours4(int startX, int startY, int minX, int minY, int maxX, int maxY)
@@ -25,9 +25,9 @@ public class Generators
         return new Neighbours4Generator(new IntPair(startX, startY), new IntPair(minX,  minY), new IntPair(maxX, maxY));
     }
 
-    public static Iterable<IntPair> neighbours4(IntPair start, IntPair min, IntPair max)
+    public static Query<IntPair> neighbours4(IntPair start, IntPair min, IntPair max)
     {
-        return new Neighbours4Generator(start, min, max);
+        return Query.wrap(new Neighbours4Generator(start, min, max));
     }
 
     public static Query<IntTriple> neighbours6_3D(IntTriple start, IntTriple min, IntTriple max)
@@ -37,24 +37,24 @@ public class Generators
             .where(point -> point.inRectangle(min, max));
     }
     
-    public static Iterable<IntPair> ray(int startX, int startY, int dx, int dy, int count)
+    public static Query<IntPair> ray(int startX, int startY, int dx, int dy, int count)
     {
-        return new RayGenerator(new IntPair(startX, startY), new IntPair(dx,  dy), count);
+        return Query.wrap(new RayGenerator(new IntPair(startX, startY), new IntPair(dx,  dy), count));
     }
 
-    public static Iterable<IntPair> ray(IntPair start, IntPair delta, int count)
+    public static Query<IntPair> ray(IntPair start, IntPair delta, int count)
     {
-        return new RayGenerator(start, delta, count);
+        return Query.wrap(new RayGenerator(start, delta, count));
     }
     
-    public static Iterable<IntPair> ray(IntPair start, IntPair delta, int count, boolean includeStart)
+    public static Query<IntPair> ray(IntPair start, IntPair delta, int count, boolean includeStart)
     {
-        return new RayGenerator(start, delta, count, includeStart);
+        return Query.wrap(new RayGenerator(start, delta, count, includeStart));
     }
     
     public static Iterable<IntPair> rhomb(IntPair center, int radius)
     {
-        return Query.concat(
+        return Query.sequenceOf(
             ray(center.add(IntPair.LEFT.mult(radius)), IntPair.UP_RIGHT, radius, true),
             ray(center.add(IntPair.UP.mult(radius)), IntPair.DOWN_RIGHT, radius, true),
             ray(center.add(IntPair.RIGHT.mult(radius)), IntPair.DOWN_LEFT, radius, true),
@@ -63,7 +63,7 @@ public class Generators
 
     public static Iterable<IntPair> rect(IntPair topLeft, int width, int height)
     {
-        return Query.concat(
+        return Query.sequenceOf(
             ray(topLeft, IntPair.RIGHT, width, true),
             ray(topLeft.add(IntPair.RIGHT.mult(width)), IntPair.DOWN, height, true),
             ray(topLeft.add(IntPair.RIGHT.mult(width)).add(IntPair.DOWN.mult(height)), IntPair.LEFT, width, true),

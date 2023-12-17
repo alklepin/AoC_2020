@@ -153,6 +153,11 @@ public class IntPair
         return new IntPair(m_x * number, m_y * number);
     }
 
+    public IntPair reverse()
+    {
+        return new IntPair(-m_x, -m_y);
+    }
+
     public IntPair divideBy(int number)
     {
         return new IntPair(m_x / number, m_y / number);

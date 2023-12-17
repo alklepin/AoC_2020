@@ -755,39 +755,45 @@ public class Board2D
         System.out.println("==========================================");
     }
 
-    public static Iterable<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
+    public static Query<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
     {
-        return new Neighbours8Generator(start, min, max);
+        return Query.wrap(new Neighbours8Generator(start, min, max));
     }
     
-    public Iterable<IntPair> neighbours4RC(IntPair start)
+    public Query<IntPair> neighbours4RC(IntPair start)
     {
         return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
     }
     
-    public Iterable<IntPair> neighbours4XY(IntPair start)
+    public Query<IntPair> neighbours4XY(IntPair start)
     {
         return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
     }
+
+    public Query<IntPair> directions4XY(IntPair start)
+    {
+        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1))
+            .select(c -> c.minus(start));
+    }
     
-    public Iterable<IntPair> neighbours8RC(IntPair start)
+    public Query<IntPair> neighbours8RC(IntPair start)
     {
         return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
     }
     
-    public Iterable<IntPair> neighbours8XY(IntPair start)
+    public Query<IntPair> neighbours8XY(IntPair start)
     {
         return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
     }
 
-    public Iterable<IntPair> rayRC(IntPair currentCell, IntPair delta)
+    public Query<IntPair> rayRC(IntPair currentCell, IntPair delta)
     {
         var count = Math.max(getWidth(), getHeigth());
         return Query.wrap(Generators.ray(currentCell, delta, count))
             .takeWhile(pointRC -> containsRC(pointRC));
     }
     
-    public Iterable<IntPair> rayXY(IntPair currentCell, IntPair delta)
+    public Query<IntPair> rayXY(IntPair currentCell, IntPair delta)
     {
         var count = Math.max(getWidth(), getHeigth());
         return Query.wrap(Generators.ray(currentCell, delta, count))

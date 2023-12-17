@@ -257,6 +257,12 @@ public class ImplicitGraph
         {
             return new SearchState<TNode, TDistance>(node, distance);
         }
+
+        @Override
+        public String toString()
+        {
+            return "SearchState [node=" + node + ", distance=" + distance + "]";
+        }
     }
 
     public static class SearchResultDijkstra<TNode, TDistance extends Comparable<? super TDistance>>
@@ -292,11 +298,12 @@ public class ImplicitGraph
             while (current != null)
             {
                 result.add(current);
-                current = visitedFrom.get(current).getNode();
+                var state = visitedFrom.get(current); 
+                current = state != null ? state.getNode() : null;
             }
             Collections.reverse(result);
             
-            return result.get(0).equals(start) ? result : null;
+            return result.get(0).equals(start.node) ? result : null;
         }
         
         public Set<TNode> visited()
@@ -378,7 +385,7 @@ public class ImplicitGraph
             }
 //            System.out.println("=====");
         }
-        visitedFrom.remove(start);
+        visitedFrom.remove(start.node);
         return new SearchResultDijkstra<TNode, TDistance>(start, end, visitedFrom, nodeStates);
     }
 
