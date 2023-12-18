@@ -10,7 +10,7 @@ import common.boards.IntPair;
 import common.boards.Pair;
 import common.graph.ImplicitGraph;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     private Object m_object;
@@ -21,7 +21,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -33,9 +33,9 @@ public class Puzzle1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        var inputFile = "input1.txt";
+        var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
-        var inputFile = "input2_test.txt";
+//        var inputFile = "input2_test.txt";
         
 //        LinesGroup lines = readAllLines(inputFile);
         
@@ -62,36 +62,49 @@ public class Puzzle1 extends PuzzleCommon
         var shift = minCell.reverse();
         var start = shift;
         var bounds = maxCell.add(shift);
-        var board = new Board2D(bounds.getX()+1, bounds.getY()+1);
+//        var board = new Board2D(bounds.getX()+1, bounds.getY()+1);
         System.out.println(minCell);
         System.out.println(maxCell);
-        board.setAll('.');
+//        board.setAll('.');
         
-        state = start.add(Pair.of(0,0));
+//        state = start.add(Pair.of(0,0));
+        state = start;
+        long area = 0;
+        long area1 = 0;
+        long delta = 0;
+        long straight = 0;
+        long right = 0;
+        long left = 0;
+        IntPair prevDir = decodeDir(items.get(items.size()-1).dir);
         for (var item : items)
         {
             var dir = decodeDir(item.dir);
-            for (var cnt = 0; cnt < item.length; cnt++)
-            {
-                var next = state.add(dir.mult(cnt));
-                visited.put(next, item.color);
-                board.setAtXY(next, '#');
-            }
             var nextState = state.add(dir.mult(item.length));
+            var v1 = state;
+            var v2 = (nextState.minus(state));
+            var md = prevDir.vectorMult(dir);
+            delta += item.length-1;
+            if (md > 0)
+                right++;
+            else if (md < 0)
+                left++;
+            else
+                straight++;
+            area += v1.vectorMult(v2);
+            area1 += v1.asVector().vectorMult(v2.asVector());
             state = nextState;
+            prevDir = dir;
         }
+        System.out.println(delta/2 + (3*right + left) / 4 + straight / 2 + area/2);
         
-//        var res = ImplicitGraph.BFS(Pair.of(30, 10), null, 
-        var res = ImplicitGraph.BFS(Pair.of(1, 1), null, 
-            n -> board.neighbours4XY(n)
-            .where(node -> (board.getCharAtXY(node) =='.')));
-        result = res.visited().size()+1+visited.size();
-        
-        board.printAsStrings(System.out);
-        System.out.println(result);
+//        board.printAsStrings(System.out);
+
+//        System.out.println(1l+delta+area/2);
+//        System.out.println(1l+delta+area1/2);
+//        System.out.println(area1/2);
     }
     
-    public IntPair decodeDir(char c)
+    public static IntPair decodeDirOld(char c)
     {
         return switch (c)
             {
@@ -99,6 +112,18 @@ public class Puzzle1 extends PuzzleCommon
                 case 'D' -> IntPair.UP;
                 case 'L' -> IntPair.LEFT;
                 case 'R' -> IntPair.RIGHT;
+                default -> throw new IllegalStateException();
+            };
+    }
+
+    public static IntPair decodeDir(char c)
+    {
+        return switch (c)
+            {
+                case '3' -> IntPair.DOWN;
+                case '1' -> IntPair.UP;
+                case '2' -> IntPair.LEFT;
+                case '0' -> IntPair.RIGHT;
                 default -> throw new IllegalStateException();
             };
     }
@@ -114,8 +139,14 @@ public class Puzzle1 extends PuzzleCommon
             var parts = line.split("\\s+");
             dir = parts[0].charAt(0);
             length = parseInt(parts[1]);
-            color = parseInt(parts[2].substring(1), 16);
+            var code = parts[2].substring(2, parts[2].length()-1);
+            color = Integer.parseInt(code.substring(0, 5), 16);
+            
+            length = color;
+            dir = code.charAt(5);
         }
+        
+        
     }
     
     

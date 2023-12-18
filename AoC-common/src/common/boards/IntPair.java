@@ -153,6 +153,11 @@ public class IntPair
         return new IntPair(m_x * number, m_y * number);
     }
 
+    public long vectorMult(IntPair other)
+    {
+        return (long)m_x * other.m_y -  (long)m_y * other.m_x;
+    }
+
     public IntPair reverse()
     {
         return new IntPair(-m_x, -m_y);
