@@ -33,8 +33,8 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        var inputFile = "input1.txt";
-//        var inputFile = "input1_test.txt";
+//        var inputFile = "input1.txt";
+        var inputFile = "input1_test.txt";
 //        var inputFile = "input2_test.txt";
         
 //        LinesGroup lines = readAllLines(inputFile);
@@ -97,6 +97,11 @@ public class Puzzle2 extends PuzzleCommon
         }
         System.out.println(delta/2 + (3*right + left) / 4 + straight / 2 + area/2);
         
+        System.out.println("delta: "+delta);
+        System.out.println("right: "+right);
+        System.out.println("left: "+left);
+        System.out.println("straight: "+straight);
+        System.out.println("area: "+area);
 //        board.printAsStrings(System.out);
 
 //        System.out.println(1l+delta+area/2);

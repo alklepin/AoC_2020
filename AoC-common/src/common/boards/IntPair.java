@@ -210,9 +210,9 @@ public class IntPair
      * Returns Euclidean length
      * @return
      */
-    public double length()
+    public long length()
     {
-        return Math.sqrt(m_x * m_x + m_y * m_y);
+        return (long)Math.round(Math.sqrt((long)m_x * m_x + (long)m_y * m_y));
     }
 
     @Override
