@@ -3,12 +3,13 @@ package day20;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -87,12 +88,22 @@ public class Puzzle1 extends PuzzleCommon
                 t.addSource(m.name);
             }
         }
+
+//        for (var m : modules.values())
+//        {
+//            var sources = Query.wrap(m.knownSources.keySet()).join();
+//            System.out.println("" + m.getType() + m.name + " <- " + sources);
+//        }
+//        System.out.println("===");
         
         long lowPulseCounter = 0;
         long highPulseCounter = 0;
         var start = "broadcaster";
         LinkedList<PulseToModule> pulsesTo = new LinkedList<>();
-        var repCount = 1000;
+        var repCount = 1000000;
+        var seqCount = 0;
+        var prevStep = 0;
+        for_loop:
         for (int c = 0; c < repCount; c++)
         {
             pulsesTo.add(new PulseToModule(false, "button", start));
@@ -113,6 +124,28 @@ public class Puzzle1 extends PuzzleCommon
                         highPulseCounter++;
                     else
                         lowPulseCounter++;
+                    // Here we have to find periods of pulsing
+                    // of modules which are at distance 2 from rx
+                    // and then multiply the found periods
+//                    var modName = "mp";
+//                    var modName = "ng";
+//                    var modName = "qb";
+//                    var modName = "qt";
+                    var modName = "ck";
+//                    if (p.toModuleName.equals(nm))
+                    if (p.fromModuleName.equals(modName) && !p.pulseType)
+                    {
+                        seqCount++;
+                        var delta = (c+1 - prevStep);
+                        prevStep = c+1;
+
+//                        if ((seqCount % 4) == 0)
+                        {
+                            System.out.println("Nm: "+modName+" pulseType:"+p.pulseType);
+                            System.out.println("Presses: "+ (c+1) + " delta: "+delta);
+                        }
+                        //break for_loop;
+                    }
                 }
                 nextPulses.forEach((p) -> pulsesTo.add(p));
             }
@@ -149,6 +182,8 @@ public class Puzzle1 extends PuzzleCommon
     {
         public String name;
         public String[] targets;
+        public TreeMap<String, Boolean> knownSources = new TreeMap<>();
+        
         public Module(String name, String [] targets)
         {
             super();
@@ -156,9 +191,13 @@ public class Puzzle1 extends PuzzleCommon
             this.targets = targets;
         }
 
-        public abstract void addSource(String name);
+        public void addSource(String name)
+        {
+            knownSources.put(name, false);
+        }
 
         public abstract Query<PulseToModule> pulse(PulseToModule pulse);
+        public abstract char getType();
     }
     
     public class Broadcaster extends Module
@@ -168,16 +207,17 @@ public class Puzzle1 extends PuzzleCommon
             super(name, targets);
         }
         
-        public void addSource(String name)
-        {
-            throw new IllegalStateException();
-        }
-        
         public Query<PulseToModule> pulse(PulseToModule pulse)
         {
             return Query.wrap(targets).select(t -> new PulseToModule(false, name, t));
         }
+
+        public char getType()
+        {
+            return '$';
+        }
     }
+    
     public class Untyped extends Module
     {
         public Untyped(String name)
@@ -185,13 +225,14 @@ public class Puzzle1 extends PuzzleCommon
             super(name, new String[0]);
         }
 
-        public void addSource(String name)
-        {
-        }
-        
         public Query<PulseToModule> pulse(PulseToModule pulse)
         {
             return Query.empty();
+        }
+        
+        public char getType()
+        {
+            return '^';
         }
     }
     
@@ -204,10 +245,6 @@ public class Puzzle1 extends PuzzleCommon
             super(name, targets);
         }
 
-        public void addSource(String name)
-        {
-        }
-        
         public Query<PulseToModule> pulse(PulseToModule pulse)
         {
             if (pulse.pulseType)
@@ -216,29 +253,38 @@ public class Puzzle1 extends PuzzleCommon
             state = !state;
             return Query.wrap(targets).select(t -> new PulseToModule(state, name, t));
         }
+
+        public char getType()
+        {
+            return '%';
+        }
     }
 
     public class Conjunction extends Module
     {
-        public HashMap<String, Boolean> knownSources = new HashMap<>();
-        
         public Conjunction(String name, String [] targets)
         {
             super(name, targets);
         }
 
-        public void addSource(String name)
-        {
-            knownSources.put(name, false);
-        }
-        
         public Query<PulseToModule> pulse(PulseToModule pulse)
         {
             knownSources.put(pulse.fromModuleName, pulse.pulseType);
             var state = 
                 Query.wrap(knownSources.values()).all(s -> s == Boolean.TRUE);
             
+//            StringBuilder sb = new StringBuilder();
+//            for (var e : knownSources.entrySet())
+//            {
+//                sb.append(e.getValue() ? '1' : '0');
+//            }
+//            System.out.println("Con: " + name + " state: "+ sb);
             return Query.wrap(targets).select(t -> new PulseToModule(!state, name, t));
+        }
+        
+        public char getType()
+        {
+            return '&';
         }
     }
     
