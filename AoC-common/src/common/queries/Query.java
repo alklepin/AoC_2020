@@ -105,6 +105,13 @@ public class Query<T> implements Iterable<T>
     {
         return new Query<T>(new WhereIterable<T>(m_source, e -> e != null));
     }
+    
+    public Query<T> distinct()
+    {
+        return new Query<T>(new DistinctIterable<T>(m_source));
+    }
+
+    
 
     @SuppressWarnings("unchecked")
     @SafeVarargs

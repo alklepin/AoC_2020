@@ -30,9 +30,10 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        var inputFile = "input1.txt";
+        var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
-        var inputFile = "input1_test2.txt";
+//        var inputFile = "input1_test2.txt";
+//        var inputFile = "input1_test4.txt";
         
 //        LinesGroup lines = readAllLines(inputFile);
         
@@ -46,13 +47,16 @@ public class Puzzle2 extends PuzzleCommon
         var dirs = new IntPair[] {IntPair.UP, IntPair.DOWN, IntPair.LEFT, IntPair.RIGHT};
         var dims = new IntPair(board.getWidth(), board.getHeigth());
 //        for (int idx = 0; idx < 26501365; idx++)
-        for (int idx = 0; idx < 25; idx++)
+//        var bound = 196;
+//        var bound = 327;
+        var bound = 1113;
+        for (int idx = 1; idx <= bound; idx++)
         {
             System.out.println("Step: "+idx + " Size: "+visited.size() + " QSize: "+queue.size());
+            
             var nextQueue = new HashSet<IntPair>();
             for (var node : queue)
             {
-                visited.put(node, idx);
                 for (var dir : dirs)
                 {
                     var nextNode = node.add(dir);
@@ -62,17 +66,28 @@ public class Puzzle2 extends PuzzleCommon
                         if (!visited.containsKey(nextNode))
                         {
                             nextQueue.add(nextNode);
+                            visited.put(nextNode, idx);
                         }
                     }
                 }
             }
             queue = nextQueue;
+
+            var r = 0;
+            for (var e : visited.entrySet())
+            {
+                var s = e.getValue();
+                if (s % 2 == idx % 2)
+                    r++;
+            }
+            System.out.println(r);
         }
+        
         var result = 0;
         for (var e : visited.entrySet())
         {
             var s = e.getValue();
-            if (s % 2 == 1)
+            if (s % 2 == bound % 2)
                 result++;
         }
         System.out.println(result);
