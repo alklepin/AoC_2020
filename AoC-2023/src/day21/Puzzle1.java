@@ -1,7 +1,11 @@
 package day21;
 
+import java.util.HashSet;
+
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.boards.Board2D;
+import common.boards.IntPair;
 
 public class Puzzle1 extends PuzzleCommon
 {
@@ -29,12 +33,29 @@ public class Puzzle1 extends PuzzleCommon
         
 //        LinesGroup lines = readAllLines(inputFile);
         
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
-//        System.out.println(result);
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        Board2D board = Board2D.parseAsCharsXY(lines);
+        
+        var startCell = board.allCellsXY().where(c -> board.getCharAtXY(c) == 'S').single(0);
+        var queue = new HashSet<IntPair>();
+        queue.add(startCell);
+        var nextQueue = new HashSet<IntPair>();
+        for (int idx = 0; idx < 64; idx++)
+        {
+            for (var node : queue)
+            {
+                for (var nextNode : board.neighbours4XY(node).where(c -> board.getCharAtXY(c) != '#'))
+                {
+                    nextQueue.add(nextNode);
+                }
+            }
+            var tmp = queue;
+            queue = nextQueue;
+            nextQueue = tmp;
+            nextQueue.clear();
+        }
+        
+        System.out.println(queue.size());
         
     }
 }

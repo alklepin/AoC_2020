@@ -326,12 +326,12 @@ public class Board2D
         }
     }
     
-    public Iterable<IntPair> allCellsRC()
+    public Query<IntPair> allCellsRC()
     {
         return allCellsRCImpl();
     }
     
-    public Iterable<IntPair> allCellsXY()
+    public Query<IntPair> allCellsXY()
     {
         return allCellsXYImpl();
     }

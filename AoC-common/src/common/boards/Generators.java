@@ -55,10 +55,10 @@ public class Generators
     public static Iterable<IntPair> rhomb(IntPair center, int radius)
     {
         return Query.sequenceOf(
-            ray(center.add(IntPair.LEFT.mult(radius)), IntPair.UP_RIGHT, radius, true),
-            ray(center.add(IntPair.UP.mult(radius)), IntPair.DOWN_RIGHT, radius, true),
-            ray(center.add(IntPair.RIGHT.mult(radius)), IntPair.DOWN_LEFT, radius, true),
-            ray(center.add(IntPair.DOWN.mult(radius)), IntPair.UP_LEFT, radius, true));
+            ray(center.add(IntPair.LEFT.mult(radius)), IntPair.UP_RIGHT, radius, false),
+            ray(center.add(IntPair.UP.mult(radius)), IntPair.DOWN_RIGHT, radius, false),
+            ray(center.add(IntPair.RIGHT.mult(radius)), IntPair.DOWN_LEFT, radius, false),
+            ray(center.add(IntPair.DOWN.mult(radius)), IntPair.UP_LEFT, radius, false));
     }
 
     public static Iterable<IntPair> rect(IntPair topLeft, int width, int height)
