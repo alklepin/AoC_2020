@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
@@ -13,7 +14,7 @@ import common.boards.IntPair;
 import common.boards.IntTriple;
 import common.boards.Pair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -22,7 +23,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -95,6 +96,11 @@ public class Puzzle1 extends PuzzleCommon
                     occupiedBy.put(cell, brick);
                 }
             }
+            for (var b : belowBricks)
+            {
+                b.addDependent(brick);
+                brick.dependsOn(b);
+            }
             brick.downTo(targetHeight);
             uncoveredBricks.removeAll(belowBricks);
             uncoveredBricks.add(brick);
@@ -126,7 +132,36 @@ public class Puzzle1 extends PuzzleCommon
         System.out.println(max);
         System.out.println(result);
         
+        long sum = 0;
+        var bricksToMove = new HashSet<Brick>();
+        bricksToMove.addAll(bricksSorted);
+        bricksToMove.removeAll(bricksToDestroy);
+        for (var b : bricksToMove)
+        {
+            var dependent = new HashSet<Brick>();
+            dependent.add(b);
+            var queue = new LinkedList<Brick>();
+            queue.add(b);
+            while (queue.size() > 0)
+            {
+                var next = queue.poll();
+                for (var bb : next.dependent)
+                {
+                    if (dependent.containsAll(bb.dependsOn))
+                    {
+                        if (dependent.add(bb))
+                        {
+                            queue.add(bb);
+                        }
+                    }
+                }
+            }
+            sum += dependent.size()-1;
+        }
+        System.out.println("Sum: "+sum);
     }
+    
+    
     
     public int comparerByZ(Brick a, Brick b)
     {
@@ -145,6 +180,8 @@ public class Puzzle1 extends PuzzleCommon
         RangeInt rangeX;
         RangeInt rangeY;
         int state = 0;
+        HashSet<Brick> dependent = new HashSet<>();
+        HashSet<Brick> dependsOn = new HashSet<>();
 
         private int index;
 
@@ -164,6 +201,16 @@ public class Puzzle1 extends PuzzleCommon
             rangeX = RangeInt.ofInclusive(a.getX(), b.getX());
             rangeY = RangeInt.ofInclusive(a.getY(), b.getY());
             this.index = (++counter); 
+        }
+
+        public void dependsOn(Brick brick)
+        {
+            dependsOn.add(brick);
+        }
+
+        public void addDependent(Brick brick)
+        {
+            dependent.add(brick);
         }
 
         public void markUncovered()

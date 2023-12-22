@@ -4,7 +4,7 @@ public class Range<T extends Comparable<? super T>> implements Comparable<Range<
 {
     private T start; // inclusive
     private T end; // exclusive
-    
+
     public Range(T start, T end)
     {
         this.start = start;
