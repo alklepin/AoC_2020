@@ -1,5 +1,6 @@
 package day23;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -9,7 +10,7 @@ import common.boards.Board2D;
 import common.boards.IntPair;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle3 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -18,7 +19,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle3().solve();
         }
         finally
         {
@@ -53,34 +54,46 @@ public class Puzzle1 extends PuzzleCommon
         
     }
     
+    static int maxDist = 0;
+    
     static int maxDistance(IntPair current)
     {
 //        printPath();
         
         if (current.equals(end))
         {
+            int d = distance.get(current);
+            if (d > maxDist)
+            {
+                maxDist = d;
+                printPath();
+                System.out.println("Max:" + d);
+            }
+//            System.out.println("End:" + d);
             return distance.get(current);
         }
         var result = 0;
         
         var currentChar = board.getCharAtXY(current);
         Query<IntPair> nextCells;
-        if (currentChar != '.')
-        {
-            nextCells = Query.wrap(current.add(IntPair.decodeDirectionVInv(currentChar)));
-        }
-        else
-        {
+//        if (currentChar != '.')
+//        {
+//            nextCells = Query.wrap(current.add(IntPair.decodeDirectionVInv(currentChar)));
+//        }
+//        else
+//        {
             nextCells = board.neighbours4XY(current)
                 .where(c -> board.getCharAtXY(c) != '#');
-        }
+//        }
         var currentDistance = distance.get(current);
-        for (var next : nextCells)
+        var list = nextCells.toList();
+        Collections.reverse(list);
+        for (var next : list)
         {
-            var nextChar = board.getCharAtXY(next);
-            var nextDir = IntPair.decodeDirectionVInv(nextChar);
-            if (nextDir != null && nextDir.equals(next.minus(current).mult(-1)))
-                continue;
+//            var nextChar = board.getCharAtXY(next);
+//            var nextDir = IntPair.decodeDirectionVInv(nextChar);
+//            if (nextDir != null && nextDir.equals(next.minus(current).mult(-1)))
+//                continue;
             
             var nextD = distance.get(next);
             if (nextD != null)
