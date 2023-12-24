@@ -28,6 +28,16 @@ public class Line
         m_norm = m_direction.rotateLeft();
     }
     
+    public Vect2D getPoint()
+    {
+        return m_point;
+    }
+
+    public Vect2D getDirection()
+    {
+        return m_direction;
+    }
+    
     public double signedDistanceTo(Vect2D point)
     {
         return point.minus(m_point).scalarMult(m_norm);

@@ -9,7 +9,7 @@ import common.geometry.Vect2D;
 import common.geometry.Vect3D;
 import common.geometry.Vect3I;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -18,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -47,32 +47,49 @@ public class Puzzle1 extends PuzzleCommon
             items.add(item);
         }
         
-//        var minBound = new Vect2D(7,7);
-//        var maxBound = new Vect2D(27,27);
-        var minBound = new Vect2D(200000000000000d,200000000000000d);
-        var maxBound = new Vect2D(400000000000000d,400000000000000d);
+        var item1 = items.get(0);
+        var item2 = items.get(10);
+        var item3 = items.get(30);
+        long start; 
+//        var start = 1800000000l;
+//        var start = 5000000000000l;
+        start = 54760742187l-10;;
+//        54728889464
         
-        for (var idx1 = 0; idx1 < items.size(); idx1++)
+        var step = 1;
+        System.out.println("Start time: " + start + " step: "+step);
+//        for (long time = start; time < start + 1000*step; time+= step)
+        for (long time = 54729962348l; time < 54729965328l; time+= 1)
         {
-            var i1 = items.get(idx1);
-            for (var idx2 = idx1+1; idx2 < items.size(); idx2++)
-            {
-                var i2 = items.get(idx2);
-                
-                var line1 = i1.line2D;
-                var line2 = i2.line2D;
-                var intersPnt = line1.intersectWith(line2);
-                
-                if (intersPnt == null)
-                    continue;
-                if (!intersPnt.inRectangle(minBound, maxBound))
-                    continue;
-                if (intersPnt.minus(line1.getPoint()).scalarMult(line1.getDirection()) >= 0
-                    && intersPnt.minus(line2.getPoint()).scalarMult(line2.getDirection()) >= 0
-                    )
-                    result++;
-            }
+            var pos1 = item1.pos.add(item1.vel.mult(time)); 
+            var pos2 = item2.pos.add(item2.vel.mult(time)); 
+            var pos3 = item3.pos.add(item3.vel.mult(time));
+            
+            var v1 = pos3.minus(pos2);
+            var v2 = pos2.minus(pos1);
+            
+            var scalar = v1.scalarMult(v2);
+            var snorm = scalar/v1.length()/v2.length();
+            
+//            System.out.println("Scalar: " + snorm);
+
+            var pos11 = item1.pos.add(item1.vel.mult(time+1)); 
+            var pos21 = item2.pos.add(item2.vel.mult(time+1)); 
+            var pos31 = item3.pos.add(item3.vel.mult(time+1));
+            
+            var v11 = pos31.minus(pos21);
+            var v21 = pos21.minus(pos11);
+            
+            var scalar1 = v11.scalarMult(v21);
+            var snorm1 = scalar/v11.length()/v21.length();
+            
+            var diff = snorm1 - snorm;
+//            System.out.println("Diff: " + diff);
+            
+            if (Math.abs(snorm) >= 0.9999999999)
+                System.out.println("Time: " + time);
         }
+        
         
         System.out.println(result);
         

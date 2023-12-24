@@ -2,6 +2,8 @@ package common.geometry;
 
 import java.util.ArrayList;
 
+import common.boards.IntTriple;
+
 public class Vect3I
 {
     public static final ArrayList<Vect3I> NEIGHBOURS = generateNeighbours(); 
@@ -34,6 +36,12 @@ public class Vect3I
                     }
                 }
         return result;
+    }
+
+    public static Vect3I from(String s)
+    {
+        var parts = s.split("[\\s,]+");
+        return new Vect3I(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
     
     public Vect3I(int x, int y, int z)

@@ -9,7 +9,7 @@ import common.geometry.Vect2D;
 import common.geometry.Vect3D;
 import common.geometry.Vect3I;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle4 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -18,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle4().solve();
         }
         finally
         {
@@ -47,32 +47,20 @@ public class Puzzle1 extends PuzzleCommon
             items.add(item);
         }
         
-//        var minBound = new Vect2D(7,7);
-//        var maxBound = new Vect2D(27,27);
-        var minBound = new Vect2D(200000000000000d,200000000000000d);
-        var maxBound = new Vect2D(400000000000000d,400000000000000d);
+        var item1 = items.get(0);
+        var item2 = items.get(1);
+        var item3 = items.get(2);
+
+        var dp = item1.pos.minus(item2.pos); 
+        var dv = item1.vel.minus(item2.vel);
         
-        for (var idx1 = 0; idx1 < items.size(); idx1++)
-        {
-            var i1 = items.get(idx1);
-            for (var idx2 = idx1+1; idx2 < items.size(); idx2++)
-            {
-                var i2 = items.get(idx2);
-                
-                var line1 = i1.line2D;
-                var line2 = i2.line2D;
-                var intersPnt = line1.intersectWith(line2);
-                
-                if (intersPnt == null)
-                    continue;
-                if (!intersPnt.inRectangle(minBound, maxBound))
-                    continue;
-                if (intersPnt.minus(line1.getPoint()).scalarMult(line1.getDirection()) >= 0
-                    && intersPnt.minus(line2.getPoint()).scalarMult(line2.getDirection()) >= 0
-                    )
-                    result++;
-            }
-        }
+        var d1 = (dv.getX() * dp.getY() - dv.getY() * dp.getX()) / (dv.getY() * item2.vel.getX() - dv.getX() * item2.vel.getY()); 
+        var d2 = (dv.getX() * dp.getZ() - dv.getZ() * dp.getX()) / (dv.getZ() * item2.vel.getX() - dv.getX() * item2.vel.getZ()); 
+
+        System.out.println(d1);
+        System.out.println(d2);
+
+        
         
         System.out.println(result);
         
