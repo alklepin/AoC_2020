@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.geometry.Line;
+import common.geometry.Line3D;
 import common.geometry.Vect2D;
 import common.geometry.Vect3D;
 import common.geometry.Vect3I;
@@ -64,6 +65,34 @@ public class Puzzle4 extends PuzzleCommon
         
         System.out.println(result);
         
+        for (var idx1 = 0; idx1 < items.size(); idx1++)
+        {
+            var i1 = items.get(idx1);
+            for (var idx2 = idx1+1; idx2 < items.size(); idx2++)
+            {
+                var i2 = items.get(idx2);
+                
+                var line1 = i1.line3D;
+                var line2 = i2.line3D;
+                
+                var v1 = i1.vel;
+                var v2 = i2.vel;
+                var s = v1.scalarMult(v2) / v1.length() / v2.length();
+                if (Math.abs(s) >= 0.9999999)
+                    System.out.println("Found parallels");
+                
+                //var intersPnt = line1.intersectWith(line2);
+                
+//                if (intersPnt == null)
+//                    continue;
+//                if (!intersPnt.inRectangle(minBound, maxBound))
+//                    continue;
+//                if (intersPnt.minus(line1.getPoint()).scalarMult(line1.getDirection()) >= 0
+//                    && intersPnt.minus(line2.getPoint()).scalarMult(line2.getDirection()) >= 0
+//                    )
+//                    result++;
+            }
+        }
     }
     
     public static class Item
@@ -71,6 +100,7 @@ public class Puzzle4 extends PuzzleCommon
         Vect3D pos;
         Vect3D vel;
         Line line2D;
+        Line3D line3D;
         public Item(Vect3D pos, Vect3D vel)
         {
             super();
@@ -81,6 +111,7 @@ public class Puzzle4 extends PuzzleCommon
             var v = new Vect2D(vel.getX(), vel.getY());
             
             line2D = new Line(pnt, v);
+            line3D = new Line3D(pos, vel);
              
         }
         

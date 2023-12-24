@@ -4,11 +4,18 @@ import common.boards.IntTriple;
 
 public class Vect3D
 {
+    public static final Vect3D ZERO = Vect3D.of(0, 0, 0);
+    
     private final double m_x;
     private final double m_y;
     private final double m_z;
     
     public static Vect3D vector(double x, double y, double z)
+    {
+        return new Vect3D(x, y, z);
+    }
+    
+    public static Vect3D of(double x, double y, double z)
     {
         return new Vect3D(x, y, z);
     }
@@ -152,7 +159,7 @@ public class Vect3D
     @Override
     public String toString()
     {
-        return "Vect2D [m_x=" + m_x + ", m_y=" + m_y + ", m_z=" + m_z + "]";
+        return "Vect3D [m_x=" + m_x + ", m_y=" + m_y + ", m_z=" + m_z + "]";
     }
 
     
