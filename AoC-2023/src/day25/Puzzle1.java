@@ -2,7 +2,6 @@ package day25;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
@@ -37,7 +36,6 @@ public class Puzzle1 extends PuzzleCommon
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int result = 0;
-        HashSet<Edge> edgesSet = new HashSet<>();
         ArrayList<Edge> edgesList = new ArrayList<>();
         HashMap<String, ArrayList<String>> edges = new HashMap<>();
         
@@ -49,7 +47,6 @@ public class Puzzle1 extends PuzzleCommon
             for (var t : toParts)
             {
                 var edge = new Edge(from, t);
-                edgesSet.add(edge);
                 edgesList.add(edge);
                 var listFrom = edges.get(from);
                 if (listFrom == null)
@@ -68,7 +65,7 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         //var start = edgesList.get(0).node1;
-        var nodes = Query.wrap(edges.keySet()).toList();
+        var nodes = new ArrayList<>(edges.keySet());
         System.out.println("Nodes count:"+nodes.size());
         
         loop:
@@ -81,7 +78,7 @@ public class Puzzle1 extends PuzzleCommon
             {
                 var edge2 = edgesList.get(idx2);
 //                var edge2 = new Edge("bvb","cmg");
-                var res = ImplicitGraph.StrongComponentsFinder(nodes, node ->
+                var res = ImplicitGraph.findStrongComponents(nodes, node ->
                 {
                     var list = Query.wrap(edges.get(node))
                     .where(next -> {
@@ -95,13 +92,16 @@ public class Puzzle1 extends PuzzleCommon
                     
                     return list;
                 });
-                if (res.getBridges().size() == 1) //  && res.getStrongComponents().size() >= 2
+                if (res.getBridges().size() == 1)
                 {
                     System.out.println(res.getBridges().get(0));
                     System.out.println(edge1);
                     System.out.println(edge2);
-                    System.out.println(res.getStrongComponents().get(0).size());
-                    System.out.println(res.getStrongComponents().get(1).size());
+                    var c1 = res.getStrongComponents().get(0).size();
+                    var c2 = res.getStrongComponents().get(1).size();
+                    System.out.println(c1);
+                    System.out.println(c2);
+                    System.out.println(c1*c2);
                     
                     break loop;
                 }
