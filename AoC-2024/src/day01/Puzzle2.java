@@ -2,12 +2,14 @@ package day01;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -16,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -35,6 +37,7 @@ public class Puzzle1 extends PuzzleCommon
         
         ArrayList<IntPair> first = new ArrayList<>();
         ArrayList<IntPair> second = new ArrayList<>();
+        HashMap<Integer, Integer> secondHashed = new HashMap<>();
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int idx = 0;
         for (String line : lines)
@@ -44,22 +47,33 @@ public class Puzzle1 extends PuzzleCommon
             var pair2 = IntPair.of(parseInt(parts[1]), idx);
             first.add(pair1);
             second.add(pair2);
+            
+            var val = secondHashed.get(pair2.getX());
+            val = (val == null) ? 1 : val + 1;
+            secondHashed.put(pair2.getX(), val);
+            
             idx++;
         }
         
-        Collections.sort(first, Puzzle1::comparer);
-        Collections.sort(second, Puzzle1::comparer);
+        Collections.sort(first, Puzzle2::comparer);
+        Collections.sort(second, Puzzle2::comparer);
         
         
         long result = 0;
         for (idx = 0; idx < first.size(); idx++)
         {
-            result += Math.abs(first.get(idx).getX() - second.get(idx).getX());
+            var val = secondHashed.get(first.get(idx).getX());
+            if (val != null)
+            {
+                result += val * first.get(idx).getX();
+            }
         }
         
         System.out.println(result);
         
     }
+
+    
     
     public static int comparer(IntPair p1, IntPair p2)
     {
