@@ -44,6 +44,11 @@ public class LinesGroup implements Iterable<String>
     {
         return lines.iterator();
     }
+    
+    public Iterable<LineParser> parsers()
+    {
+        return Query.wrap(lines).select(line -> new LineParser(line));
+    }
 
     public String get(int pos)
     {

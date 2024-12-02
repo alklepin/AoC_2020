@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import common.Tuple;
+
 public class Query<T> implements Iterable<T>
 {
     private Iterable<T> m_source;
@@ -61,6 +63,11 @@ public class Query<T> implements Iterable<T>
         return new Query<T>(new ConcatIterable<T>(srcs));
     }
     
+    public <TTarget> Query<TTarget> selectPairs(Converter<Tuple<T, T>, ? extends TTarget> converter)
+    {
+        return new Query<TTarget>(new SelectPairsIterable<T, TTarget>(m_source, converter));
+    }
+
     public <TTarget> Query<TTarget> select(Converter<? super T, ? extends TTarget> converter)
     {
         return new Query<TTarget>(new SelectIterable<T, TTarget>(m_source, converter));
