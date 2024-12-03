@@ -84,6 +84,26 @@ public class LineParser
         return result;
     }
 
+    public ArrayList<String> listOf(String regex)
+    {
+        return listOf(regex, str -> str);
+    }
+    
+    public <T> ArrayList<T> listOf(String regex, Function<String, T> converter)
+    {
+        var pattern = Pattern.compile(regex);
+        var matcher = pattern.matcher(source);
+        ArrayList<T> result = new ArrayList<>();
+        var idx = startPos;
+        while (idx < source.length() && matcher.find(idx))
+        {
+            var str = source.substring(matcher.start(), matcher.end());
+            result.add(converter.apply(str));
+            idx = matcher.end();
+        }
+        return result;
+    }
+
     public LineParser segment(String regexSeparator)
     {
         var pattern = Pattern.compile(regexSeparator+"|$");
