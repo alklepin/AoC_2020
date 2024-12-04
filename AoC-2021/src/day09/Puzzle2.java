@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators.Neighbours4Generator;
 import common.boards.IntPair;
 import common.boards.Pair;
 
@@ -92,15 +91,13 @@ public class Puzzle2 extends PuzzleCommon
         }
         
         ArrayList<IntPair> mins = new ArrayList<>();
-        IntPair min = new IntPair(0,0);
-        IntPair max = new IntPair(height-1,width-1);
         for (int iRow = 0; iRow < height; iRow++)
         {
             for (int iCol = 0; iCol < width; iCol++)
             {
                 var found = true;
                 var val = board.getAtRC(iRow, iCol);
-                for (var pair : new Neighbours4Generator(Pair.of(iRow, iCol), min, max))
+                for (var pair : board.neighbours4RC(Pair.of(iRow, iCol)))
                 {
                     if (board.getAtRC(pair) <= val)
                     {
@@ -128,7 +125,7 @@ public class Puzzle2 extends PuzzleCommon
                 IntPair current;
                 while ((current = front.poll()) != null)
                 {
-                    for (var pair : new Neighbours4Generator(current, min, max))
+                    for (var pair : board.neighbours4RC(current))
                     {
                         if (board.getAtRC(pair) >= board.getAtRC(current) && used.getAtRC(pair) == 0 && board.getAtRC(pair) != 9)
                         {

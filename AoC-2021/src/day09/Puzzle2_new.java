@@ -7,7 +7,6 @@ import java.util.HashMap;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators.Neighbours4Generator;
 import common.boards.IntPair;
 import common.boards.Pair;
 import common.queries.Query;
@@ -100,7 +99,7 @@ public class Puzzle2_new extends PuzzleCommon
             {
                 var found = true;
                 var val = board.getAtRC(iRow, iCol);
-                for (var pair : new Neighbours4Generator(Pair.of(iRow, iCol), min, max))
+                for (var pair : board.neighbours4RC(Pair.of(iRow, iCol)))
                 {
                     if (board.getAtRC(pair) <= val)
                     {
@@ -117,7 +116,7 @@ public class Puzzle2_new extends PuzzleCommon
         }
         
         var components = board.connectedComponentsRC(mins,
-            (current) -> new Neighbours4Generator(current, min, max),
+            (current) -> board.neighbours4RC(current),
             (current, next) -> board.getAtRC(next) >= board.getAtRC(current) && board.getAtRC(next) != 9);
 
         ArrayList<Integer> sizes = Query.wrap(components).select(c -> c.size()).toList();

@@ -1,13 +1,10 @@
 package day09;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
-import common.boards.Generators.Neighbours4Generator;
-import common.boards.IntPair;
 import common.boards.Pair;
 
 public class Puzzle1 extends PuzzleCommon
@@ -89,15 +86,13 @@ public class Puzzle1 extends PuzzleCommon
             row++;
         }
         
-        IntPair min = new IntPair(0,0);
-        IntPair max = new IntPair(height-1,width-1);
         for (int iRow = 0; iRow < height; iRow++)
         {
             for (int iCol = 0; iCol < width; iCol++)
             {
                 var found = true;
                 var val = board.getAtRC(iRow, iCol);
-                for (var pair : new Neighbours4Generator(Pair.of(iRow, iCol), min, max))
+                for (var pair : board.neighbours4RC(Pair.of(iRow, iCol)))
                 {
                     if (board.getAtRC(pair) <= val)
                     {

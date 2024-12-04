@@ -30,6 +30,13 @@ public class Generators
         return Query.wrap(new Neighbours4Generator(start, min, max));
     }
 
+    public static Query<IntPair> neighbours4Diag(IntPair start, IntPair min, IntPair max)
+    {
+        return Query.wrap(IntPair.FOUR_DIAGONALS)
+            .select(pair -> pair.add(start))
+            .where(pair -> pair.inRectangle(min, max));
+    }
+
     public static Query<IntTriple> neighbours6_3D(IntTriple start, IntTriple min, IntTriple max)
     {
         return Query.wrap(IntTriple.NEIGHBOURS6)

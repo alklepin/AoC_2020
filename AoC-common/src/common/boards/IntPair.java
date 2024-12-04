@@ -16,6 +16,10 @@ public class IntPair
     public static final IntPair DOWN_LEFT = IntPair.of(-1, -1);
     public static final IntPair DOWN_RIGHT = IntPair.of(1, -1);
     
+    public static final IntPair [] ALL_DIRECTIONS = new IntPair[] {UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT};
+    public static final IntPair [] FOUR_CROSS_DIRECTIONS = new IntPair[] {UP, RIGHT, DOWN, LEFT};
+    public static final IntPair [] FOUR_DIAGONALS = new IntPair[] {UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT};
+    
     private int m_x;
     private int m_y;
 
@@ -319,5 +323,10 @@ public class IntPair
             y += dims.getY();  
         }
         return new IntPair(x, y);
+    }
+
+    public boolean isOrthogonalTo(IntPair other)
+    {
+        return m_x * other.m_x + m_y * other.m_y == 0;
     }
 }

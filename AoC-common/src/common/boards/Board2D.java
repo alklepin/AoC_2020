@@ -119,6 +119,11 @@ public class Board2D
         return (char)m_data[row][col];
     }
 
+    public void setCharAt(IntPair cell, char value)
+    {
+        m_data[cell.getX()][cell.getY()] = value;
+    }
+
     public void setCharAt(int row, int col, char value)
     {
         m_data[row][col] = value;
@@ -770,6 +775,16 @@ public class Board2D
         return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
     }
 
+    public Query<IntPair> neighbours4DiagRC(IntPair start)
+    {
+        return Generators.neighbours4Diag(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
+    }
+    
+    public Query<IntPair> neighbours4DiagXY(IntPair start)
+    {
+        return Generators.neighbours4Diag(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
+    }
+
     public Query<IntPair> directions4XY(IntPair start)
     {
         return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1))
@@ -824,5 +839,53 @@ public class Board2D
             setAtXY(0, y, '#');
             setAtXY(getWidth()-1, y, borderChar);
         }
+    }
+    
+    public String readWordRC(IntPair startCell, IntPair direction, int length)
+    {
+        var s  = new StringBuilder();
+        s.append(getCharAt(startCell));
+        var ray = rayRC(startCell, direction);
+        for (var c : ray.take(length-1))
+        {
+            s.append(getCharAt(c));
+        }
+        return s.toString();
+    }
+    
+    public String readWordRC(IntPair startCell, IntPair direction)
+    {
+        var s  = new StringBuilder();
+        s.append(getCharAt(startCell));
+        var ray = rayRC(startCell, direction);
+        for (var c : ray)
+        {
+            s.append(getCharAt(c));
+        }
+        return s.toString();
+    }
+
+    public String readWordXY(IntPair startCell, IntPair direction, int length)
+    {
+        var s  = new StringBuilder();
+        s.append(getCharAtXY(startCell));
+        var ray = rayXY(startCell, direction);
+        for (var c : ray.take(length-1))
+        {
+            s.append(getCharAtXY(c));
+        }
+        return s.toString();
+    }
+
+    public String readWordXY(IntPair startCell, IntPair direction)
+    {
+        var s  = new StringBuilder();
+        s.append(getCharAtXY(startCell));
+        var ray = rayXY(startCell, direction);
+        for (var c : ray)
+        {
+            s.append(getCharAtXY(c));
+        }
+        return s.toString();
     }
 }
