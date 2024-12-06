@@ -329,4 +329,14 @@ public class IntPair
     {
         return m_x * other.m_x + m_y * other.m_y == 0;
     }
+
+    public IntPair rotateClockwise90()
+    {
+        return IntPair.of(m_y, -m_x);
+    }
+
+    public IntPair rotateAntiClockwise90()
+    {
+        return IntPair.of(-m_y, m_x);
+    }
 }
