@@ -82,11 +82,8 @@ public class Puzzle2 extends PuzzleCommon
         }
         
         var possibleObstaclse = new HashSet<IntPair>();
-        for (var v : visited)
-        {
-            for (var o : board.neighbours4XY(v))
-                possibleObstaclse.add(o);
-        }
+        // It makes sense to put obstacle only to the cell where otherwise guard would move
+        possibleObstaclse.addAll(visited);
         var count = 0;
         for (var o : possibleObstaclse)
         {
