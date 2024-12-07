@@ -6,7 +6,7 @@ import java.util.HashSet;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -15,7 +15,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -38,14 +38,25 @@ public class Puzzle1 extends PuzzleCommon
         {
             long testValue = parseLong(line.segment("[:\\s]").toString());
             var values = line.skipTill("[:]").listOfInts("[:\\s]");
-            if (canCombine(values, testValue))
+            if (canCombinev2(values, testValue))
+            {
+//                if (!canCombine(values, testValue))
+//                {
+//                    System.out.println(line.toString());
+//                }
                 result += testValue;
+            }
         }
         System.out.println(result);
         
+        for (var i = 0; i <= 10000; i++)
+        {
+            System.out.println(""+i+" -> "+countVultiplier(i));
+        }
+        
     }
 
-    private boolean canCombine(ArrayList<Integer> values, long testValue)
+    private boolean canCombinev2(ArrayList<Integer> values, long testValue)
     {
         var step = new HashSet<Long>();
         step.add(values.get(0).longValue());
@@ -57,14 +68,32 @@ public class Puzzle1 extends PuzzleCommon
             {
                 long op1 = v.longValue();
                 long res = nextValue + op1;
-                nextStep.add(res);
+                if (res > 0 && res <= testValue)
+                    nextStep.add(res);
                 
                 res = nextValue * op1;
-                if (res > 0)
+                if (res > 0 && res <= testValue)
                     nextStep.add(res);
+                
+                res = op1*countVultiplier(nextValue) + nextValue;
+                if (res > 0 && res <= testValue)
+                {
+                    nextStep.add(res);
+                }
             }
             step = nextStep;
         }
         return step.contains(testValue);
+    }
+    
+    private long countVultiplier(long value)
+    {
+        long res = 10;
+        while (value >= 10)
+        {
+            res *= 10;
+            value /= 10;
+        }
+        return res;
     }
 }
