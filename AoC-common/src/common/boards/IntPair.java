@@ -339,4 +339,9 @@ public class IntPair
     {
         return IntPair.of(-m_y, m_x);
     }
+
+    public IntPair negate()
+    {
+        return IntPair.of(-m_x, -m_y);
+    }
 }

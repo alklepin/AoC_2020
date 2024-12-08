@@ -9,7 +9,7 @@ import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -18,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -68,13 +68,16 @@ public class Puzzle1 extends PuzzleCommon
                     var c2 = list.get(j);
                     var diff = c2.minus(c1);
                     
-                    var an1 = c2.add(diff);
-                    var an2 = c1.minus(diff);
-                    
-                    if (board.containsRC(an1))
-                        antinodes.add(an1);
-                    if (board.containsRC(an2))
-                        antinodes.add(an2);
+                    antinodes.add(c1);
+                    antinodes.add(c2);
+                    for (var an : board.rayRC(c2, diff))
+                    {
+                        antinodes.add(an);
+                    }
+                    for (var an : board.rayRC(c2, diff.negate()))
+                    {
+                        antinodes.add(an);
+                    }
                 }
             }
         }
