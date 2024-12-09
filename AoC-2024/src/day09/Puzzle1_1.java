@@ -6,7 +6,7 @@ import java.util.Arrays;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle1_1 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -15,7 +15,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle1_1().solve();
         }
         finally
         {
@@ -44,8 +44,8 @@ public class Puzzle1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        var inputFile = "input1.txt";
-//        var inputFile = "input1_test.txt";
+//        var inputFile = "input1.txt";
+        var inputFile = "input1_test.txt";
         
         LinesGroup lines = readAllLines(inputFile);
         var initialLayout = lines.get(0);
@@ -98,7 +98,6 @@ public class Puzzle1 extends PuzzleCommon
 
             }
         }
-//        System.out.println(buf);
         
         var sectors = new int[totalLength];
         for (var b : blocks)
@@ -116,23 +115,57 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         
-        var idx1 = 0;
-        var idx2 = sectors.length-1;
-        while (idx1 <= idx2)
+        
+        System.out.println(buf);
+        var blockIdx = blocks.size()-1;
+        var blockCopied = 0;
+        var blockRemaining = blocks.get(blockIdx).length;
+        var freeBlockIdx = 0;
+        var freeBlockUsedSpace = 0;
+        while (freeSpace > 0 && blockIdx >= 0)
         {
-            while (idx1 < sectors.length && sectors[idx1] >= 0)
-                idx1++;
-            while (idx2 >= 0 && sectors[idx2] < 0)
-                idx2--;
-            if (idx1 < sectors.length && idx2 >= 0 && idx1 < idx2)
+            var fblock = freeBlocks.get(freeBlockIdx);
+            var block = blocks.get(blockIdx);
+            var toMove = Math.min(blockRemaining, freeSpace);
+            toMove = Math.min(toMove, fblock.length-freeBlockUsedSpace);
+            
+            System.arraycopy(sectors, block.initialPosition + blockCopied,
+                sectors, fblock.initialPosition + freeBlockUsedSpace, toMove);
+            Arrays.fill(sectors, block.initialPosition + blockCopied, block.initialPosition 
+                + blockCopied+toMove, -1);
+            
+            blockCopied += toMove;
+            blockRemaining -= toMove;
+            freeSpace -= toMove;
+
+            var newPosition = block.newPosition;
+            newPosition = Math.min(newPosition, fblock.initialPosition + freeBlockUsedSpace);
+            block.newPosition = newPosition;
+            
+            freeBlockUsedSpace += toMove;
+            if (freeBlockUsedSpace >= fblock.length)
             {
-                sectors[idx1] = sectors[idx2];
-                sectors[idx2] = -1;
+                freeBlockIdx++;
+                freeBlockUsedSpace = 0;
             }
-//            printSectors(sectors);
+            if (blockRemaining == 0)
+            {
+                blockIdx--;
+                if (blockIdx < blocks.size())
+                {
+                    blockRemaining = blocks.get(blockIdx).length;
+                    blockCopied = 0;
+                }
+            }
+            printSectors(sectors);
         }
         
         long result = 0;
+//        for (var b : blocks)
+//        {
+//            System.out.println("Block "+b.id+" starts at "+b.newPosition);
+//            result += b.id * b.newPosition;
+//        }
         for (var sIdx = 0; sIdx < sectors.length; sIdx++)
         {
             var s = sectors[sIdx];
@@ -143,7 +176,7 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
 
-//        printSectors(sectors);
+        printSectors(sectors);
         System.out.println(result);
         
         
