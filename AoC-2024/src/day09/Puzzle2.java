@@ -6,7 +6,7 @@ import java.util.Arrays;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1_1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -15,7 +15,7 @@ public class Puzzle1_1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1_1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -44,41 +44,45 @@ public class Puzzle1_1 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        var inputFile = "input1.txt";
-        var inputFile = "input1_test.txt";
+        var inputFile = "input1.txt";
+//        var inputFile = "input1_test.txt";
+//        var inputFile = "input1_test2.txt";
         
         LinesGroup lines = readAllLines(inputFile);
         var initialLayout = lines.get(0);
         var blocks = new ArrayList<Block>();
         var freeBlocks = new ArrayList<Block>();
-        var idx = 0;
-        var id = 0;
-        var initialPosition = 0;
-        var freeSpace = 0;
         var totalLength = 0;
-        while (idx < initialLayout.length())
         {
-            var c = initialLayout.charAt(idx);
-            var length = c - '0';
-            blocks.add(new Block(id, length, initialPosition));
-            totalLength += length;
-            initialPosition+= length;
-            idx++;
-            
-            if (idx < initialLayout.length())
+            var idx = 0;
+            var id = 0;
+            var initialPosition = 0;
+            var freeSpace = 0;
+            while (idx < initialLayout.length())
             {
-                var cf = initialLayout.charAt(idx);
-                var lengthf = cf - '0';
-                freeSpace += lengthf;
-                freeBlocks.add(new Block(-1, lengthf, initialPosition));
-                totalLength += lengthf;
-                initialPosition+= lengthf;
-                
+                var c = initialLayout.charAt(idx);
+                if (c == '0')
+                    System.out.println("empty block detected!");
+                var length = c - '0';
+                blocks.add(new Block(id, length, initialPosition));
+                totalLength += length;
+                initialPosition+= length;
                 idx++;
-                id++;
+                
+                if (idx < initialLayout.length())
+                {
+                    var cf = initialLayout.charAt(idx);
+                    var lengthf = cf - '0';
+                    freeSpace += lengthf;
+                    freeBlocks.add(new Block(-1, lengthf, initialPosition));
+                    totalLength += lengthf;
+                    initialPosition+= lengthf;
+                    
+                    idx++;
+                    id++;
+                }
             }
         }
-
         
         var buf = new StringBuilder();
         for (var bidx = 0; bidx < blocks.size(); bidx++)
@@ -98,6 +102,7 @@ public class Puzzle1_1 extends PuzzleCommon
 
             }
         }
+        System.out.println(buf);
         
         var sectors = new int[totalLength];
         for (var b : blocks)
@@ -115,57 +120,26 @@ public class Puzzle1_1 extends PuzzleCommon
             }
         }
         
-        
-        System.out.println(buf);
-        var blockIdx = blocks.size()-1;
-        var blockCopied = 0;
-        var blockRemaining = blocks.get(blockIdx).length;
-        var freeBlockIdx = 0;
-        var freeBlockUsedSpace = 0;
-        while (freeSpace > 0 && blockIdx >= 0)
+        for (var idx = blocks.size()-1; idx >= 0; idx--)
         {
-            var fblock = freeBlocks.get(freeBlockIdx);
-            var block = blocks.get(blockIdx);
-            var toMove = Math.min(blockRemaining, freeSpace);
-            toMove = Math.min(toMove, fblock.length-freeBlockUsedSpace);
-            
-            System.arraycopy(sectors, block.initialPosition + blockCopied,
-                sectors, fblock.initialPosition + freeBlockUsedSpace, toMove);
-            Arrays.fill(sectors, block.initialPosition + blockCopied, block.initialPosition 
-                + blockCopied+toMove, -1);
-            
-            blockCopied += toMove;
-            blockRemaining -= toMove;
-            freeSpace -= toMove;
-
-            var newPosition = block.newPosition;
-            newPosition = Math.min(newPosition, fblock.initialPosition + freeBlockUsedSpace);
-            block.newPosition = newPosition;
-            
-            freeBlockUsedSpace += toMove;
-            if (freeBlockUsedSpace >= fblock.length)
+            var block = blocks.get(idx);
+            for (var fidx = 0; fidx < idx; fidx++)
             {
-                freeBlockIdx++;
-                freeBlockUsedSpace = 0;
-            }
-            if (blockRemaining == 0)
-            {
-                blockIdx--;
-                if (blockIdx < blocks.size())
+                var freeBlock = freeBlocks.get(fidx);
+                if (freeBlock.length >= block.length)
                 {
-                    blockRemaining = blocks.get(blockIdx).length;
-                    blockCopied = 0;
+                    System.arraycopy(sectors,  block.initialPosition, sectors, freeBlock.newPosition, block.length);
+                    Arrays.fill(sectors, block.initialPosition, block.initialPosition + block.length, -1);
+                    
+                    freeBlock.newPosition = freeBlock.newPosition + block.length;
+                    freeBlock.length -= block.length;
+                    break;
                 }
             }
-            printSectors(sectors);
+//            printSectors(sectors);
         }
         
         long result = 0;
-//        for (var b : blocks)
-//        {
-//            System.out.println("Block "+b.id+" starts at "+b.newPosition);
-//            result += b.id * b.newPosition;
-//        }
         for (var sIdx = 0; sIdx < sectors.length; sIdx++)
         {
             var s = sectors[sIdx];
@@ -176,7 +150,7 @@ public class Puzzle1_1 extends PuzzleCommon
             }
         }
 
-        printSectors(sectors);
+//        printSectors(sectors);
         System.out.println(result);
         
         
