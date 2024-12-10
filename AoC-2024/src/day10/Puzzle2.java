@@ -1,5 +1,9 @@
 package day10;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
@@ -7,7 +11,7 @@ import common.boards.IntPair;
 import common.graph.Graph;
 import common.graph.ImplicitGraph;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -16,7 +20,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -35,7 +39,7 @@ public class Puzzle1 extends PuzzleCommon
         
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         var board = Board2D.parseAsChars(lines);
-        var result = 0l;
+        long result = 0l;
         for (var cell : board.allCellsRC())
         {
             if (board.getCharAt(cell) == '0')
@@ -48,9 +52,33 @@ public class Puzzle1 extends PuzzleCommon
                 {
                     if (board.getCharAt(c) == '9')
                     {
-                        score++;
+                        var counts = new HashMap<IntPair, Integer>();
+                        counts.put(c, 1);
+                        
+                        var queue = new LinkedList<IntPair>();
+                        queue.add(c);
+                        
+                        while (queue.size() > 0)
+                        {
+                            var cur = queue.poll();
+                            for (var prev : board.neighbours4RC(cur)
+                                .where(prev -> (searchResult.visited().contains(prev) || searchResult.starts().contains(prev))
+                                    && board.getCharAt(prev) == board.getCharAt(cur)-1))
+                            {
+                                var count = counts.get(prev);
+                                count = ((count == null) ? 0 : count) + counts.get(cur);
+                                counts.put(prev, count);
+                                if (!queue.contains(prev))
+                                    queue.add(prev);
+                            }
+                        }
+
+                        var scoreDelta = counts.get(cell);
+                        score += scoreDelta;
+                            
                     }
                 }
+//                System.out.println(""+cell+" -> "+score);
                 result += score; 
             }
         }

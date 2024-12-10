@@ -75,6 +75,11 @@ public class ImplicitGraph
         {
             return visitedFrom.keySet();
         }
+
+        public Set<TNode> starts()
+        {
+            return starts;
+        }
     }
 
     public static class SearchResultDFS<TNode> extends SearchResult<TNode>

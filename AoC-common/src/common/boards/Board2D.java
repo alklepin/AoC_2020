@@ -759,6 +759,17 @@ public class Board2D
         }
         System.out.println("==========================================");
     }
+    
+    public Query<IntPair> borderRC()
+    {
+        return Query.sequenceOf(
+            Query.range(0, m_width-1).select(c -> new IntPair(0, c)),
+            Query.range(0, m_heigth-1).select(r -> new IntPair(r, m_width-1)),
+            Query.range(0, m_width-1).select(c -> new IntPair(m_heigth-1, m_width-1-c)),
+            Query.range(0, m_heigth-1).select(r -> new IntPair(m_width-1-r, 0))
+            );
+    }
+    
 
     public static Query<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
     {
