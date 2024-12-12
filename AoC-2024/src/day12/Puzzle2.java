@@ -10,7 +10,7 @@ import common.boards.Perimeters;
 import common.graph.ImplicitGraph;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -19,7 +19,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -55,20 +55,44 @@ public class Puzzle1 extends PuzzleCommon
             var fenceCount = 0;
             for (var c : Query.concat(Query.wrap(cell), searchResult.visited()))
             {
-                for (var dir : IntPair.FOUR_CROSS_DIRECTIONS)
+                var inAngle = 0;
+                var outAngle = 0;
+                for (var d : IntPair.FOUR_DIAGONALS)
                 {
-                    var next = c.add(dir);
-                    if (!board.containsRC(next)
-                        || (board.getAtRC(cell) != board.getAtRC(next))
+                    var nd = c.add(d);
+                    var n1 = c.add(IntPair.of(0, d.getY()));
+                    var n2 = c.add(IntPair.of(d.getX(), 0));
+                    
+                    if ((!board.containsRC(n1) || (board.getAtRC(cell) != board.getAtRC(n1)))
+                        && (!board.containsRC(n2) || (board.getAtRC(cell) != board.getAtRC(n2)))
                         )
                     {
-                        fenceCount++;
+                        outAngle++;
+                    }
+                    
+                    if (board.containsRC(nd)
+                        && (board.getAtRC(cell) == board.getAtRC(n1))
+                        && (board.getAtRC(cell) == board.getAtRC(n2))
+                        && (board.getAtRC(cell) != board.getAtRC(nd))
+                        )
+                    {
+                        inAngle++;
                     }
                 }
+                
+//                System.out.println("Cell: "+c+" outAngle: "+outAngle + " inAngle: "+inAngle);
+                
+                fenceCount += inAngle + outAngle;
                 count++;
                 processed.add(c);
             }
             
+            var f1 = Perimeters.sideCount(Query.concat(Query.wrap(cell), searchResult.visited()));
+            if (f1 != fenceCount)
+            {
+                System.out.println("Error "+cell);
+            }
+//            System.out.println("---");
             result += fenceCount*count;
         }
         

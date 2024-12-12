@@ -134,6 +134,17 @@ public class IntPair
     {
         return m_y;
     }
+
+    public int getC()
+    {
+        return m_x;
+    }
+    
+    public int getR()
+    {
+        return m_y;
+    }
+    
     public IntPair add(IntPair other)
     {
         return new IntPair(m_x + other.m_x, m_y + other.m_y);
@@ -190,6 +201,16 @@ public class IntPair
     public IntPair nextDown()
     {
         return add(DOWN);
+    }
+
+    public IntPair projectToX()
+    {
+        return of(m_x, 0);
+    }
+
+    public IntPair projectToY()
+    {
+        return of(0, m_y);
     }
     
     /**
