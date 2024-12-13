@@ -11,6 +11,11 @@ public class LongPair
     private long m_x;
     private long m_y;
 
+    public static LongPair of(long x, long y)
+    {
+        return new LongPair(x, y);
+    }
+    
     public Vect2D asVector()
     {
         return new Vect2D(m_x, m_y);
@@ -156,4 +161,30 @@ public class LongPair
         LongPair other = (LongPair)obj;
         return m_x == other.m_x && m_y == other.m_y;
     }
+
+    public LongPair modulo(long modulo)
+    {
+        return of(m_x % modulo, m_y % modulo);
+    }
+    
+    public LongPair componentModulo(LongPair dims)
+    {
+        var x = m_x % dims.getX();
+        if (x < 0)
+        {
+            x += dims.getX();  
+        }
+        var y = m_y % dims.getY();
+        if (y < 0)
+        {
+            y += dims.getY();  
+        }
+        return new LongPair(x, y);
+    }
+
+    public LongPair swapComponents()
+    {
+        return of(m_y, m_x);
+    }
+    
 }

@@ -23,6 +23,7 @@ public class IntPair
     private int m_x;
     private int m_y;
 
+
     public static IntPair of(int x, int y)
     {
         return new IntPair(x, y);

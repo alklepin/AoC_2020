@@ -1,12 +1,12 @@
 package day13;
 
 import common.LineParser;
-import common.LinesGroup;
 import common.Numbers;
 import common.PuzzleCommon;
-import common.boards.IntPair;
+import common.boards.LongPair;
+import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -15,7 +15,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -26,10 +26,10 @@ public class Puzzle1 extends PuzzleCommon
     
     static class Data
     {
-        public IntPair A;
-        public IntPair B;
-        public IntPair P;
-        public Data(IntPair a, IntPair b, IntPair p)
+        public LongPair A;
+        public LongPair B;
+        public LongPair P;
+        public Data(LongPair a, LongPair b, LongPair p)
         {
             super();
             A = a;
@@ -47,41 +47,38 @@ public class Puzzle1 extends PuzzleCommon
             var nodX = Numbers.nod(A.getX(), B.getX(), P.getX());
             var nodY = Numbers.nod(A.getY(), B.getY(), P.getY());
             return new Data(
-                IntPair.of(A.getC() / nodX, A.getC() / nodY),
-                IntPair.of(B.getC() / nodX, B.getC() / nodY),
-                IntPair.of(P.getC() / nodX, P.getC() / nodY)
+                LongPair.of(A.getX() / nodX, A.getY() / nodY),
+                LongPair.of(B.getX() / nodX, B.getY() / nodY),
+                LongPair.of(P.getX() / nodX, P.getY() / nodY)
                 );
         }
         
-        public IntPair solve()
+        public LongPair solve()
         {
-            var data = simplify();
+//            var data = simplify();
+            var data = this;
             
-            var XA = data.A.getX();
-            var YA = data.A.getY();
-            var XB = data.B.getX();
-            var YB = data.B.getY();
-            var XP = data.P.getX();
-            var YP = data.P.getY();
+            long XA = data.A.getX();
+            long YA = data.A.getY();
+            long XB = data.B.getX();
+            long YB = data.B.getY();
+            long XP = data.P.getX();
+            long YP = data.P.getY();
+
+            var pa = (XP*YB - YP*XB)/(double)(XA*YB - XB*YA);
+            var pb = (YP*XA - XP*YA)/(double)(XA*YB - XB*YA);
+            long pal = Math.round(pa);
+            long pbl = Math.round(pb);
             
-            var nodX = Numbers.nod(XA, XB);
-            var nodY = Numbers.nod(YA, YB);
-            if (XP % nodX != 0 
-                || YP % nodY != 0 
-                )
-            {
-                return null;
-            }
+            System.out.println(""+pal+ "   "+pbl);
+            var resX = pal * XA + pbl * XB; 
+            var resY = pal * YA + pbl * YB; 
+            System.out.println("res "+resX+ "   "+resY);
+            System.out.println("Prz "+XP+ "   "+YP);
+            System.out.println("dif "+(XP-resX)+ "   "+(YP-resY));
             
-            var modX = Numbers.nok(XA, XB);
-            var modY = Numbers.nok(YA, YB);
-            
-//            var XA0 = XA * XP
-            
-            var nX = XP / (XA * XB);  
-            var nY = YP / (YA * YB);
-            XP = XP % (XA * XB);
-            YP = YP % (YA * YB);
+            if (XP-resX == 0 && YP-resY == 0)
+                return new LongPair(pal, pbl);
             
             return null;
         }
@@ -104,29 +101,23 @@ public class Puzzle1 extends PuzzleCommon
             var data2 = new LineParser(line2).listOfInts();
             var data3 = new LineParser(line3).listOfInts();
             var data = new Data(
-                IntPair.of(data1.get(0), data1.get(1)),
-                IntPair.of(data2.get(0), data2.get(1)),
-                IntPair.of(data3.get(0), data3.get(1))
+                LongPair.of(data1.get(0), data1.get(1)),
+                LongPair.of(data2.get(0), data2.get(1)),
+                LongPair.of(data3.get(0)+10000000000000l, data3.get(1)+10000000000000l)
                 );
             
             System.out.println(data);
-            var found = false;
-            var cost = -1;
-            for (var b = 0; b < 100; b++)
+            var res = data.solve();
+            if (res != null)
             {
-                for (var a = 0; a < 100; a++)
-                {
-                    var res = data.A.mult(a).add(data.B.mult(b));
-                    if (res.equals(data.P))
-                    {
-                        found = true;
-                        cost = b + 3*a;
-                    }
-                }
-            }
-            System.out.println("Cost: "+cost);
-            if (found)
+                var cost = res.getY() + res.getX()*3;
+                System.out.println("Cost: "+cost);
                 result += cost;
+            }
+            else
+            {
+                System.out.println("Cost: not found");
+            }
         }
         
         System.out.println(result);

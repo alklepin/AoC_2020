@@ -37,6 +37,11 @@ public class Query<T> implements Iterable<T>
         return new Query<Integer>(new RangeIterable(start, count));
     }
 
+    public static Query<Long> rangeLong(long start, long count)
+    {
+        return new Query<Long>(new RangeIterableLong(start, count));
+    }
+
     public static <Type> Query<Type> wrap(Iterable<Type> source)
     {
         if (source instanceof Query)
