@@ -1,6 +1,7 @@
 package common.boards;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -285,6 +286,21 @@ public class Board2D
         }
     }
     
+    public void printAsStrings(PrintWriter ps)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int rowIdx = 0; rowIdx < m_data.length; rowIdx++)
+        {
+            int[] rowData = m_data[rowIdx];
+            sb.setLength(0);
+            for (int i = 0; i < rowData.length; i++)
+            {
+                sb.append((char)rowData[i]);
+            }
+            ps.println(sb.toString());
+        }
+    }
+
     public void printAsStrings(PrintStream ps)
     {
         StringBuilder sb = new StringBuilder();

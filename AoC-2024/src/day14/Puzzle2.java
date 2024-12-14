@@ -1,13 +1,17 @@
 package day14;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import common.LineParser;
 import common.LinesGroup;
 import common.PuzzleCommon;
+import common.boards.Board2D;
 import common.boards.IntPair;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -16,7 +20,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -46,24 +50,32 @@ public class Puzzle1 extends PuzzleCommon
             robots.add(new Robot(pos, vel));
         }
         
-        var steps = 100;
-        var counts = new int[4];
+        try (var fout = new FileWriter("output.txt");
+            var pw = new PrintWriter(fout))
+        {
+            for (var step = 1; step < dims.getX() * dims.getY(); step++)
+            {
+                processAtStep(step, dims, robots, pw);
+            }
+            pw.flush();
+        }
+        // Then look at the output, find "##################" and write down step count
+        // 7520
+    }
+    
+    public void processAtStep(int step, IntPair dims, ArrayList<Robot> robots, PrintWriter w)
+    {
+        var board = new Board2D(dims.getX(), dims.getY());
+        board.setAll(' ');
         for (var r : robots)
         {
-            var newPos = r.position.add(r.velocity.mult(steps)).componentModulo(dims);
+            var newPos = r.position.add(r.velocity.mult(step)).componentModulo(dims);
             var x = newPos.getX();
             var y = newPos.getY();
-            if (x == dims.getX() / 2 || y == dims.getY() / 2)
-                continue;
-            var idx = (x < dims.getX() / 2 ? 0 : 1) +  (y < dims.getY() / 2 ? 0 : 1) * 2;
-            counts[idx]++;
+            board.setCharAtXY(x, y, '#');
         }
-        
-        var result = ((long)counts[0]) * counts[1] * counts[2] * counts[3];
-        
-        
-        System.out.println(result);
-        
+        w.println("Step="+step);
+        board.printAsStrings(w);
     }
     
     static class Robot
