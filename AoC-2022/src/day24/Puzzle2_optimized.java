@@ -55,7 +55,7 @@ public class Puzzle2_optimized extends PuzzleCommon
         for (var cell : board.allCellsXY())
         {
             char c = board.getCharAtXY(cell);
-            var dir = IntPair.decodeDirectionVInv(c);
+            var dir = IntPair.decodeDirectionVInv_XY(c);
             if (dir != null)
             {
                 blizzards.add(new Blizzard(cell, dir));

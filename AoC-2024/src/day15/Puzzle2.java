@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
-import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.IntPair;
@@ -43,12 +42,7 @@ public class Puzzle2 extends PuzzleCommon
             lines.add(line);
         }
         var board = Board2D.parseAsChars(lines);
-        var buf = new StringBuilder();
-        for (var line : lineGroups.get(1))
-        {
-            buf.append(line);
-        }
-        var movementsStr = buf.toString();
+        var movementsStr = lineGroups.get(1).joinLines();
         var movements = movementsStr.toCharArray();
 
         board.printAsStrings(System.out);
@@ -56,36 +50,26 @@ public class Puzzle2 extends PuzzleCommon
         var robot = board.findCharXY('@').first();
         for (var moveChar : movements)
         {
-            var dir = IntPair.decodeDirectionVInv(moveChar);
-            var next = robot.add(dir);
-            var nextChar = board.getCharAtXY(next);
-            if (nextChar == '.')
+            var dir = IntPair.decodeDirectionVInv_XY(moveChar);
+            
+            var moves = new ArrayList<IntPair>();
+            if (canMove(board, robot, dir, moves))
             {
-                board.setCharAtXY(robot, '.');
-                board.setCharAtXY(next, '@');
-                robot = next;
-            }
-            else if (nextChar == '[' || nextChar == ']')
-            {
-                var moves = new ArrayList<IntPair>();
-                var canMove = canMove(board, robot, dir, moves);
-                if (canMove)
+                var processed = new HashSet<IntPair>();
+                Collections.reverse(moves);
+                for (var c : moves)
                 {
-                    var processed = new HashSet<IntPair>();
-                    Collections.reverse(moves);
-                    for (var c : moves)
+                    if (processed.add(c))
                     {
-                        if (processed.add(c))
-                        {
-                            var v = c.add(dir);
-                            board.setCharAtXY(v, board.getCharAtXY(c));
-                            board.setCharAtXY(c, '.');
-                        }
+                        var v = c.add(dir);
+                        board.setCharAtXY(v, board.getCharAtXY(c));
+                        board.setCharAtXY(c, '.');
                     }
-                    board.setCharAtXY(robot, '.');
-                    robot = next;
                 }
+                board.setCharAtXY(robot, '.');
+                robot = robot.add(dir);
             }
+            
             
             board.printAsStrings(System.out);
         }
@@ -96,13 +80,6 @@ public class Puzzle2 extends PuzzleCommon
             result += c.getX() + c.getY()*100;
         }
         
-//        LinesGroup lines = readAllLines(inputFile);
-        
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
-//        {
-//        }
         System.out.println(result);
         
     }
@@ -116,32 +93,20 @@ public class Puzzle2 extends PuzzleCommon
             return true;
         if (nextChar == '#')
             return false;
-        if (dir.equals(IntPair.LEFT))
+        
+        if (dir.isHorizontal())
         {
-            if (nextChar == ']')
-            {
-                movements.add(next);
-                next = next.add(dir);
-                return canMove(board, next, dir, movements);
-            }
-            throw new IllegalStateException();
+            movements.add(next);
+            return canMove(board, next.add(dir), dir, movements);
         }
-        else if (dir.equals(IntPair.RIGHT))
+        else
         {
             if (nextChar == '[')
-            {
-                movements.add(next);
-                next = next.add(dir);
-                return canMove(board, next, dir, movements);
-            }
-            throw new IllegalStateException();
-        }
-        else if (dir.equals(IntPair.UP) || dir.equals(IntPair.DOWN))
-        {
-            if (nextChar == '[')
-                return canMove(board, next, dir, movements) && canMove(board, next.add(IntPair.RIGHT), dir, movements);
+                return canMove(board, next, dir, movements) 
+                    && canMove(board, next.add(IntPair.RIGHT), dir, movements);
             if (nextChar == ']')
-                return canMove(board, next, dir, movements) && canMove(board, next.add(IntPair.LEFT), dir, movements);
+                return canMove(board, next, dir, movements) 
+                    && canMove(board, next.add(IntPair.LEFT), dir, movements);
         }
         throw new IllegalStateException();
     }

@@ -1,6 +1,5 @@
 package day15;
 
-import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.IntPair;
@@ -44,7 +43,7 @@ public class Puzzle1 extends PuzzleCommon
         var robot = board.findCharXY('@').first();
         for (var moveChar : movements)
         {
-            var dir = IntPair.decodeDirectionVInv(moveChar);
+            var dir = IntPair.decodeDirectionVInv_XY(moveChar);
             var next = robot.add(dir);
             
             if (board.getCharAtXY(next) == '.')

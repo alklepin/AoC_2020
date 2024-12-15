@@ -162,4 +162,14 @@ public class LinesGroup implements Iterable<String>
         return split("\\s*");
     }
     
+    public String joinLines()
+    {
+        var buf = new StringBuilder();
+        for (var line : lines)
+        {
+            buf.append(line);
+        }
+        return buf.toString();
+    }
+    
 }

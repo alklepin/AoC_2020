@@ -40,28 +40,28 @@ public class IntPair
         return new IntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
     
-    public static IntPair decodeDirection(char c)
+    public static IntPair decodeDirectionV_XY(char c)
     {
         return switch (c) 
-        {
-            case '^' -> IntPair.UP;
-            case 'v' -> IntPair.DOWN;
-            case '>' -> IntPair.RIGHT;
-            case '<' -> IntPair.LEFT;
-            default -> null;
-        };
+            {
+                case '^' -> IntPair.UP;
+                case 'v' -> IntPair.DOWN;
+                case '>' -> IntPair.RIGHT;
+                case '<' -> IntPair.LEFT;
+                default -> null;
+            };
     }
     
-    public static IntPair decodeDirectionVInv(char c)
+    public static IntPair decodeDirectionVInv_XY(char c)
     {
         return switch (c) 
-        {
-            case '^' -> IntPair.DOWN;
-            case 'v' -> IntPair.UP;
-            case '>' -> IntPair.RIGHT;
-            case '<' -> IntPair.LEFT;
-            default -> null;
-        };
+            {
+                case '^' -> IntPair.DOWN;
+                case 'v' -> IntPair.UP;
+                case '>' -> IntPair.RIGHT;
+                case '<' -> IntPair.LEFT;
+                default -> null;
+            };
     }    
     
     public char asDirectionChar()
@@ -365,5 +365,15 @@ public class IntPair
     public IntPair negate()
     {
         return IntPair.of(-m_x, -m_y);
+    }
+    
+    public boolean isHorizontal()
+    {
+        return m_y == 0;
+    }
+
+    public boolean isVerticall()
+    {
+        return m_x == 0;
     }
 }

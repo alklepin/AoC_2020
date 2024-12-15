@@ -67,7 +67,7 @@ public class Puzzle1 extends PuzzleCommon
         Query<IntPair> nextCells;
         if (currentChar != '.')
         {
-            nextCells = Query.wrap(current.add(IntPair.decodeDirectionVInv(currentChar)));
+            nextCells = Query.wrap(current.add(IntPair.decodeDirectionVInv_XY(currentChar)));
         }
         else
         {
@@ -78,7 +78,7 @@ public class Puzzle1 extends PuzzleCommon
         for (var next : nextCells)
         {
             var nextChar = board.getCharAtXY(next);
-            var nextDir = IntPair.decodeDirectionVInv(nextChar);
+            var nextDir = IntPair.decodeDirectionVInv_XY(nextChar);
             if (nextDir != null && nextDir.equals(next.minus(current).mult(-1)))
                 continue;
             
