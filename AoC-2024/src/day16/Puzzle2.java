@@ -8,7 +8,7 @@ import common.boards.Board2D;
 import common.boards.IntPair;
 import common.graph.ImplicitGraph;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +17,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -53,13 +53,50 @@ public class Puzzle1 extends PuzzleCommon
             );
         var endNode = searchResult.getEndNode();
         var pathLength = searchResult.getEndNodeDistance();
-        var b = board.clone();
-        for (var n : searchResult.getPath())
+        
+        var count = 0;
+        var result = 0;
+        for (var cell : board.allCellsXY().where(c -> board.getCharAtXY(c) != '#'))
         {
-            b.setCharAtXY(n.position, '*');
+            var searchResult1 = ImplicitGraph.Dijkstra(startState, 
+                s -> s.position.equals(cell), 
+                s -> {
+                    var nextStates = new ArrayList<ImplicitGraph.SearchState<Reindeer, Integer>>();
+                    nextStates.add(new ImplicitGraph.SearchState<>(new Reindeer(s.getNode().position, s.getNode().direction.rotateClockwise90()), s.getDistance() + 1000));
+                    nextStates.add(new ImplicitGraph.SearchState<>(new Reindeer(s.getNode().position, s.getNode().direction.rotateAntiClockwise90()), s.getDistance() + 1000));
+                    var next = s.getNode().position.add(s.getNode().direction);
+                    if (board.containsXY(next) && board.getCharAtXY(next) != '#')
+                        nextStates.add(new ImplicitGraph.SearchState<>(new Reindeer(next, s.getNode().direction), s.getDistance() + 1));
+                    return nextStates;
+                }
+                );
+            var firstEnd = searchResult1.getEndNode();
+            var searchResult2 = ImplicitGraph.Dijkstra(
+                new ImplicitGraph.SearchState<>(firstEnd, 0), 
+                s -> s.position.equals(end), 
+                s -> {
+                    var nextStates = new ArrayList<ImplicitGraph.SearchState<Reindeer, Integer>>();
+                    nextStates.add(new ImplicitGraph.SearchState<>(new Reindeer(s.getNode().position, s.getNode().direction.rotateClockwise90()), s.getDistance() + 1000));
+                    nextStates.add(new ImplicitGraph.SearchState<>(new Reindeer(s.getNode().position, s.getNode().direction.rotateAntiClockwise90()), s.getDistance() + 1000));
+                    var next = s.getNode().position.add(s.getNode().direction);
+                    if (board.containsXY(next) && board.getCharAtXY(next) != '#')
+                        nextStates.add(new ImplicitGraph.SearchState<>(new Reindeer(next, s.getNode().direction), s.getDistance() + 1));
+                    return nextStates;
+                }
+                );
+            count++;
+            System.out.println(count);
+            if (searchResult1.getEndNodeDistance() + searchResult2.getEndNodeDistance() == pathLength)
+                result++;
         }
-        b.printAsStrings(System.out);
+//        var b = board.clone();
+//        for (var n : searchResult.getPath())
+//        {
+//            b.setCharAtXY(n.position, '*');
+//        }
+//        b.printAsStrings(System.out);
         System.out.println(pathLength);
+        System.out.println(result);
         
     }
     

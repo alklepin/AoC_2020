@@ -305,6 +305,16 @@ public class ImplicitGraph
             this.nodeStates = nodeStates;
         }
         
+        public TNode getEndNode()
+        {
+            return end.node;
+        }
+
+        public TDistance getEndNodeDistance()
+        {
+            return end.distance;
+        }
+        
         public ArrayList<TNode> getPath()
         {
             return getPath(end.node);
@@ -335,7 +345,10 @@ public class ImplicitGraph
         
         public TDistance distanceTo(TNode node)
         {
-            return nodeStates.get(node).distance;
+            var nodeState = nodeStates.get(node);
+            if (nodeState != null)
+                return nodeState.distance;
+            return null;
         }
     }
     
