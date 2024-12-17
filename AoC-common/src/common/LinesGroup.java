@@ -171,5 +171,14 @@ public class LinesGroup implements Iterable<String>
         }
         return buf.toString();
     }
-    
+
+    public void insertLineAt(int idx, String line)
+    {
+        lines.add(idx, line);
+    }
+
+    public void removeLineAt(int idx)
+    {
+        lines.remove(idx);
+    }
 }

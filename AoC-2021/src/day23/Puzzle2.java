@@ -467,9 +467,12 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-//        LinesGroup lines = readAllLines("input1.txt");
+        LinesGroup lines = readAllLinesNonEmpty("input1.txt", false);
+        lines.insertLineAt(3, "  #D#C#B#A#  ");
+        lines.insertLineAt(4, "  #D#B#A#C#  ");
         
-        LinesGroup lines = readAllLinesNonEmpty("input1_1.txt", false);
+//        LinesGroup lines = readAllLinesNonEmpty("input_Test.txt", false);
+//        LinesGroup lines = readAllLinesNonEmpty("input1_1.txt", false);
 //        LinesGroup lines = readAllLinesNonEmpty("input4.txt", false);
 //        LinesGroup lines = readAllLinesNonEmpty("input3.txt", false);
 //        LinesGroup lines = readAllLinesNonEmpty("input2.txt", false);
