@@ -9,7 +9,7 @@ import common.boards.Board2D;
 import common.boards.IntPair;
 import common.graph.ImplicitGraph;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -18,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -37,11 +37,8 @@ public class Puzzle1 extends PuzzleCommon
 //        var dims = new IntPair(7, 7);
 //        var bytesCount= 12;
         
-//        LinesGroup lines = readAllLines(inputFile);
-        
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         ArrayList<IntPair> bytes = new ArrayList<>();
-        int result = 0;
         for (var line : lines.parsers())
         {
             var data = line.listOfInts();
@@ -50,34 +47,33 @@ public class Puzzle1 extends PuzzleCommon
         }
         var start = new IntPair(0,0);
         var end = dims.add(IntPair.of(-1, -1));
-        HashSet<IntPair> occupied = new HashSet<>();
-        for (var idx = 0; idx < Math.min(bytes.size(), bytesCount); idx++)
-        {
-            occupied.add(bytes.get(idx));
-        }
         Board2D board = new Board2D(dims.getX(), dims.getY());
-        var searchResult = ImplicitGraph.BFS(start, end, node -> board.neighbours4XY(node).where(n -> !occupied.contains(n)));
-        
-        board.setAll('.');
-        for (var n : occupied)
+        var limit = bytesCount;
+        for (limit = bytesCount; limit < bytes.size(); limit++)
         {
-            if (board.containsXY(n))
-                board.setCharAtXY(n, '#');
-        }
-        
-//        for (var n : searchResult.visited())
-//        {
-//            board.setCharAtXY(n, 'O');
-//        }
+            HashSet<IntPair> occupied = new HashSet<>();
+            for (var idx = 0; idx < Math.min(bytes.size(), limit); idx++)
+            {
+                occupied.add(bytes.get(idx));
+            }
+            var searchResult = ImplicitGraph.BFS(start, end, node -> board.neighbours4XY(node).where(n -> !occupied.contains(n)));
+            var path = searchResult.getPath();
+            if (searchResult.getPath() == null)
+            {
+                break;
+            }
 
-//        for (var n : searchResult.getPath())
-//        {
-//            board.setCharAtXY(n, 'O');
-//        }
-        
-        board.printAsStrings(System.out);
-        
-        System.out.println(searchResult.getPath().size()-1);
+            limit++;
+            var visited = new HashSet<>(path);
+            while (limit < bytes.size() && !visited.contains(bytes.get(limit-1)))
+            {
+                limit++;
+            }
+            limit--;
+        }
+
+        System.out.println(limit);
+        System.out.println(bytes.get(limit-1));
         
     }
 }
