@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import common.LinesGroup;
 import common.PuzzleCommon;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -14,7 +14,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -43,34 +43,14 @@ public class Puzzle1 extends PuzzleCommon
         regexPattern.append(")+$");
         var regex = Pattern.compile(regexPattern.toString());
         
-        long result = 0;
+        var result = 0;
         for (var p : lines.get(1))
         {
             if (regex.matcher(p).find())
-            {
-                result += countVariabts(p, patterns);
-            }            
+                result++;
         }
         
         System.out.println(result);
         
-    }
-    
-    public long countVariabts(String p, String[] patterns)
-    {
-        long[] counters = new long[p.length()+1];
-        counters[0] = 1;
-        for (int pos = 0; pos < p.length(); pos++)
-        {
-            for (int pIdx = 0; pIdx < patterns.length; pIdx++)
-            {
-                var pattern = patterns[pIdx];
-                if (p.startsWith(pattern, pos))
-                {
-                    counters[pos + pattern.length()] += counters[pos];
-                }
-            }
-        }
-        return counters[p.length()];
     }
 }
