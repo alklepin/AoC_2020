@@ -8,7 +8,7 @@ import common.boards.Board2D;
 import common.boards.IntPair;
 import common.graph.ImplicitGraph;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +17,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -38,44 +38,35 @@ public class Puzzle1 extends PuzzleCommon
         var start = board.findCharXY('S').first();
         var end = board.findCharXY('E').first();
         
-        var forwardResult = ImplicitGraph.BFS(start, end, cell -> board.neighbours4XY(cell).where(c -> (board.getCharAtXY(c) != '#')));
-        var reversedResult = ImplicitGraph.BFS(end, start, cell -> board.neighbours4XY(cell).where(c -> (board.getCharAtXY(c) != '#')));
+        var forwardResult = ImplicitGraph.BFS(start, end, 
+            cell -> board.neighbours4XY(cell).where(c -> (board.getCharAtXY(c) != '#')));
+        var reversedResult = ImplicitGraph.BFS(end, start, 
+            cell -> board.neighbours4XY(cell).where(c -> (board.getCharAtXY(c) != '#')));
         
         var shortestLemgth = forwardResult.getPath().size();
         
         var delta = 100;
         
-        HashSet<Cheat> results = new HashSet<>();
+        long result = 0;
         for (var c1 : board.allCellsXY().where(c -> board.getCharAtXY(c) != '#'))
         {
             for (var c2 : board.allCellsXY().where(c -> board.getCharAtXY(c) != '#'))
             {
-                if (c1.equals(IntPair.of(9,7))
-                    && c2.equals(IntPair.of(11,7)))
+                var cheatDist = c1.minus(c2).lengthManh();
+                if (cheatDist <= 20 && !c1.equals(c2))
                 {
-                    int a = 1;
-                }
-                
-                if (c1.minus(c2).lengthManh() <= 2 && !c1.equals(c2))
-                {
-                    var p1 = forwardResult.getPath(c1); 
-                    var p2 = reversedResult.getPath(c2); 
-                    if (p1 != null && p2 != null 
-                        && p1.size() + p2.size() <= shortestLemgth - delta - 1)
+                    var d1 = forwardResult.getDistance(c1); 
+                    var d2 = reversedResult.getDistance(c2); 
+                    if (d1 >= 0 && d2 >= 0 
+                        && d1 + d2 <= shortestLemgth - delta - 1 - cheatDist)
                     {
-                        results.add(new Cheat(c1, c2));
+                        result++;
                     }
                 }
             }
         }
         
-//        for (var c : results)
-//        {
-//            System.out.println(c);
-//        }
-        
-        System.out.println(results.size());
-        
+        System.out.println(result);
     }
     
     static class Cheat

@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.function.Predicate;
 
-import common.graph.ImplicitGraph.MoveGenerator;
 import common.graph.StrongComponentsFinder.StrongComponentsSearchResult;
 import common.queries.Query;
 
@@ -26,27 +25,38 @@ public class ImplicitGraph
         private final HashSet<TNode> starts;
         private final TNode end;
         private final HashMap<TNode, TNode> visitedFrom;
+        private final HashMap<TNode, Long> distances; 
         
-        public SearchResult(Iterable<TNode> starts, TNode end, HashMap<TNode, TNode> visitedFrom)
+        public SearchResult(Iterable<TNode> starts, TNode end, HashMap<TNode, TNode> visitedFrom, HashMap<TNode, Long> distances)
         {
             this.starts = new HashSet<TNode>();
             for (var s : starts)
                 this.starts.add(s);
             this.end = end;
             this.visitedFrom = visitedFrom;
+            this.distances = distances;
         }
 
-        public SearchResult(TNode start, TNode end, HashMap<TNode, TNode> visitedFrom)
+        public SearchResult(TNode start, TNode end, HashMap<TNode, TNode> visitedFrom, HashMap<TNode, Long> distances)
         {
             this.starts = new HashSet<TNode>();
             this.starts.add(start);
             this.end = end;
             this.visitedFrom = visitedFrom;
+            this.distances = distances;
         }
         
         public TNode getEnd()
         {
             return end;
+        }
+        
+        public long getDistance(TNode node)
+        {
+            var result = distances.get(node);
+            if (result != null)
+                return result;
+            return -1;
         }
 
         public ArrayList<TNode> getPath()
@@ -86,14 +96,14 @@ public class ImplicitGraph
     {
 
         public SearchResultDFS(Iterable<TNode> starts, TNode end,
-            HashMap<TNode, TNode> visitedFrom)
+            HashMap<TNode, TNode> visitedFrom, HashMap<TNode, Long> distances)
         {
-            super(starts, end, visitedFrom);
+            super(starts, end, visitedFrom, distances);
         }
 
-        public SearchResultDFS(TNode start, TNode end, HashMap<TNode, TNode> visitedFrom)
+        public SearchResultDFS(TNode start, TNode end, HashMap<TNode, TNode> visitedFrom, HashMap<TNode, Long> distances)
         {
-            super(start, end, visitedFrom);
+            super(start, end, visitedFrom, distances);
         }
 
     }
@@ -130,7 +140,7 @@ public class ImplicitGraph
     {
         Predicate<TNode> endCondition = (end != null) ? (next) -> next.equals(end) : (n) -> Boolean.FALSE;
         var result = BFSSteppedCond(start, endCondition, moveGenerator, emptyAction);
-        return new SearchResult<TNode>(start, end, result.visitedFrom);
+        return new SearchResult<TNode>(start, end, result.visitedFrom, result.distances);
     }
     
     public static <TNode> SearchResult<TNode> BFSCond(TNode start, Predicate<TNode> endCondition, MoveGenerator<TNode> moveGenerator)
@@ -165,9 +175,11 @@ public class ImplicitGraph
         
         LinkedList<TNode> currentQueue = new LinkedList<>();
         HashMap<TNode, TNode> visitedFrom = new HashMap<>();
+        HashMap<TNode, Long> distances = new HashMap<>();
         for (var s : starts)
         {
             visitedFrom.put(s, s);
+            distances.put(s, 0l);
             currentQueue.add(s);
         }
         TNode end = null;
@@ -178,12 +190,14 @@ public class ImplicitGraph
             while (currentQueue.size() > 0)
             {
                 TNode current = currentQueue.poll();
+                long currentDistance = distances.get(current);
                 for (var next : moveGenerator.nextNodes(current))
                 {
                     if (visitedFrom.containsKey(next))
                         continue;
                     
                     visitedFrom.put(next, current);
+                    distances.put(next, currentDistance+1);
                     if (endCondition.test(next))
                     {
                         end = next;
@@ -202,7 +216,7 @@ public class ImplicitGraph
         {
             visitedFrom.remove(s);
         }
-        return new SearchResult<TNode>(starts, end, visitedFrom);
+        return new SearchResult<TNode>(starts, end, visitedFrom, distances);
     }
 
     public static <TNode> SearchResult<TNode> DFS(TNode start, TNode end, MoveGenerator<TNode> moveGenerator)
@@ -210,12 +224,17 @@ public class ImplicitGraph
         Stack<TNode> stack = new Stack<>();
         HashMap<TNode, TNode> visitedFrom = new HashMap<>();
         HashMap<TNode, TNode> reachedFrom = new HashMap<>();
+        HashMap<TNode, Long> distances = new HashMap<>();
         visitedFrom.put(start, start);
+        distances.put(start,  0l);
         stack.add(start);
         while (stack.size() > 0)
         {
             TNode current = stack.pop();
-            visitedFrom.put(current, reachedFrom.get(current));
+            var prev = reachedFrom.get(current);
+            long currentDistance = distances.get(prev) + 1;
+            visitedFrom.put(current, prev);
+            distances.put(current, currentDistance);
             for (var next : moveGenerator.nextNodes(current))
             {
                 if (visitedFrom.containsKey(next))
@@ -230,7 +249,7 @@ public class ImplicitGraph
             }
         }
         visitedFrom.remove(start);
-        return new SearchResult<TNode>(start, end, visitedFrom);
+        return new SearchResult<TNode>(start, end, visitedFrom, distances);
     }
 
     //===========================================================================

@@ -786,6 +786,20 @@ public class Board2D
             );
     }
     
+    /**
+     * Neighbors located at a distance not more that specified
+     * @param start The center of neighbor
+     * @return
+     */
+    public Query<IntPair> neighboursAtMDistXY(IntPair start, int maxDistance)
+    {
+        var result = Query.wrap(start);
+        for (var dist = 1; dist <= maxDistance; dist++)
+            result = result.concat(Query.wrap(Generators.rhomb(start, dist)));
+        result = result.where(c -> containsXY(c));
+        return result;
+    }
+    
 
     public static Query<IntPair> neighbours8(IntPair start, IntPair min, IntPair max)
     {
