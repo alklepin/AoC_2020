@@ -24,6 +24,17 @@ public class LinesGroup implements Iterable<String>
     
     private ArrayList<String> lines = new ArrayList<>();
     
+    public LinesGroup()
+    {
+        
+    }
+
+    public LinesGroup(String [] lines)
+    {
+        for (var s : lines)
+            addLine(s);
+    }
+    
     public void addLine(String line)
     {
         lines.add(line);
