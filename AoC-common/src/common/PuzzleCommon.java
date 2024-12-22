@@ -7,14 +7,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import common.queries.Query;
 
@@ -255,5 +251,21 @@ public class PuzzleCommon
             return result;
         else
             return defaultValue;
+    }
+    
+    public ArrayList<String> split(String str, String splitter)
+    {
+        var partsList = new ArrayList<String>();
+        var start = 0;
+        var end = 0;
+        while ((end = str.indexOf(splitter, start)) >= 0)
+        {
+            partsList.add(str.substring(start, end));
+            start = end+1;
+        }
+        if (start < str.length())
+            partsList.add(str.substring(start, str.length() - 1));
+
+        return partsList;
     }
 }

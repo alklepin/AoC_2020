@@ -13,7 +13,7 @@ import common.boards.IntPair;
 import common.graph.ImplicitGraph;
 import static common.graph.ImplicitGraph.SearchState;
 
-public class Puzzle1_2 extends PuzzleCommon
+public class Puzzle1_3 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -22,7 +22,7 @@ public class Puzzle1_2 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1_2().solve();
+            new Puzzle1_3().solve();
         }
         finally
         {
@@ -134,13 +134,20 @@ public class Puzzle1_2 extends PuzzleCommon
     public HashSet<String> encodeCommandB(String cmd)
     {
         var tmp = encodeCommandB(cmd, 'A');
-//        var result = new HashSet<String>();
-//        for (var s : tmp)
-//        {
-//            result.add(s + "A");
-//        }
-//        return result;
-        return tmp;
+        
+        var result = new HashSet<String>();
+        long minLength = Long.MAX_VALUE; 
+        for (var s : tmp)
+        {
+            if (minLength > s.length())
+                minLength = s.length();
+        }
+        for (var s : tmp)
+        {
+            if (minLength == s.length())
+                result.add(s);
+        }
+        return result;
     }
     
     public HashSet<String> encodeCommandB(String cmd, char from)

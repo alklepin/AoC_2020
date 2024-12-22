@@ -64,14 +64,19 @@ public class Puzzle2 extends PuzzleCommon
         
         var seqs = new ArrayList<long[]>();
         var known = new HashSet<Long>();
-        var fd = differences.get(0);
-        for (var idx = 0; idx < fd.length-4; idx++)
+//        for (var didx = 0; didx < differences.size(); didx++)
         {
-            var s = new long[] {fd[idx], fd[idx+1], fd[idx+2], fd[idx+3]};
-            var h = (((s[0] + 10) * 20 + (s[1] + 10)) * 20 + (s[2] + 10)) * 20 + (s[3] + 10);
-            if (known.add(h))
-                seqs.add(s);
+            var didx = 0;
+            var fd = differences.get(didx);
+            for (var idx = 0; idx < fd.length-4; idx++)
+            {
+                var s = new long[] {fd[idx], fd[idx+1], fd[idx+2], fd[idx+3]};
+                var h = (((s[0] + 10) * 20 + (s[1] + 10)) * 20 + (s[2] + 10)) * 20 + (s[3] + 10);
+                if (known.add(h))
+                    seqs.add(s);
+            }
         }
+        System.out.println(seqs.size());
         
         long best = 0;
         for (var seq : seqs)

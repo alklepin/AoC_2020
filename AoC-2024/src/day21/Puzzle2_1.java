@@ -1,7 +1,7 @@
 package day21;
 
 import java.text.MessageFormat;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -11,9 +11,9 @@ import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.IntPair;
 import common.graph.ImplicitGraph;
-import common.graph.ImplicitGraph.SearchState;
+import static common.graph.ImplicitGraph.SearchState;
 
-public class Puzzle2 extends PuzzleCommon
+public class Puzzle2_1 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -22,7 +22,7 @@ public class Puzzle2 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle2().solve();
+            new Puzzle2_1().solve();
         }
         finally
         {
@@ -52,7 +52,7 @@ public class Puzzle2 extends PuzzleCommon
     private static Board2D boardB = Board2D.parseAsCharsXY(new LinesGroup(keypadB)); 
     
     
-    public static HashSet<String> generatePaths(Board2D board, IntPair from, IntPair to, boolean removeBad)
+    public static HashSet<String> generatePaths(Board2D board, IntPair from, IntPair to)
     {
         if (board.getCharAtXY(from) == ' ')
         {
@@ -63,72 +63,20 @@ public class Puzzle2 extends PuzzleCommon
         if (from.equals(to))
         {
             var result = new HashSet<String>();
-            result.add("A");
+            result.add("");
             return result;
         }
 
         var d = to.minus(from);
+        var x = d.getX();
+        var y = d.getY();
+
         var result = new HashSet<String>();
+        if (x != 0)
         {
             boolean valid = true;
             var code = new StringBuilder();
-            var x = d.getX();
-            var y = d.getY();
             var v = from;
-            while (x > 0)
-            {
-                code.append('>');
-                v = v.add(IntPair.RIGHT);
-                valid = valid && board.getCharAtXY(v) != ' ';
-                x--;
-            }
-            while (x < 0)
-            {
-                code.append('<');
-                v = v.add(IntPair.LEFT);
-                valid = valid && board.getCharAtXY(v) != ' ';
-                x++;
-            }
-            while (y > 0)
-            {
-                code.append('v');
-                v = v.add(IntPair.UP);
-                valid = valid && board.getCharAtXY(v) != ' ';
-                y--;
-            }
-            while (y < 0)
-            {
-                code.append('^');
-                v = v.add(IntPair.DOWN);
-                valid = valid && board.getCharAtXY(v) != ' ';
-                y++;
-            }
-            
-            if (valid)
-            {
-                result.add(code+"A");
-            }
-        }
-        {
-            boolean valid = true;
-            var code = new StringBuilder();
-            var x = d.getX();
-            var y = d.getY();
-            var v = from;
-            while (y > 0)
-            {
-                code.append('v');
-                v = v.add(IntPair.UP);
-                valid = valid && board.getCharAtXY(v) != ' ';
-                y--;
-            }
-            while (y < 0)
-            {
-                code.append('^');
-                v = v.add(IntPair.DOWN);
-                valid = valid && board.getCharAtXY(v) != ' ';
-                y++;
-            }
             while (x > 0)
             {
                 code.append('>');
@@ -145,34 +93,39 @@ public class Puzzle2 extends PuzzleCommon
             }
             if (valid)
             {
-                result.add(code+"A");
+                var paths = generatePaths(board, v, to);
+                for (var p : paths)
+                {
+                    result.add(code+p);
+                }
             }
         }
-        if (removeBad)
+        if (y != 0)
         {
-            if (result.size() > 1 && result.contains("v<A"))
+            boolean valid = true;
+            var code = new StringBuilder();
+            var v = from;
+            while (y > 0)
             {
-                result.remove("v<A");
+                code.append('v');
+                v = v.add(IntPair.UP);
+                valid = valid && board.getCharAtXY(v) != ' ';
+                y--;
             }
-            if (result.size() > 1 && result.contains("^>A"))
+            while (y < 0)
             {
-                result.remove("^>A");
+                code.append('^');
+                v = v.add(IntPair.DOWN);
+                valid = valid && board.getCharAtXY(v) != ' ';
+                y++;
             }
-            if (result.size() > 1 && result.contains(">>^A"))
+            if (valid)
             {
-                result.remove(">>^A");
-            }
-            if (result.size() > 1 && result.contains(">vA"))
-            {
-                result.remove(">vA");
-            }
-            if (result.size() > 1 && result.contains(">^A"))
-            {
-                result.remove(">^A");
-            }
-            if (result.size() > 1 && result.contains("<^A"))
-            {
-                result.remove("<^A");
+                var paths = generatePaths(board, v, to);
+                for (var p : paths)
+                {
+                    result.add(code+p);
+                }
             }
         }
         return result;
@@ -181,7 +134,8 @@ public class Puzzle2 extends PuzzleCommon
     public String[] splitCommand(String str)
     {
         var partsList = split(str, "A");
-        return partsList.toArray(new String[0]);
+        var parts = partsList.toArray(new String[0]);
+        return parts;
     }
     
     public HashMap<String, String> knownCodes = new HashMap<>();
@@ -213,6 +167,9 @@ public class Puzzle2 extends PuzzleCommon
             result.append(code);
         }
         return result.toString();
+
+//        var tmp = encodeCommandB(cmd, 'A');
+//        return tmp;
     }
     
     public HashSet<String> encodeCommandB(String cmd, char from)
@@ -232,7 +189,7 @@ public class Puzzle2 extends PuzzleCommon
         {
             for (var c : cont)
             {
-                result.add(m + c);
+                result.add(m + "A" + c);
             }
         }
         return result;
@@ -281,9 +238,9 @@ public class Puzzle2 extends PuzzleCommon
                 return false;
             return true;
         }
-        private Puzzle2 getEnclosingInstance()
+        private Puzzle2_1 getEnclosingInstance()
         {
-            return Puzzle2.this;
+            return Puzzle2_1.this;
         }
         @Override
         public String toString()
@@ -306,7 +263,7 @@ public class Puzzle2 extends PuzzleCommon
         {
             p = p + "A";
             var key = new DPKey(p, level);
-            Long partLength = knownLengths.get(key);
+            var partLength = knownLengths.get(key);
             if (partLength == null)
             {
                 var code = knownCodes.get(p);
@@ -390,7 +347,7 @@ public class Puzzle2 extends PuzzleCommon
             {
                 var p1 = boardA.findCharXY(c1).first();
                 var p2 = boardA.findCharXY(c2).first();
-                var paths = generatePaths(boardA, p1, p2, false);
+                var paths = generatePaths(boardA, p1, p2);
                 var key = IntPair.of(c1, c2);
                 moves.put(key, paths);
             }
@@ -409,7 +366,7 @@ public class Puzzle2 extends PuzzleCommon
             {
                 var p1 = boardB.findCharXY(c1).first();
                 var p2 = boardB.findCharXY(c2).first();
-                var paths = generatePaths(boardB, p1, p2, true);
+                var paths = generatePaths(boardB, p1, p2);
                 var key = IntPair.of(c1, c2);
                 moves.put(key, paths);
             }
@@ -452,21 +409,72 @@ public class Puzzle2 extends PuzzleCommon
         
 //        System.exit(0);
         
-        HashMap<IntPair, HashSet<String>> movesA1 = generateNextLevelMoves(movesA);
-        HashMap<IntPair, HashSet<String>> movesA2 = generateNextLevelMoves(movesA1);
-        HashMap<IntPair, HashSet<String>> movesA3 = generateNextLevelMoves(movesA2);
-        HashMap<IntPair, HashSet<String>> movesA4 = generateNextLevelMoves(movesA3);
-        HashMap<IntPair, HashSet<String>> movesA5 = generateNextLevelMoves(movesA4);
-        HashMap<IntPair, HashSet<String>> movesA6 = generateNextLevelMoves(movesA5);
+        HashMap<IntPair, HashSet<String>> movesA1 = new HashMap<>();
+        for (var entry : movesA.entrySet())
+        {
+            var key = entry.getKey();
+            var set = new HashSet<String>();
+            for (var s : entry.getValue())
+            {
+                set.add(encodeCommandB(s+"A"));
+            }
+//            System.out.println("   "+best);
+            movesA1.put(key, set);
+        }
+        
+        
+        HashMap<IntPair, HashSet<String>> movesA2 = new HashMap<>();
+        for (var entry : movesA1.entrySet())
+        {
+            var key = entry.getKey();
+            var set = new HashSet<String>();
+            for (var s : entry.getValue())
+            {
+                set.add(encodeCommandB(s));
+            }
+//            System.out.println("   "+best);
+            movesA2.put(key, set);
+        }
+
+        HashMap<IntPair, HashSet<String>> movesA3 = new HashMap<>();
+        for (var entry : movesA2.entrySet())
+        {
+            var key = entry.getKey();
+            var set = new HashSet<String>();
+            for (var s : entry.getValue())
+            {
+                set.add(encodeCommandB(s));
+            }
+//            System.out.println("   "+best);
+            movesA3.put(key, set);
+        }
+
+        HashMap<IntPair, HashSet<String>> movesA4 = new HashMap<>();
+        for (var entry : movesA3.entrySet())
+        {
+            var key = entry.getKey();
+            var set = new HashSet<String>();
+            for (var s : entry.getValue())
+            {
+                set.add(encodeCommandB(s));
+            }
+//            System.out.println("   "+best);
+            movesA4.put(key, set);
+        }
         
 //        for (var e : knownCodes.entrySet())
 //        {
 //            System.out.println(e.getKey()+" "+e.getValue());
 //        }
-        System.out.println("Known codes size: "+knownCodes.size());
+        
+        
+        System.out.println(mapSize(movesA));
+        System.out.println(mapSize(movesA1));
+//        System.out.println(mapSize(movesA2));
+//        System.out.println(mapSize(movesA3));
         
         HashMap<IntPair, String> movesAF = new HashMap<>();
-        for (var entry : movesA3.entrySet())
+        for (var entry : movesA4.entrySet())
         {
             var key = entry.getKey();
             String best = null;
@@ -477,12 +485,12 @@ public class Puzzle2 extends PuzzleCommon
                 if (best == null || best.length() > s1.length())
                     best = s1;
             }
-            System.out.println(MessageFormat.format("{0} to {1}", (char)key.getX(), (char)key.getY()));
-            System.out.println("   "+best);
+//            System.out.println(MessageFormat.format("{0} to {1}", (char)key.getX(), (char)key.getY()));
+//            System.out.println("   "+best);
             movesAF.put(key, best);
         }
         
-        int level = 4;
+        int level = 3;
         HashMap<IntPair, Long> movesAFL = new HashMap<>();
         for (var entry : movesA.entrySet())
         {
@@ -492,26 +500,26 @@ public class Puzzle2 extends PuzzleCommon
             
             for (var s : entry.getValue())
             {
-                var cmd = s;
-                long length = getLengthOfCodeB(cmd, level);
-//                var tmpCode = getCodeB(cmd, level);
-//                System.out.println("> "+printAsChars(key)+": "+tmpCode);
+                var cmd = s+"A";
+                var length = getLengthOfCodeB(cmd, level);
+                var tmpCode = getCodeB(cmd, level);
+                System.out.println("> "+printAsChars(key)+": "+tmpCode);
                 if (length < best)
                 {
-//                    System.out.println("> "+printAsChars(key)+": chosen as the best");
-//                    bestCode = tmpCode;
+                    System.out.println("> "+printAsChars(key)+": chosen as the best");
                     best = length;
+                    bestCode = tmpCode;
                 }
             }
-//            System.out.println("   "+best);
+            System.out.println("   "+best);
             movesAFL.put(key, best);
             
-//            var code = movesAF.get(key);
-//            if (code.length() != best)
-//            {
-//                System.out.println("!!! "+printAsChars(key)+": "+code + " "+bestCode);
-//                System.out.println("!!! "+printAsChars(key)+": " + code.length() + " "+best);
-//            }
+            var code = movesAF.get(key);
+            if (code.length() != best)
+            {
+                System.out.println("!!! "+printAsChars(key)+": "+code + " "+bestCode);
+                System.out.println("!!! "+printAsChars(key)+": " + code.length() + " "+best);
+            }
             
         }
         
@@ -531,15 +539,15 @@ public class Puzzle2 extends PuzzleCommon
             for (var idx = 1; idx < s.length(); idx++)
             {
                 var key = IntPair.of(s.charAt(idx-1), s.charAt(idx));
-                long codeLength = movesAFL.get(key); 
                 var code = movesAF.get(key);
+                var codeLength = movesAFL.get(key); 
                 if (code.length() != codeLength)
                 {
                     System.out.println("!!! "+printAsChars(key)+": "+code);
                     System.out.println("!!! "+printAsChars(key)+": " + code.length() + " "+codeLength);
                 }
-                res.append(code);
                 length += codeLength;
+                res.append(code);
             }
             System.out.println(MessageFormat.format("{0}: {1}", line, res));
             System.out.println(line + ": " + res.length());
@@ -550,25 +558,6 @@ public class Puzzle2 extends PuzzleCommon
         }
         System.out.println(result);
         
-//        printDecoded("v<A<AA>>^AvAA<^A>Av<A<A>>^Av<<A>>^AvAA<^A>AA<vA^>AAv<<A>^A>AvA^A<vA<AA>>^AvAA^<A>Av<A>^A<A>Av<A<AA>>^AvAA^<A>Av<<A>A^>AvA^A<A>AAv<<A>>^AvA^Av<A<AA>>^AvA^AvA^<A>AAA<vA^>Av<<A>^A>AvA^A", level);
-//        printDecoded("<vA<AA>>^AvAA^<A>Av<<A>A>^Av<<A>>^AvAA^<A>AA<vA>^AA<Av<A>>^AvA^A<vA<AA>>^AvAA^<A>A<vA>^A<A>A<vA<AA>>^AvAA^<A>A<vA>^Av<<A>>^AvA<^A>AAv<<A>>^AvA^A<vA<AA>>^AvA^AvA<^A>AAA<vA>^Av<<A>^A>AvA^A", level);
-        
-    }
-    
-    public HashMap<IntPair, HashSet<String>> generateNextLevelMoves(HashMap<IntPair, HashSet<String>> moves)
-    {
-        HashMap<IntPair, HashSet<String>> result = new HashMap<>();
-        for (var entry : moves.entrySet())
-        {
-            var key = entry.getKey();
-            var set = new HashSet<String>();
-            for (var s : entry.getValue())
-            {
-                set.add(encodeCommandB(s));
-            }
-            result.put(key, set);
-        }
-        return result;
     }
     
     public String printAsChars(IntPair p)
@@ -625,45 +614,5 @@ public class Puzzle2 extends PuzzleCommon
                 System.out.println(MessageFormat.format("{0} -> {1} : {2}", c1, c2, costMap.get(IntPair.of(c1, c2))));
             }
         }
-    }
-    
-    public void printDecoded(String code, int level)
-    {
-        System.out.println("Decoding: "+code);
-        for (var idx = 0; idx < level; idx++)
-        {
-            code = decodeB(code);
-            System.out.println("Level #"+idx+ ": "+code);
-        }
-    }
-    
-    public String decodeB(String code)
-    {
-        var pos = boardB.findCharXY('A').first();
-        var codeChars = code.toCharArray();
-        var result = new StringBuilder();
-        for (var c : codeChars)
-        {
-            if (c == 'A')
-            {
-                var boardChar = boardB.getCharAtXY(pos);
-                result.append(boardChar);
-            }
-            else
-            {
-                var dir = IntPair.decodeDirectionVInv_XY(c);
-                pos = pos.add(dir);
-                if (!boardB.containsXY(pos))
-                {
-                    throw new IllegalStateException("out: "+pos);
-                }
-                var boardChar = boardB.getCharAtXY(pos);
-                if (boardChar == ' ')
-                {
-                    throw new IllegalStateException("illegal cell: "+pos);
-                }
-            }
-        }
-        return result.toString();
     }
 }
