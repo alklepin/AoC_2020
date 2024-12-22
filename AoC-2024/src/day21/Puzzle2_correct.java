@@ -13,7 +13,7 @@ import common.boards.IntPair;
 import common.graph.ImplicitGraph;
 import common.graph.ImplicitGraph.SearchState;
 
-public class Puzzle2 extends PuzzleCommon
+public class Puzzle2_correct extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -22,7 +22,7 @@ public class Puzzle2 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle2().solve();
+            new Puzzle2_correct().solve();
         }
         finally
         {
@@ -52,7 +52,7 @@ public class Puzzle2 extends PuzzleCommon
     private static Board2D boardB = Board2D.parseAsCharsXY(new LinesGroup(keypadB)); 
     
     
-    public static HashSet<String> generatePaths(Board2D board, IntPair from, IntPair to, boolean removeBad)
+    public static HashSet<String> generatePaths(Board2D board, IntPair from, IntPair to)
     {
         if (board.getCharAtXY(from) == ' ')
         {
@@ -148,41 +148,6 @@ public class Puzzle2 extends PuzzleCommon
                 result.add(code+"A");
             }
         }
-        if (removeBad)
-        {
-            if (result.size() > 1 && result.contains("v<A"))
-            {
-                result.remove("v<A");
-            }
-            if (result.size() > 1 && result.contains("^>A"))
-            {
-                result.remove("^>A");
-            }
-            if (result.size() > 1 && result.contains("^<A"))
-            {
-                result.remove("^<A");
-            }
-            if (result.size() > 1 && result.contains(">>^A"))
-            {
-                result.remove(">>^A");
-            }
-            if (result.size() > 1 && result.contains(">vA"))
-            {
-                result.remove(">vA");
-            }
-            if (result.size() > 1 && result.contains(">^A"))
-            {
-                result.remove(">^A");
-            }
-            if (result.size() > 1 && result.contains("<^A"))
-            {
-                result.remove("<^A");
-            }
-            if (result.size() > 1 && result.contains("<vA"))
-            {
-                result.remove("<vA");
-            }
-        }
         return result;
     }
     
@@ -192,36 +157,7 @@ public class Puzzle2 extends PuzzleCommon
         return partsList.toArray(new String[0]);
     }
     
-    public HashMap<String, String> knownCodes = new HashMap<>();
-    
-    public String encodeCommandB(String cmd)
-    {
-        if (cmd.startsWith("v<A<AA>>^AvA<^A>AAvA^A"))
-        {
-            var a = 123;
-        }
-        var parts = splitCommand(cmd);
-        var result = new StringBuilder();
-        for (var p : parts)
-        {
-            p = p + "A";
-            var code = knownCodes.get(p);
-            if (code == null)
-            {
-                String best = null;
-                var codes = encodeCommandB(p, 'A');
-                for (var c : codes)
-                {
-                    if ((best == null) || best.length() > c.length())
-                        best = c;
-                }
-                code = best;
-            }
-            knownCodes.put(p, code);
-            result.append(code);
-        }
-        return result.toString();
-    }
+    public HashMap<String, HashSet<String>> knownCodes = new HashMap<>();
     
     public HashSet<String> encodeCommandB(String cmd, char from)
     {
@@ -289,9 +225,9 @@ public class Puzzle2 extends PuzzleCommon
                 return false;
             return true;
         }
-        private Puzzle2 getEnclosingInstance()
+        private Puzzle2_correct getEnclosingInstance()
         {
-            return Puzzle2.this;
+            return Puzzle2_correct.this;
         }
         @Override
         public String toString()
@@ -301,7 +237,7 @@ public class Puzzle2 extends PuzzleCommon
     }
     
     public HashMap<DPKey, Long> knownLengths = new HashMap<>();
-    public HashMap<DPKey, String> knownDPCodes = new HashMap<>();
+    public HashMap<DPKey, HashSet<String>> knownDPCodes = new HashMap<>();
     
     public long getLengthOfCodeB(String cmd, int level)
     {
@@ -317,21 +253,22 @@ public class Puzzle2 extends PuzzleCommon
             Long partLength = knownLengths.get(key);
             if (partLength == null)
             {
-                var code = knownCodes.get(p);
-                if (code == null)
+                var codes = knownCodes.get(p);
+                if (codes == null)
                 {
-                    String best = null;
-                    var codes = encodeCommandB(p, 'A');
-                    for (var c : codes)
-                    {
-                        if ((best == null) || best.length() > c.length())
-                            best = c;
-                    }
-                    code = best;
+                    codes = encodeCommandB(p, 'A');
                 }
-                knownCodes.put(p, code);
+                knownCodes.put(p, codes);
                 
-                partLength = getLengthOfCodeB(code, level-1);
+                long best = Long.MAX_VALUE;
+                for (String code : codes)
+                {
+                    var curLength = getLengthOfCodeB(code, level-1);
+                    if (curLength < best)
+                        best = curLength;
+                }
+                
+                partLength = best;
                 knownLengths.put(key, partLength);
             }
             length += partLength;
@@ -339,50 +276,49 @@ public class Puzzle2 extends PuzzleCommon
         return length;
     }
 
-    public String getCodeB(String cmd, int level)
+    public HashSet<String> getCodeB(String cmd, int level)
     {
+        var result = new HashSet<String>(); 
         if (level == 0)
-            return cmd;
+        {
+            result.add(cmd);
+            return result;
+        }
         
         var parts = splitCommand(cmd);
-        long length = 0;
-        var result = new StringBuilder();
         for (var p : parts)
         {
             p = p + "A";
             var key = new DPKey(p, level);
-            var partLength = knownLengths.get(key);
-            var partCode = knownDPCodes.get(key);
-            if (partLength == null || partCode == null)
+            var partCodes = knownDPCodes.get(key);
+            if (partCodes == null)
             {
-                var code = knownCodes.get(p);
-                if (code == null)
+                var codes = knownCodes.get(p);
+                if (codes == null)
                 {
-                    String best = null;
-                    var codes = encodeCommandB(p, 'A');
-                    for (var c : codes)
-                    {
-                        if ((best == null) || best.length() > c.length())
-                            best = c;
-                    }
-                    code = best;
+                    codes = encodeCommandB(p, 'A');
                 }
-                knownCodes.put(p, code);
+                knownCodes.put(p, codes);
                 
-                partLength = getLengthOfCodeB(code, level-1);
-                knownLengths.put(key, partLength);
+                partCodes = new HashSet<>();
                 
-                partCode = getCodeB(code, level-1);
-                knownDPCodes.put(key, partCode);
+                for (String code : codes)
+                {
+                    partCodes.addAll(getCodeB(code, level-1));
+                }
+                knownDPCodes.put(key, partCodes);
             }
-            length += partLength;
-            result.append(partCode);
-            if (partLength != partCode.length())
+            var tmp = new HashSet<String>();
+            for (var s1 : result)
             {
-                var a = 100;
+                for (var s2 : partCodes)
+                {
+                    tmp.add(s1 + s2);
+                }
             }
+            result = tmp;
         }
-        return result.toString();
+        return result;
     }
     
     HashMap<IntPair, HashSet<String>> movesA = generateMovesA();
@@ -398,7 +334,7 @@ public class Puzzle2 extends PuzzleCommon
             {
                 var p1 = boardA.findCharXY(c1).first();
                 var p2 = boardA.findCharXY(c2).first();
-                var paths = generatePaths(boardA, p1, p2, false);
+                var paths = generatePaths(boardA, p1, p2);
                 var key = IntPair.of(c1, c2);
                 moves.put(key, paths);
             }
@@ -417,7 +353,7 @@ public class Puzzle2 extends PuzzleCommon
             {
                 var p1 = boardB.findCharXY(c1).first();
                 var p2 = boardB.findCharXY(c2).first();
-                var paths = generatePaths(boardB, p1, p2, true);
+                var paths = generatePaths(boardB, p1, p2);
                 var key = IntPair.of(c1, c2);
                 moves.put(key, paths);
             }
@@ -455,42 +391,11 @@ public class Puzzle2 extends PuzzleCommon
         
     
 //        printMoves(movesA);
-        printMoves(movesB);
+//        printMoves(movesB);
         
         
-//        System.exit(0);
         
-        HashMap<IntPair, HashSet<String>> movesA1 = generateNextLevelMoves(movesA);
-        HashMap<IntPair, HashSet<String>> movesA2 = generateNextLevelMoves(movesA1);
-        HashMap<IntPair, HashSet<String>> movesA3 = generateNextLevelMoves(movesA2);
-        HashMap<IntPair, HashSet<String>> movesA4 = generateNextLevelMoves(movesA3);
-        HashMap<IntPair, HashSet<String>> movesA5 = generateNextLevelMoves(movesA4);
-        HashMap<IntPair, HashSet<String>> movesA6 = generateNextLevelMoves(movesA5);
-        
-//        for (var e : knownCodes.entrySet())
-//        {
-//            System.out.println(e.getKey()+" "+e.getValue());
-//        }
-        System.out.println("Known codes size: "+knownCodes.size());
-        
-        HashMap<IntPair, String> movesAF = new HashMap<>();
-        for (var entry : movesA3.entrySet())
-        {
-            var key = entry.getKey();
-            String best = null;
-            for (var s : entry.getValue())
-            {
-                var set = encodeCommandB(s);
-                var s1 = set;
-                if (best == null || best.length() > s1.length())
-                    best = s1;
-            }
-            System.out.println(MessageFormat.format("{0} to {1}", (char)key.getX(), (char)key.getY()));
-            System.out.println("   "+best);
-            movesAF.put(key, best);
-        }
-        
-        int level = 4;
+        int level = 25;
         HashMap<IntPair, Long> movesAFL = new HashMap<>();
         for (var entry : movesA.entrySet())
         {
@@ -524,33 +429,19 @@ public class Puzzle2 extends PuzzleCommon
         }
         
         
-        System.out.println(mapSize(movesA));
-        System.out.println(mapSize(movesA1));
-        System.out.println(movesAF.size());
-
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         
         long result = 0;
         for (String line : lines)
         {
             var s = "A"+line;
-            var res = new StringBuilder();
             long length = 0;
             for (var idx = 1; idx < s.length(); idx++)
             {
                 var key = IntPair.of(s.charAt(idx-1), s.charAt(idx));
                 long codeLength = movesAFL.get(key); 
-                var code = movesAF.get(key);
-                if (code.length() != codeLength)
-                {
-                    System.out.println("!!! "+printAsChars(key)+": "+code);
-                    System.out.println("!!! "+printAsChars(key)+": " + code.length() + " "+codeLength);
-                }
-                res.append(code);
                 length += codeLength;
             }
-            System.out.println(MessageFormat.format("{0}: {1}", line, res));
-            System.out.println(line + ": " + res.length());
             System.out.println(line + ": " + length);
             
 //            result += res.length() * parseInt(line.substring(0, line.length()-1));
@@ -558,25 +449,9 @@ public class Puzzle2 extends PuzzleCommon
         }
         System.out.println(result);
         
-            printDecoded("v<A<AA>>^AvA^A<A>vA^A<vA<AA>>^AvAA^<A>AA<vA^>AAv<<A>^A>AvA^Av<<A>A>^AvA<^A>A<vA<AA>>^AvA<^A>AvA^Av<A>^A<A>AA<vA<A>>^A<Av>A^Av<<A>>^AvA^A<vA<A>>^Av<<A>>^AAvAA<^A>Av<A^>A<A>A<vA^>A<Av<A>>^AvA^Av<<A>A>^A<A>vA^Av<<A>>^AvA^A<vA<AA>>^AvAA^<A>Av<A>^A<A>A<vA<A>>^Av<<A>>^AAvAA^<A>A<vA^>AAv<<A>^A>AvA^AAv<A<A>>^AvA<^A>Av<<A>>^AvA^Av<<A>A>^Av<<A>>^AAvAA<^A>A<vA>^A<A>Av<A^>A<Av<A>>^AvA^AAAv<<A>A^>A<A>vA^A<vA<AA>>^AvA^<A>AvA^Av<A^>A<A>A", level);
-            printDecoded("<vA<AA>>^AvA^AvA<^A>A<vA<AA>>^AvAA<^A>AA<vA>^AAv<<A>^A>AvA^Av<<A>A>^AvA<^A>A<vA<AA>>^AvA<^A>AvA^A<vA>^A<A>AAv<<A>A>^AvA<^A>Av<<A>>^AvA^Av<<A>A>^Av<<A>>^AAvAA<^A>A<vA>^A<A>A<vA>^Av<<A>^A>AvA^Av<<A>A>^AvA<^A>Av<<A>>^AvA^A<vA<AA>>^AvAA<^A>A<vA>^A<A>Av<<A>A>^Av<<A>>^AAvAA<^A>A<vA>^AAv<<A>^A>AvA^AAv<<A>A>^AvA<^A>Av<<A>>^AvA^Av<<A>A>^Av<<A>>^AAvAA<^A>A<vA>^A<A>A<vA>^Av<<A>^A>AvA^AAAv<<A>A>^AvA<^A>A<vA<AA>>^AvA<^A>AvA^A<vA>^A<A>A", level);
+//        printDecoded("v<A<AA>>^AvAA<^A>Av<A<A>>^Av<<A>>^AvAA<^A>AA<vA^>AAv<<A>^A>AvA^A<vA<AA>>^AvAA^<A>Av<A>^A<A>Av<A<AA>>^AvAA^<A>Av<<A>A^>AvA^A<A>AAv<<A>>^AvA^Av<A<AA>>^AvA^AvA^<A>AAA<vA^>Av<<A>^A>AvA^A", level);
+//        printDecoded("<vA<AA>>^AvAA^<A>Av<<A>A>^Av<<A>>^AvAA^<A>AA<vA>^AA<Av<A>>^AvA^A<vA<AA>>^AvAA^<A>A<vA>^A<A>A<vA<AA>>^AvAA^<A>A<vA>^Av<<A>>^AvA<^A>AAv<<A>>^AvA^A<vA<AA>>^AvA^AvA<^A>AAA<vA>^Av<<A>^A>AvA^A", level);
         
-    }
-    
-    public HashMap<IntPair, HashSet<String>> generateNextLevelMoves(HashMap<IntPair, HashSet<String>> moves)
-    {
-        HashMap<IntPair, HashSet<String>> result = new HashMap<>();
-        for (var entry : moves.entrySet())
-        {
-            var key = entry.getKey();
-            var set = new HashSet<String>();
-            for (var s : entry.getValue())
-            {
-                set.add(encodeCommandB(s));
-            }
-            result.put(key, set);
-        }
-        return result;
     }
     
     public String printAsChars(IntPair p)

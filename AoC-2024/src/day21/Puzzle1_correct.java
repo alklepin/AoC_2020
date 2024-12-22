@@ -3,17 +3,13 @@ package day21;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.Function;
 
-import common.Function2;
 import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 import common.boards.IntPair;
-import common.graph.ImplicitGraph;
-import static common.graph.ImplicitGraph.SearchState;
 
-public class Puzzle1_3 extends PuzzleCommon
+public class Puzzle1_correct extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -22,7 +18,7 @@ public class Puzzle1_3 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1_3().solve();
+            new Puzzle1_correct().solve();
         }
         finally
         {
@@ -275,7 +271,7 @@ public class Puzzle1_3 extends PuzzleCommon
         }
         
         HashMap<IntPair, String> movesAF = new HashMap<>();
-        for (var entry : movesA3.entrySet())
+        for (var entry : movesA1.entrySet())
         {
             var key = entry.getKey();
             System.out.println(MessageFormat.format("{0} to {1}", (char)key.getX(), (char)key.getY()));
