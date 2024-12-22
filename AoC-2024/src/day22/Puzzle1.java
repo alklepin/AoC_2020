@@ -28,13 +28,58 @@ public class Puzzle1 extends PuzzleCommon
 //        var inputFile = "input1_test.txt";
         
 //        LinesGroup lines = readAllLines(inputFile);
+
+        var step = 2000;
+        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+        long result = 0;
+        for (String line : lines)
+        {
+            long v = parseLong(line);
+            var s = new Secret(v);
+            for (var idx = 0; idx < step; idx++)
+            {
+                s.next();
+            }
+            result += s.value;
+        }
+        System.out.println(result);
         
-//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-//        int result = 0;
-//        for (String line : lines)
+//        var s = new Secret(123);
+//        for (var idx = 0; idx < 10; idx++)
 //        {
+//            s.next();
+//            System.out.println(s.value);
 //        }
-//        System.out.println(result);
         
+    }
+    
+    public class Secret
+    {
+        public long value;
+        
+        public Secret(long v)
+        {
+            value = v;
+        }
+        
+        public void next()
+        {
+            mix(value * 64);
+            prune();
+            mix(value / 32);
+            prune();
+            mix(value * 2048);
+            prune();
+        }
+        
+        private void mix(long v)
+        {
+            value = value ^ v;
+        }
+
+        private void prune()
+        {
+            value = value % 16777216;
+        }
     }
 }
