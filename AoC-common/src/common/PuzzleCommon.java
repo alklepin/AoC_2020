@@ -264,7 +264,7 @@ public class PuzzleCommon
             start = end+1;
         }
         if (start < str.length())
-            partsList.add(str.substring(start, str.length() - 1));
+            partsList.add(str.substring(start, str.length()));
 
         return partsList;
     }

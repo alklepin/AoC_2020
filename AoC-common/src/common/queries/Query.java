@@ -55,6 +55,11 @@ public class Query<T> implements Iterable<T>
     {
         return new Query<Type>(Arrays.asList(array));
     }
+
+    public static <T> Query<T> yield(T value)
+    {
+        return Query.wrap(SingleValueIterable.wrap(value));
+    }
     
     @SafeVarargs
     public static <T> Query<T> sequenceOf(Query<T>... sources)
