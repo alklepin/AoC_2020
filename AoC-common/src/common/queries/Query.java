@@ -171,6 +171,14 @@ public class Query<T> implements Iterable<T>
         return result;
     }
 
+    public Query<T> sorted()
+    {
+        var list = toList();
+        list.sort(null);
+        return Query.wrap(list);
+    }
+    
+    
     public String join()
     {
         return join(", ");
