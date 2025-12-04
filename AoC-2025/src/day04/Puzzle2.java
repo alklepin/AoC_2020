@@ -4,7 +4,7 @@ import common.LinesGroup;
 import common.PuzzleCommon;
 import common.boards.Board2D;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -13,7 +13,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -33,15 +33,27 @@ public class Puzzle1 extends PuzzleCommon
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         Board2D board = Board2D.parseAsCharsXY(lines); 
         
+        Board2D nextBoard;
+        Board2D[] current = new Board2D[1];
+        current[0] = board;
         int result = 0;
-        for (var cell : board.allCellsXY().where(p -> board.getAtXY(p) == '@'))
+        boolean hasChanges = true;
+        while (hasChanges)
         {
-            var num = board.neighbours8XY(cell).where(p -> board.getAtXY(p) == '@').count();
-            if (num < 4)
+            hasChanges = false;
+            nextBoard = current[0].clone();
+            for (var cell : board.allCellsXY().where(p -> current[0].getAtXY(p) == '@'))
             {
-//                board.setAtXY(cell, 'X');
-                result++;
+                var num = board.neighbours8XY(cell).where(p -> current[0].getAtXY(p) == '@').count();
+                if (num < 4)
+                {
+    //                board.setAtXY(cell, 'X');
+                    result++;
+                    hasChanges = true;
+                    nextBoard.setAtXY(cell, '.');
+                }
             }
+            current[0] = nextBoard.clone();
         }
         System.out.println(result);
         

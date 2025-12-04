@@ -1,8 +1,7 @@
-package day04;
+package day05;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
-import common.boards.Board2D;
 
 public class Puzzle1 extends PuzzleCommon
 {
@@ -30,22 +29,12 @@ public class Puzzle1 extends PuzzleCommon
         
 //        LinesGroup lines = readAllLines(inputFile);
         
-        LinesGroup lines = readAllLinesNonEmpty(inputFile);
-        Board2D board = Board2D.parseAsCharsXY(lines); 
-        
-        int result = 0;
-        for (var cell : board.allCellsXY().where(p -> board.getAtXY(p) == '@'))
-        {
-            var num = board.neighbours8XY(cell).where(p -> board.getAtXY(p) == '@').count();
-            if (num < 4)
-            {
-//                board.setAtXY(cell, 'X');
-                result++;
-            }
-        }
-        System.out.println(result);
-        
-//        board.printAsStrings(System.out);
+//        LinesGroup lines = readAllLinesNonEmpty(inputFile);
+//        int result = 0;
+//        for (String line : lines)
+//        {
+//        }
+//        System.out.println(result);
         
     }
 }
