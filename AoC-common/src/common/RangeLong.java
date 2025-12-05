@@ -39,6 +39,13 @@ public class RangeLong implements Comparable<RangeLong>
         return new RangeLong(s, e);
     }
 
+    public boolean intersects(RangeLong other)
+    {
+        var s = Math.max(start,  other.start);
+        var e = Math.min(end,  other.end);
+        return e > s;
+    }
+
     @Override
     public String toString()
     {
@@ -53,5 +60,10 @@ public class RangeLong implements Comparable<RangeLong>
     public long length()
     {
         return Math.max(0, end - start);
+    }
+
+    public boolean contains(long value)
+    {
+        return start <= value && value < end;
     }
 }

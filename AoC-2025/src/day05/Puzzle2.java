@@ -1,11 +1,13 @@
 package day05;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import common.PuzzleCommon;
 import common.RangeLong;
+import common.RangeLongSet;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -14,7 +16,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -34,6 +36,7 @@ public class Puzzle1 extends PuzzleCommon
         var lineGroups = readAllLineGroups(inputFile);
         var ranges = lineGroups.get(0);
         var rangeList = new ArrayList<RangeLong>();
+        var rangeSet = new RangeLongSet(); 
         for (var line : ranges)
         {
             var parts = line.split("-");
@@ -41,21 +44,14 @@ public class Puzzle1 extends PuzzleCommon
             var end = parseLong(parts[1]);
             var range = new RangeLong(start, end+1);
             rangeList.add(range);
+            rangeSet.addRange(range);
         }
         
-        var result = 0;
-        var ingredients = lineGroups.get(1);
-        for (var line : ingredients)
+        long result = 0;
+        for (var r : rangeSet)
         {
-            var id = parseLong(line);
-            for (var r : rangeList)
-            {
-                if (r.contains(id))
-                {
-                    result++;
-                    break;
-                }
-            }
+            result += r.length();
+            System.out.println(r);
         }
         
         System.out.println(result);
