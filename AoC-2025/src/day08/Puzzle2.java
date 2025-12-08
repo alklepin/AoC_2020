@@ -11,7 +11,7 @@ import common.PuzzleCommon;
 import common.geometry.Vect3D;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -20,7 +20,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -157,7 +157,8 @@ public class Puzzle1 extends PuzzleCommon
             }
         }
         Collections.sort(segments, SegComparator.instance);
-        for (var idx = 0; idx < segments.size() && idx < steps; idx++)
+        PSegment lastSegment = null; 
+        for (var idx = 0; idx < segments.size(); idx++)
         {
             var s = segments.get(idx);
             var p1 = s.point1;
@@ -170,16 +171,21 @@ public class Puzzle1 extends PuzzleCommon
                 System.out.println(MessageFormat.format("Merged sets {0} and {1}", s1.id, s2.id));
                 s1.join(s2);
             }
+            if (s1.size() == points.size())
+            {
+                lastSegment = s;
+                break;
+            }
         }
         
-        var res = Query.wrap(sets.values()).select(s -> s.findEffectiveSet()).distinct().sorted(HSetComparator.instance).toList();
+//        var res = Query.wrap(sets.values()).select(s -> s.findEffectiveSet()).distinct().sorted(HSetComparator.instance).toList();
+//        
+//        for (var s : res)
+//        {
+//            System.out.println(MessageFormat.format("Set {0} size {1}", s.id, s.size));
+//        }
         
-        for (var s : res)
-        {
-            System.out.println(MessageFormat.format("Set {0} size {1}", s.id, s.size));
-        }
-        
-        long result = (long)res.get(0).size * res.get(1).size * res.get(2).size;
+        long result = Math.round(lastSegment.point1.getX() * lastSegment.point2.getX());
         
         System.out.println(result);
         

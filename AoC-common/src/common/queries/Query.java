@@ -177,6 +177,13 @@ public class Query<T> implements Iterable<T>
         list.sort(null);
         return Query.wrap(list);
     }
+
+    public Query<T> sorted(Comparator<? super T> c)
+    {
+        var list = toList();
+        list.sort(c);
+        return Query.wrap(list);
+    }
     
     
     public String join()
