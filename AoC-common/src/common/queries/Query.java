@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Spliterators;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -123,12 +124,26 @@ public class Query<T> implements Iterable<T>
         return new Query<T>(new WhereIterable<T>(m_source, e -> e != null));
     }
     
-    public Query<T> distinct()
+    public Query<T> notNull()
     {
-        return new Query<T>(new DistinctIterable<T>(m_source));
+        return where(Query::isNotNull);
     }
 
+    private static boolean isNotNull(Object obj)
+    {
+        return obj != null;
+    }
     
+    
+    public Query<T> distinct()
+    {
+        return new Query<T>(new UniqueIterable<T>(m_source));
+    }
+    
+    public Query<T> unique()
+    {
+        return distinct();
+    }
 
     @SuppressWarnings("unchecked")
     @SafeVarargs
@@ -161,6 +176,18 @@ public class Query<T> implements Iterable<T>
         return this;
     }
     
+    @SafeVarargs
+    public static <T> Query<T> firstNotEmpty(Query<T>... sources)
+    {
+        return new Query<T>(new FirstNotEmptyIterable<T>(sources));
+    }
+
+    @SafeVarargs
+    public static <T> Iterable<T> firstNotEmpty(Iterable<T>... sources)
+    {
+        return new FirstNotEmptyIterable<T>(sources);
+    }
+
     public ArrayList<T> toList()
     {
         ArrayList<T> result = new ArrayList<T>();
@@ -365,6 +392,11 @@ public class Query<T> implements Iterable<T>
         return false;
     }
 
+    public boolean any()
+    {
+        return iterator().hasNext();
+    }
+
     public boolean all(Predicate<? super T> condition)
     {
         for (T element : this)
@@ -375,6 +407,30 @@ public class Query<T> implements Iterable<T>
         return true;
     }
 
+    public <TCmp extends Comparable<? super TCmp>> T max(Function<T, TCmp> keyToCompare)
+    {
+        T result = null;
+        TCmp bestKey = null;
+        for (var val : this)
+        {
+            if (bestKey == null)
+            {
+                result = val;
+                bestKey = keyToCompare.apply(val);
+            }
+            else
+            {
+                var key = keyToCompare.apply(val);
+                if (bestKey.compareTo(key) < 0)
+                {
+                    result = val;
+                    bestKey = key;
+                }
+            }
+        }
+        
+        return result;
+    }
     
 //    private Iterable<T> unwrap()
 //    {
