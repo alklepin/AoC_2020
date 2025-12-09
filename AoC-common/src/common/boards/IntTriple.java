@@ -34,6 +34,12 @@ public class IntTriple
         var parts = s.split(",");
         return new IntTriple(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
+
+    public static IntTriple from(String s, String separatorRegEx)
+    {
+        var parts = s.split(separatorRegEx);
+        return new IntTriple(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+    }
     
     public IntTriple(int x, int y, int z)
     {
