@@ -253,7 +253,7 @@ public class PuzzleCommon
             return defaultValue;
     }
     
-    public ArrayList<String> split(String str, String splitter)
+    public static ArrayList<String> split(String str, String splitter)
     {
         var partsList = new ArrayList<String>();
         var start = 0;
