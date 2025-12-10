@@ -1,6 +1,7 @@
 package day10;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import common.LinesGroup;
 import common.PuzzleCommon;
@@ -8,7 +9,7 @@ import common.graph.Graph;
 import common.graph.ImplicitGraph;
 import common.queries.Query;
 
-public class Puzzle1 extends PuzzleCommon
+public class Puzzle2 extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -17,7 +18,7 @@ public class Puzzle1 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle1().solve();
+            new Puzzle2().solve();
         }
         finally
         {
@@ -31,19 +32,97 @@ public class Puzzle1 extends PuzzleCommon
         String sTargetState;
         int targetState;
         ArrayList<Integer> buttons;
+        ArrayList<ArrayList<Integer>> buttonLists;
         ArrayList<Integer> joltages;
 
-        public Machine(String lights, ArrayList<Integer> buttons, ArrayList<Integer> joltages)
+        public Machine(String lights, ArrayList<ArrayList<Integer>> buttonLists, ArrayList<Integer> joltages)
         {
             sTargetState = lights;
             targetState = lightsAsANumber(lights);
-            this.buttons = buttons;
+            this.buttonLists = buttonLists;
+            this.buttons = Query.wrap(buttonLists).select(list -> numsAsNumber(list)).toList();
             this.joltages = joltages;
+        }
+        
+        static class State implements Comparable<State>
+        {
+            int [] values;
+            
+            public State(int length)
+            {
+                values = new int[length];
+            }
+
+            private State(int [] values)
+            {
+                this.values = values;
+            }
+            
+            public State apply(ArrayList<Integer> button)
+            {
+                var newState = new int[values.length];
+                System.arraycopy(values, 0, newState, 0, values.length);
+                for (var v : button)
+                {
+                    newState[v]++;
+                }
+                return new State(newState);
+            }
+
+            @Override
+            public int hashCode()
+            {
+                final int prime = 31;
+                int result = 1;
+                result = prime * result + Arrays.hashCode(values);
+                return result;
+            }
+
+            @Override
+            public boolean equals(Object obj)
+            {
+                if (this == obj)
+                    return true;
+                if (obj == null)
+                    return false;
+                if (getClass() != obj.getClass())
+                    return false;
+                State other = (State)obj;
+                return Arrays.equals(values, other.values);
+            }
+
+            @Override
+            public String toString()
+            {
+                return "State [values=" + Arrays.toString(values) + "]";
+            }
+
+            @Override
+            public int compareTo(State o)
+            {
+                return Arrays.compare(values, o.values);
+            }
+        }
+        
+        static int sum(int[] list)
+        {
+            var result = 0;
+            for (var v : list)
+                result += v;
+            return result;
         }
         
         long stepsToTarget()
         {
-            var result = ImplicitGraph.BFS(0, targetState, node -> Query.wrap(buttons).select(b -> node.intValue() ^ b.intValue()));
+            var start = new State(joltages.size());
+            
+            var end = new State(toIntArray(joltages));
+            var result = ImplicitGraph.BFS(start, end, node -> {
+                System.out.println("" + node+ " -> " + sum(node.values));
+                return Query.wrap(buttonLists)
+                    .select(b -> node.apply(b))
+                    .where(n -> n.compareTo(end) <= 0);
+            });
             var path = result.getPath();
 //            if (path != null)
 //            {
@@ -61,6 +140,17 @@ public class Puzzle1 extends PuzzleCommon
         }
     }
     
+    static int[] toIntArray(ArrayList<Integer> list)
+    {
+        var result = new int[list.size()];
+        var idx = 0;
+        for (var val : list)
+        {
+            result[idx++] = val;
+        }
+        return result;
+    }
+    
     static int lightsAsANumber(String lights)
     {
         var result = 0;
@@ -72,7 +162,7 @@ public class Puzzle1 extends PuzzleCommon
         return result;
     }
     
-    static int numsAsNumber(int[] nums)
+    static int numsAsNumber(ArrayList<Integer> nums)
     {
         var result = 0;
         for (var n : nums)
@@ -121,19 +211,20 @@ public class Puzzle1 extends PuzzleCommon
             var lights = line.substring(idx0+1, idx1);
             var buttonStrings = split(line.substring(idx1+1, idx2-1),"(");
             var joltages = line.substring(idx2+1, idx3);
-            var buttons = new ArrayList<Integer>();
+            var buttons = new ArrayList<ArrayList<Integer>>();
             for (var button : Query.wrap(buttonStrings)
                 .select(b -> b.trim())
                 .where(s -> s.length() > 0)
                 .select(b -> b.substring(0, b.length()-1))
                 .where(s -> s.length() > 0))
             {
-                buttons.add(numsAsNumber(parseIntArray(button)));
+                buttons.add(parseIntArrayList(button));
             }
             var machine = new Machine(lights, buttons, parseIntArrayList(joltages));
             var pathLength = machine.stepsToTarget();
             //System.out.println(pathLength);
             result += pathLength;
+            System.out.println(line);
         }
         System.out.println(result);
         
