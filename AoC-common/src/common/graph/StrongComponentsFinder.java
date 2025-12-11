@@ -84,7 +84,7 @@ public class StrongComponentsFinder
         }
     }
 
-    private static class Edge<TNode>
+    public static class Edge<TNode>
     {
         TNode n1;
         TNode n2;

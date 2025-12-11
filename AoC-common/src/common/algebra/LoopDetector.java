@@ -1,6 +1,5 @@
 package common.algebra;
 
-import java.nio.channels.IllegalSelectorException;
 import java.util.HashMap;
 import java.util.function.Function;
 

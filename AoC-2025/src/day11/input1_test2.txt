@@ -1,0 +1,6 @@
+﻿you: bbb ccc
+bbb: ddd
+ccc: ddd
+ddd: eee fff
+eee: out
+fff: out
