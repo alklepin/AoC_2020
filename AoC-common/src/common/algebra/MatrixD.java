@@ -55,8 +55,8 @@ public class MatrixD implements Cloneable
     
     public void gauss()
     {
-        var rowLimit = Math.min(rows, columns-1);
-        for (var row = 0; row < rowLimit; row++)
+        var diagLength = Math.min(rows, columns-1);
+        for (var row = 0; row < diagLength; row++)
         {
             var idx = row;
             while (idx < rows && get(idx, row) == 0)

@@ -1,6 +1,5 @@
 package day10;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,7 +11,7 @@ import common.graph.Graph;
 import common.graph.ImplicitGraph;
 import common.queries.Query;
 
-public class Puzzle2 extends PuzzleCommon
+public class Puzzle2_notBad extends PuzzleCommon
 {
 
     public static void main(String [] args)
@@ -21,7 +20,7 @@ public class Puzzle2 extends PuzzleCommon
         var start = System.currentTimeMillis();
         try
         {
-            new Puzzle2().solve();
+            new Puzzle2_notBad().solve();
         }
         finally
         {
@@ -59,7 +58,7 @@ public class Puzzle2 extends PuzzleCommon
         long stepsToTarget()
         {
             var cols = buttonLists.size() + 1;
-            var rows = joltages.size() + 5; // reserve 4 extra rows for synthetic equations
+            var rows = joltages.size() + 3; // reserve 4 extra rows for synthetic equations
             int maxJoltage = Collections.max(joltages);
             
             var matrixSrc = new MatrixD(rows, cols);
@@ -75,14 +74,14 @@ public class Puzzle2 extends PuzzleCommon
                 matrixSrc.set(row, buttonLists.size(), joltages.get(row));
             }
             
-//            matrixSrc.print(System.out);
-//            System.out.println("===");
+            matrixSrc.print(System.out);
+            System.out.println("===");
             
             var matrix = matrixSrc.clone();
             matrix.gauss();
 
-//            matrix.print(System.out);
-//            System.out.println("===");
+            matrix.print(System.out);
+            System.out.println("===");
 
 //            var diff = buttonLists.size() - joltages.size();
 //            if (diff <= 0)
@@ -97,14 +96,14 @@ public class Puzzle2 extends PuzzleCommon
                 if (same(matrixSaved.get(idx, idx), 0))
                     posToTry.add(idx);
             }
-            if (posToTry.size() > 5)
+            if (posToTry.size() > 4)
             {
 //                throw new IllegalStateException();
                 System.out.println("Skipped!!!!");
                 return 0;
             }
             
-            long minSteps = Integer.MAX_VALUE;
+            var minSteps = Integer.MAX_VALUE;
             var lim1 = posToTry.size() > 0 ? maxJoltage : 1;
             for (var v1 = 0; v1 < lim1; v1++)
             {
@@ -117,71 +116,54 @@ public class Puzzle2 extends PuzzleCommon
                         var lim4 = posToTry.size() > 3 ? maxJoltage : 1;
                         for (var v4 = 0; v4 < lim4; v4++)
                         {
-                            var lim5 = posToTry.size() > 4 ? maxJoltage : 1;
-                            for (var v5 = 0; v5 < lim4; v5++)
+                            if (v1 == 3 && v2 == 1 && v3 == 2)
                             {
-                                matrix = matrixSaved.clone();
-                                if (posToTry.size() > 0)
-                                {
-                                    matrix.set(matrix.rows()-1, posToTry.get(0), 1);
-                                    matrix.inc(matrix.rows()-1, cols-1, v1);
-                                }
-                                if (posToTry.size() > 1)
-                                {
-                                    matrix.set(matrix.rows()-2, posToTry.get(1), 1);
-                                    matrix.inc(matrix.rows()-2, cols-1, v2);
-                                }
-                                if (posToTry.size() > 2)
-                                {
-                                    matrix.set(matrix.rows()-3, posToTry.get(2), 1);
-                                    matrix.inc(matrix.rows()-3, cols-1, v3);
-                                }
-                                if (posToTry.size() > 3)
-                                {
-                                    matrix.set(matrix.rows()-4, posToTry.get(3), 1);
-                                    matrix.inc(matrix.rows()-4, cols-1, v4);
-                                }
-                                if (posToTry.size() > 4)
-                                {
-                                    matrix.set(matrix.rows()-5, posToTry.get(4), 1);
-                                    matrix.inc(matrix.rows()-5, cols-1, v4);
-                                }
-    //                            matrix.print(System.out);
-    //                            System.out.println("==before=");
-                                matrix.gauss();
-    //                            matrix.print(System.out);
-    //                            System.out.println("==after=");
+                                int test = 12;
+                            }
+                            
+                            matrix = matrixSaved.clone();
+                            if (posToTry.size() > 0)
+                            {
+                                matrix.set(matrix.rows()-1, posToTry.get(0), 1);
+                                matrix.inc(matrix.rows()-1, cols-1, v1);
+                            }
+                            if (posToTry.size() > 1)
+                            {
+                                matrix.set(matrix.rows()-2, posToTry.get(1), 1);
+                                matrix.inc(matrix.rows()-2, cols-1, v2);
+                            }
+                            if (posToTry.size() > 2)
+                            {
+                                matrix.set(matrix.rows()-3, posToTry.get(2), 1);
+                                matrix.inc(matrix.rows()-3, cols-1, v3);
+                            }
+                            if (posToTry.size() > 3)
+                            {
+                                matrix.set(matrix.rows()-4, posToTry.get(3), 1);
+                                matrix.inc(matrix.rows()-4, cols-1, v4);
+                            }
+//                            matrix.print(System.out);
+//                            System.out.println("==before=");
+                            matrix.gauss();
+//                            matrix.print(System.out);
+//                            System.out.println("==after=");
+                            
+                            var steps = decodeMatrix(matrix);
+                            if (steps >= 0 && steps < minSteps)
+                            {
+                                minSteps = steps;
                                 
-                                //var steps = decodeMatrix(matrix);
-                                var steps = verify(matrixSrc, matrix);
-                                if (steps >= 0 && steps < minSteps)
+                                matrix.print(System.out);
+                                System.out.println("==after=");
+                                System.out.println("Steps: "+steps );
+                                for (var r = 0; r < matrix.rows(); r++)
                                 {
-                                    var verificationResult = verify(matrixSrc, matrix);
-                                    if (verificationResult < 0)
-                                    {
-                                        //System.out.println("Error was detected!" + verificationResult);
-                                        //verify(matrixSrc, matrix);
-                                    }
-                                    else
-                                    {
-                                        if (verificationResult != steps)
-                                        {
-                                            System.out.println("!!!!!");
-                                        }
-                                        minSteps = steps;
-                                    }
-                                    
-    //                                matrix.print(System.out);
-    //                                System.out.println("==after=");
-    //                                System.out.println("Steps: "+steps );
-    //                                for (var r = 0; r < matrix.rows(); r++)
-    //                                {
-    //                                    System.out.print(String.format("%5.1f", matrix.get(r, matrix.columns()-1)));
-    //                                }
-    //                                System.out.println();
+                                    System.out.print(String.format("%5.1f", matrix.get(r, matrix.columns()-1)));
                                 }
-    //                            System.out.println("Steps: "+steps );
-                            }                            
+                                System.out.println();
+                            }
+                            System.out.println("Steps: "+steps );
+                            
                         }
                     }
                 }
@@ -193,41 +175,6 @@ public class Puzzle2 extends PuzzleCommon
         boolean same(double a, double b)
         {
             return Math.abs(a-b) < 1e-13;
-        }
-        
-        long verify(MatrixD matrixSrc, MatrixD matrix)
-        {
-            int solutionLength = matrixSrc.columns() - 1;
-            var solution = new long[solutionLength];
-            long result = 0L;
-            for (var r = 0; r < solutionLength; r++)
-            {
-                solution[r] = Math.round(matrix.get(r,  solutionLength));
-                result += solution[r];
-                if (solution[r] < 0)
-                    return -2;
-            }
-            
-            for (var r = 0; r < matrixSrc.rows(); r++)
-            {
-                long sum = 0;
-                for (var c = 0; c < solutionLength; c++)
-                {
-                    var v = Math.round(matrixSrc.get(r, c));
-                    sum += solution[c] * v;
-                }
-                long lastCol = Math.round(matrixSrc.get(r, solutionLength));
-                if (sum != lastCol)
-                    return -1;
-            }
-
-//            for (var idx = 0; idx < solutionLength; idx++)
-//            {
-//                System.out.print(String.format("%5d", solution[idx]));
-//            }
-//            System.out.println(" = "+result);
-                
-            return result;
         }
         
         int decodeMatrix(MatrixD matrix)
@@ -319,15 +266,14 @@ public class Puzzle2 extends PuzzleCommon
     public void solve()
         throws Exception
     {
-        var inputFile = "input1.txt";
+//        var inputFile = "input1.txt";
 //        var inputFile = "input1_test.txt";
 //        var inputFile = "input2_test.txt";
 //        var inputFile = "input2_test2.txt";
-//        var inputFile = "input2_test3.txt";
+        var inputFile = "input2_test3.txt";
        
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int result = 0;
-        int lineCount = 1;
         for (String line : lines)
         {
             var idx0 = line.indexOf('[');
@@ -346,13 +292,12 @@ public class Puzzle2 extends PuzzleCommon
             {
                 buttons.add(parseIntArrayList(button));
             }
-            //System.out.println(line);
+            System.out.println(line);
             var machine = new Machine(lights, buttons, parseIntArrayList(joltages));
             var pathLength = machine.stepsToTarget();
-            System.out.println(MessageFormat.format("Line {0}/200: answer {1}", lineCount++, pathLength));
-            //System.out.println(pathLength);
+            System.out.println(pathLength);
             result += pathLength;
-            //System.out.println("-----------------------");
+            System.out.println("-----------------------");
         }
         System.out.println(result);
         
