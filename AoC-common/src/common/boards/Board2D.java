@@ -23,30 +23,30 @@ public class Board2D
 {
     private int[][] m_data;
     private final int m_width;
-    private final int m_heigth;
+    private final int m_height;
     private final IntPair m_dims;
 
     public Board2D(int width, int heigth)
     {
         m_width = width;
-        m_heigth = heigth;
-        m_dims = IntPair.of(m_width, m_heigth);
+        m_height = heigth;
+        m_dims = IntPair.of(m_width, m_height);
         m_data = createDataArray(getWidth(), getHeigth());
     }
 
     public Board2D(Bounds bounds)
     {
         m_width = bounds.width() + 1;
-        m_heigth = bounds.height() + 1;
-        m_dims = IntPair.of(m_width, m_heigth);
+        m_height = bounds.height() + 1;
+        m_dims = IntPair.of(m_width, m_height);
         m_data = createDataArray(getWidth(), getHeigth());
     }
     
     public Board2D(Board2D other)
     {
         m_width = other.m_width;
-        m_heigth = other.m_heigth;
-        m_dims = IntPair.of(m_width, m_heigth);
+        m_height = other.m_height;
+        m_dims = IntPair.of(m_width, m_height);
         m_data = duplicateArray(other.m_data);
     }
 
@@ -57,7 +57,7 @@ public class Board2D
 
     public int getHeigth()
     {
-        return m_heigth;
+        return m_height;
     }
 
     public IntPair dimensions()
@@ -188,7 +188,7 @@ public class Board2D
     
     public void forEachCell(IntConsumer action)
     {
-        for (int row = 0; row < m_heigth; row++)
+        for (int row = 0; row < m_height; row++)
         {
             var rowData = m_data[row];
             for (int col = 0; col < m_width; col++)
@@ -222,7 +222,7 @@ public class Board2D
     
     public void setAll(int value)
     {
-        for (int row = 0; row < m_heigth; row++)
+        for (int row = 0; row < m_height; row++)
         {
             var rowData = m_data[row];
             for (int col = 0; col < m_width; col++)
@@ -234,7 +234,7 @@ public class Board2D
 
     public void setAll(char value)
     {
-        for (int row = 0; row < m_heigth; row++)
+        for (int row = 0; row < m_height; row++)
         {
             var rowData = m_data[row];
             for (int col = 0; col < m_width; col++)
@@ -244,6 +244,12 @@ public class Board2D
         }
     }
     
+    public void fill(int value)
+    {
+        for (var y = 0; y < m_height; y++)
+            Arrays.fill(m_data[y], value);
+    }
+
     public void fillColumnXY(int x, int value)
     {
         for (var cell : colCellsXY(x))
@@ -370,13 +376,13 @@ public class Board2D
     private Query<IntPair> allCellsRCImpl()
     {
         return Query.range(0, m_width).selectMany(
-            col -> Query.range(0, m_heigth).select(row -> Pair.of(row, col)));
+            col -> Query.range(0, m_height).select(row -> Pair.of(row, col)));
     }
 
     private Query<IntPair> allCellsXYImpl()
     {
         return Query.range(0, m_width).selectMany(
-            col -> Query.range(0, m_heigth).select(row -> Pair.of(col, row)));
+            col -> Query.range(0, m_height).select(row -> Pair.of(col, row)));
     }
 
     public Query<IntPair> rowCellsXY(int y)
@@ -413,13 +419,13 @@ public class Board2D
 
     private Query<IntPair> colCellsXYImpl(int x)
     {
-        return Query.range(0, m_heigth)
+        return Query.range(0, m_height)
             .select(y -> Pair.of(x, y));
     }
 
     private Query<IntPair> colCellsRCImpl(int col)
     {
-        return Query.range(0, m_heigth).select(
+        return Query.range(0, m_height).select(
             row -> Pair.of(col, row));
     }
     
@@ -448,7 +454,7 @@ public class Board2D
         Function<IntPair, Iterable<IntPair>> movesGenerator,
         BiPredicate<IntPair, IntPair> canMoveFromTo)
     {
-        Board2D used = new Board2D(m_width, m_heigth);
+        Board2D used = new Board2D(m_width, m_height);
         
         Iterable<IntPair> startNodes;
         if (starts != null)
@@ -491,7 +497,7 @@ public class Board2D
         Function<IntPair, Iterable<IntPair>> movesGenerator,
         BiPredicate<IntPair, IntPair> canMoveFromTo)
     {
-        Board2D used = new Board2D(m_width, m_heigth);
+        Board2D used = new Board2D(m_width, m_height);
         
         Iterable<IntPair> startNodes;
         if (starts != null)
@@ -570,7 +576,7 @@ public class Board2D
     
     public int countValues(int value)
     {
-        int height = m_heigth;
+        int height = m_height;
         int width = m_width;
         int result = 0;
         for (int rowIdx = 0; rowIdx < height; rowIdx++)
@@ -586,7 +592,7 @@ public class Board2D
 
     public int countCells(IntPredicate condition)
     {
-        int height = m_heigth;
+        int height = m_height;
         int width = m_width;
         int result = 0;
         for (int rowIdx = 0; rowIdx < height; rowIdx++)
@@ -780,9 +786,9 @@ public class Board2D
     {
         return Query.sequenceOf(
             Query.range(0, m_width-1).select(c -> new IntPair(0, c)),
-            Query.range(0, m_heigth-1).select(r -> new IntPair(r, m_width-1)),
-            Query.range(0, m_width-1).select(c -> new IntPair(m_heigth-1, m_width-1-c)),
-            Query.range(0, m_heigth-1).select(r -> new IntPair(m_width-1-r, 0))
+            Query.range(0, m_height-1).select(r -> new IntPair(r, m_width-1)),
+            Query.range(0, m_width-1).select(c -> new IntPair(m_height-1, m_width-1-c)),
+            Query.range(0, m_height-1).select(r -> new IntPair(m_width-1-r, 0))
             );
     }
     
@@ -808,38 +814,38 @@ public class Board2D
     
     public Query<IntPair> neighbours4RC(IntPair start)
     {
-        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
+        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_height-1, m_width-1));
     }
     
     public Query<IntPair> neighbours4XY(IntPair start)
     {
-        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
+        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_height-1));
     }
 
     public Query<IntPair> neighbours4DiagRC(IntPair start)
     {
-        return Generators.neighbours4Diag(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
+        return Generators.neighbours4Diag(start, IntPair.ZERO, Pair.of(m_height-1, m_width-1));
     }
     
     public Query<IntPair> neighbours4DiagXY(IntPair start)
     {
-        return Generators.neighbours4Diag(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
+        return Generators.neighbours4Diag(start, IntPair.ZERO, Pair.of(m_width-1, m_height-1));
     }
 
     public Query<IntPair> directions4XY(IntPair start)
     {
-        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1))
+        return Generators.neighbours4(start, IntPair.ZERO, Pair.of(m_width-1, m_height-1))
             .select(c -> c.minus(start));
     }
     
     public Query<IntPair> neighbours8RC(IntPair start)
     {
-        return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_heigth-1, m_width-1));
+        return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_height-1, m_width-1));
     }
     
     public Query<IntPair> neighbours8XY(IntPair start)
     {
-        return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_width-1, m_heigth-1));
+        return Generators.neighbours8(start, IntPair.ZERO, Pair.of(m_width-1, m_height-1));
     }
 
     public Query<IntPair> rayRC(IntPair currentCell, IntPair delta)
@@ -928,5 +934,69 @@ public class Board2D
             s.append(getCharAtXY(c));
         }
         return s.toString();
+    }
+
+    public Board2D rotateLeft()
+    {
+        var result = new Board2D(m_height, m_width);
+        for (var x = 0; x < m_width; x++)
+        {
+            for (var y = 0; y < m_height; y++)
+            {
+                result.setAtXY(y, m_width - x - 1, getAtXY(x, y));
+            }
+        }
+        return result;
+    }
+
+    public Board2D rotateRight()
+    {
+        var result = new Board2D(m_height, m_width);
+        for (var x = 0; x < m_width; x++)
+        {
+            for (var y = 0; y < m_height; y++)
+            {
+                result.setAtXY(m_height - y - 1, x, getAtXY(x, y));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Flips the board vertically (relative to horizontal line through the center of the board)
+     * @return
+     */
+    public Board2D flipV()
+    {
+        var result = new Board2D(m_width, m_height);
+        for (var x = 0; x < m_width; x++)
+        {
+            System.arraycopy(m_data[x], 0, result.m_data[m_height - x - 1], 0, m_width);
+        }
+        return result;
+    }
+
+    /**
+     * Flips the board vertically (relative to horizontal line through the center of the board)
+     * @return
+     */
+    public Board2D flipH()
+    {
+        var result = new Board2D(m_width, m_height);
+        for (var y = 0; y < m_height; y++)
+        {
+            for (var x = 0; x < m_width; x++)
+            {
+                result.setAtXY(x, y, getAtXY(m_width - x - 1, y));
+            }
+        }
+        return result;
+    }
+
+    public boolean hasSpaceFor(IntPair position, Board2D other)
+    {
+        return containsXY(position) 
+            && position.getY() + other.m_height <= m_height 
+            && position.getX() + other.m_width <= m_width;
     }
 }

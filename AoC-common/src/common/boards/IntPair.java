@@ -39,6 +39,12 @@ public class IntPair
         var parts = s.split(",");
         return new IntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
+
+    public static IntPair from(String s, String separator)
+    {
+        var parts = s.split(separator);
+        return new IntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+    }
     
     public static IntPair decodeDirectionV_XY(char c)
     {
