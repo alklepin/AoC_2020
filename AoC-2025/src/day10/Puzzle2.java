@@ -108,6 +108,7 @@ public class Puzzle2 extends PuzzleCommon
             var lim1 = posToTry.size() > 0 ? maxJoltage : 1;
             for (var v1 = 0; v1 < Math.min(lim1, minSteps); v1++)
             {
+                //System.out.println("v1 = "+v1+ " minSteps = " + minSteps );
                 var lim2 = posToTry.size() > 1 ? maxJoltage : 1;
                 var usedSteps2 = v1;
                 for (var v2 = 0; v2 < Math.min(lim2, minSteps - usedSteps2); v2++)
@@ -148,7 +149,7 @@ public class Puzzle2 extends PuzzleCommon
                                 if (posToTry.size() > 4)
                                 {
                                     matrix.set(matrix.rows()-5, posToTry.get(4), 1);
-                                    matrix.inc(matrix.rows()-5, cols-1, v4);
+                                    matrix.inc(matrix.rows()-5, cols-1, v5);
                                 }
     //                            matrix.print(System.out);
     //                            System.out.println("==before=");
@@ -327,7 +328,7 @@ public class Puzzle2 extends PuzzleCommon
 //        var inputFile = "input1_test.txt";
 //        var inputFile = "input2_test.txt";
 //        var inputFile = "input2_test2.txt";
-//        var inputFile = "input2_test3.txt";
+//        var inputFile = "input2_test4.txt";
        
         LinesGroup lines = readAllLinesNonEmpty(inputFile);
         int result = 0;
