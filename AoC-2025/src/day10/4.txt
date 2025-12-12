@@ -78,8 +78,7 @@ Line 77/200: answer 56
 Line 78/200: answer 88
 Line 79/200: answer 34
 Line 80/200: answer 29
-Skipped!!!!
-Line 81/200: answer 0
+Line 81/200: answer 2 147 483 647
 Line 82/200: answer 73
 Line 83/200: answer 65
 Line 84/200: answer 85
@@ -199,5 +198,5 @@ Line 197/200: answer 58
 Line 198/200: answer 78
 Line 199/200: answer 53
 Line 200/200: answer 88
-20053
-Time spent: 155,431000 sec
+-2147463596
+Time spent: 4304,217000 sec

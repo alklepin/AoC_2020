@@ -106,19 +106,23 @@ public class Puzzle2 extends PuzzleCommon
             
             long minSteps = Integer.MAX_VALUE;
             var lim1 = posToTry.size() > 0 ? maxJoltage : 1;
-            for (var v1 = 0; v1 < lim1; v1++)
+            for (var v1 = 0; v1 < Math.min(lim1, minSteps); v1++)
             {
                 var lim2 = posToTry.size() > 1 ? maxJoltage : 1;
-                for (var v2 = 0; v2 < lim2; v2++)
+                var usedSteps2 = v1;
+                for (var v2 = 0; v2 < Math.min(lim2, minSteps - usedSteps2); v2++)
                 {
                     var lim3 = posToTry.size() > 2 ? maxJoltage : 1;
-                    for (var v3 = 0; v3 < lim3; v3++)
+                    var usedSteps3 = v1 + v2;
+                    for (var v3 = 0; v3 < Math.min(lim3, minSteps - usedSteps3); v3++)
                     {
                         var lim4 = posToTry.size() > 3 ? maxJoltage : 1;
-                        for (var v4 = 0; v4 < lim4; v4++)
+                        var usedSteps4 = v1 + v2 + v3;
+                        for (var v4 = 0; v4 < Math.min(lim4, minSteps - usedSteps4); v4++)
                         {
                             var lim5 = posToTry.size() > 4 ? maxJoltage : 1;
-                            for (var v5 = 0; v5 < lim4; v5++)
+                            var usedSteps5 = v1 + v2 + v3 + v4;
+                            for (var v5 = 0; v5 < Math.min(lim5, minSteps - usedSteps5); v5++)
                             {
                                 matrix = matrixSaved.clone();
                                 if (posToTry.size() > 0)
